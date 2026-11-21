@@ -153,7 +153,7 @@ A \textbf{bus} is a shared collection of physical conducting wires transmitting 
 \small
 \caption{System Bus Partitioning: Directionality, Width, and Signaling}
 \label{tab:system_buses}
-\begin{tabularx}{\textwidth}{l c l X}
+\begin{tabularx}{\textwidth}{l >{\centering\arraybackslash}p{3.2cm} >{\centering\arraybackslash}p{2.8cm} X}
 \toprule
 \textbf{Bus Component} & \textbf{Directionality} & \textbf{Typical Width} & \textbf{Functional Responsibility} \\
 \midrule
@@ -305,7 +305,7 @@ Fixed-width $n$-bit computer registers represent signed integers via three prima
 \small
 \caption{8-Bit Signed Representation Comparison Across Critical Numerical Values}
 \label{tab:signed_representations}
-\begin{tabularx}{\textwidth}{l c c c}
+\begin{tabularx}{0.75\textwidth}{X c c c}
 \toprule
 \textbf{Decimal Value} & \textbf{Sign-Magnitude} & \textbf{One's Complement} & \textbf{Two's Complement} \\
 \midrule
@@ -461,7 +461,7 @@ De Morgan's laws establish the algebraic bridge between conjunction, disjunction
 \small
 \caption{Truth Table Proof of De Morgan's Dual Theorems}
 \label{tab:demorgan_proof}
-\begin{tabularx}{\textwidth}{c c c c c c c c}
+\begin{tabular}{c c c c c c c c}
 \toprule
 $A$ & $B$ & $\overline{A}$ & $\overline{B}$ & $\overline{A + B}$ & $\overline{A} \cdot \overline{B}$ & $\overline{A \cdot B}$ & $\overline{A} + \overline{B}$ \\
 \midrule
@@ -470,7 +470,7 @@ $A$ & $B$ & $\overline{A}$ & $\overline{B}$ & $\overline{A + B}$ & $\overline{A}
 1 & 0 & 0 & 1 & \textbf{0} & \textbf{0} & \textbf{1} & \textbf{1} \\
 1 & 1 & 0 & 0 & \textbf{0} & \textbf{0} & \textbf{0} & \textbf{0} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 
 \subsection{The Principle of Duality}
@@ -510,7 +510,7 @@ Logic gates are physical electronic switching circuits (typically CMOS transisto
 \small
 \caption{Comprehensive Summary of Standard Logic Gates}
 \label{tab:standard_logic_gates}
-\begin{tabularx}{\textwidth}{l c l X}
+\begin{tabularx}{\textwidth}{l >{\centering\arraybackslash}p{3.2cm} >{\centering\arraybackslash}p{2.8cm} X}
 \toprule
 \textbf{Gate Name} & \textbf{Symbolic Equation} & \textbf{Behavioral Logic Condition} & \textbf{CMOS Transistor Count} \\
 \midrule
@@ -530,7 +530,7 @@ Logic gates are physical electronic switching circuits (typically CMOS transisto
 \small
 \caption{Unified 2-Input Logic Gate Truth Table}
 \label{tab:unified_truth_table}
-\begin{tabularx}{\textwidth}{c c c c c c c c}
+\begin{tabular}{c c c c c c c c}
 \toprule
 $A$ & $B$ & \textbf{AND} & \textbf{OR} & \textbf{NAND} & \textbf{NOR} & \textbf{XOR} & \textbf{XNOR} \\
 \midrule
@@ -539,7 +539,7 @@ $A$ & $B$ & \textbf{AND} & \textbf{OR} & \textbf{NAND} & \textbf{NOR} & \textbf{
 1 & 0 & 0 & 1 & 1 & 0 & 1 & 0 \\
 1 & 1 & 1 & 1 & 0 & 0 & 0 & 1 \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 
 \subsection{Properties and Applications of XOR and XNOR Gates}
@@ -618,7 +618,7 @@ Similarly, we synthesize $\{\text{NOT}, \text{OR}, \text{AND}\}$ using exclusive
 \small
 \caption{Minimum Gate Count for Universal Gate Logic Syntheses}
 \label{tab:universal_gate_counts}
-\begin{tabularx}{\textwidth}{l c c}
+\begin{tabularx}{0.85\textwidth}{X >{\centering\arraybackslash}p{4cm} >{\centering\arraybackslash}p{4cm}}
 \toprule
 \textbf{Target Logic Function} & \textbf{Minimum 2-Input NAND Gates} & \textbf{Minimum 2-Input NOR Gates} \\
 \midrule
@@ -684,7 +684,7 @@ A \textbf{Half Adder} is an arithmetic combinational building block that compute
 \small
 \caption{Half Adder Truth Table}
 \label{tab:half_adder_truth}
-\begin{tabularx}{0.6\textwidth}{c c c c}
+\begin{tabular}{c c c c}
 \toprule
 \textbf{Input $A$} & \textbf{Input $B$} & \textbf{Sum ($S$)} & \textbf{Carry ($C$)} \\
 \midrule
@@ -693,7 +693,7 @@ A \textbf{Half Adder} is an arithmetic combinational building block that compute
 1 & 0 & 1 & 0 \\
 1 & 1 & 0 & 1 \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 
 \subsection{Boolean Equations and Gate Implementation}
@@ -720,7 +720,7 @@ A \textbf{Full Adder} computes the arithmetic sum of three single-bit inputs: tw
 \small
 \caption{Full Adder Truth Table}
 \label{tab:full_adder_truth}
-\begin{tabularx}{0.7\textwidth}{c c c c c}
+\begin{tabular}{c c c c c}
 \toprule
 \textbf{Input $A$} & \textbf{Input $B$} & \textbf{Carry In ($C_{in}$)} & \textbf{Sum ($S$)} & \textbf{Carry Out ($C_{out}$)} \\
 \midrule
@@ -733,7 +733,7 @@ A \textbf{Full Adder} computes the arithmetic sum of three single-bit inputs: tw
 1 & 1 & 0 & 0 & 1 \\
 1 & 1 & 1 & 1 & 1 \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 
 \subsection{Boolean Expressions and K-Map Simplification}
@@ -866,7 +866,7 @@ A \textbf{Priority Encoder} resolves simultaneous inputs by establishing a stric
 \small
 \caption{4-to-2 Priority Encoder Truth Table (Higher Index = Higher Priority)}
 \label{tab:priority_encoder}
-\begin{tabularx}{\textwidth}{c c c c c c c}
+\begin{tabular}{c c c c c c c}
 \toprule
 $D_3$ & $D_2$ & $D_1$ & $D_0$ & $Y_1$ & $Y_0$ & \textbf{Valid ($V$)} \\
 \midrule
@@ -876,7 +876,7 @@ $D_3$ & $D_2$ & $D_1$ & $D_0$ & $Y_1$ & $Y_0$ & \textbf{Valid ($V$)} \\
 0 & 1 & X & X & 1 & 0 & \textbf{1} \\
 1 & X & X & X & 1 & 1 & \textbf{1} \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 
 \textbf{Minimized Logic Equations:}
@@ -1266,7 +1266,7 @@ Digital synthesis engineers use two distinct tabular representations:
 \small
 \caption{Comprehensive Master Excitation Table for All Flip-Flop Architectures}
 \label{tab:master_excitation}
-\begin{tabularx}{\textwidth}{c c c c c c c c}
+\begin{tabular}{c c c c c c c c}
 \toprule
 \textbf{Present State $Q$} & \textbf{Next State $Q^+$} & \textbf{SR: $S$} & \textbf{SR: $R$} & \textbf{JK: $J$} & \textbf{JK: $K$} & \textbf{D: $D$} & \textbf{T: $T$} \\
 \midrule
@@ -1275,7 +1275,7 @@ Digital synthesis engineers use two distinct tabular representations:
 1 & 0 & 0 & 1 & X & 1 & 0 & 1 \\
 1 & 1 & X & 0 & X & 0 & 1 & 0 \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 
 
@@ -1560,7 +1560,7 @@ An \textbf{Addressing Mode} specifies the mathematical rule for determining the 
 \small
 \caption{Comprehensive Summary of Processor Addressing Modes}
 \label{tab:addressing_modes}
-\begin{tabularx}{\textwidth}{l l l c}
+\begin{tabularx}{\textwidth}{l X X c}
 \toprule
 \textbf{Addressing Mode} & \textbf{Effective Address ($EA$)} & \textbf{Assembly Syntax} & \textbf{Data Memory Accesses} \\
 \midrule
@@ -2519,7 +2519,7 @@ Michael J.~Flynn classified all computer architectures into four operational qua
 \small
 \caption{Physical Memory Byte Layout for Value \texttt{0x12345678}}
 \label{tab:endian_layout}
-\begin{tabularx}{0.7\textwidth}{c c c}
+\begin{tabular}{c c c}
 \toprule
 \textbf{Memory Address} & \textbf{Big-Endian Layout} & \textbf{Little-Endian Layout} \\
 \midrule
@@ -2528,7 +2528,7 @@ Michael J.~Flynn classified all computer architectures into four operational qua
 \texttt{0x1002} & \texttt{0x56} & \texttt{0x34} \\
 \texttt{0x1003} & \texttt{0x78} (LSB) & \texttt{0x12} (MSB) \\
 \bottomrule
-\end{tabularx}
+\end{tabular}
 \end{table}
 
 \subsection{Architectural Adoption and Network Byte Order}

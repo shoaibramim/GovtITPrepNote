@@ -125,10 +125,10 @@ The relational data model represents an enterprise domain using formalized mathe
 \item \textbf{Table (Relation):} A two-dimensional grid of data representing a single entity set (e.g., \texttt{Students}, \texttt{Courses}). In formal relational theory, a relation is a subset of the Cartesian product of a list of attribute domains:
 \[ R \subseteq \text{dom}(A_1) \times \text{dom}(A_2) \times \dots \times \text{dom}(A_n) \]
 \item \textbf{Row (Tuple / Record):} A horizontal entry in a relation representing a single, distinct instance of an entity. In a \texttt{Students} table, the tuple:
-\[ \langle 101, \text{'Rahim'}, \text{'CSE'}, 3.75 \rangle \]
-records complete information for student Rahim.
+\[ \langle 101, \text{'Shoaib'}, \text{'CSE'}, 3.75 \rangle \]
+records complete information for student Shoaib.
 \item \textbf{Column (Attribute / Field):} A vertical component of a relation representing a specific named property or characteristic shared by all entities in that relation (e.g., \texttt{Student\_ID}, \texttt{Department}, \texttt{CGPA}).
-\item \textbf{Field Value (Atomic Cell):} The scalar data element located at the exact intersection of a specific row and column (e.g., Rahim's CGPA value \texttt{3.75}).
+\item \textbf{Field Value (Atomic Cell):} The scalar data element located at the exact intersection of a specific row and column (e.g., Shoaib's CGPA value \texttt{3.75}).
 \item \textbf{Domain:} The formal set of all permissible, valid atomic values that can be assigned to a specific attribute. For example:
 \begin{itemize}
 \item $\text{dom}(\text{CGPA}) = \{ x \in \mathbb{R} \mid 0.00 \le x \le 4.00 \}$
@@ -149,15 +149,15 @@ Examiners frequently test candidates on the distinction between the horizontal a
 \centering
 \caption{Worked Relational Dimensions Example: Students Table}
 \label{tab:degree_cardinality_example}
-\begin{tabularx}{\textwidth}{c l c c}
+\begin{tabularx}{0.75\textwidth}{c X c c}
 \toprule
 \textbf{Student\_ID} & \textbf{Name} & \textbf{Department} & \textbf{CGPA} \\
 \midrule
-101 & Rahim & CSE & 3.75 \\
-102 & Karim & EEE & 3.60 \\
-103 & Nabila & CSE & 3.90 \\
-104 & Tania & BBA & 3.80 \\
-105 & Hasan & ME & 3.45 \\
+101 & Shoaib & CSE & 3.75 \\
+102 & Ramim & EEE & 3.60 \\
+103 & Sifat & CSE & 3.90 \\
+104 & Hridoy & BBA & 3.80 \\
+105 & Tonmoy & ME & 3.45 \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -606,7 +606,7 @@ The ANSI/ISO SQL standard defines four transaction isolation levels representing
 \centering
 \caption{ANSI SQL Transaction Isolation Levels and Concurrency Anomalies}
 \label{tab:isolation_levels_matrix}
-\begin{tabularx}{\textwidth}{l c c c c}
+\begin{tabularx}{\textwidth}{l >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
 \toprule
 \textbf{Isolation Level} & \textbf{Dirty Read} & \textbf{Non-Repeatable Read} & \textbf{Phantom Read} & \textbf{Lost Update} \\
 \midrule
@@ -681,19 +681,19 @@ Consider a poorly designed, un-normalized table storing student enrollment, depa
 \centering
 \caption{The Un-Normalized Monolithic Table: Redundancy and Flaws}
 \label{tab:unnormalized_table}
-\begin{tabularx}{\textwidth}{c l c l c l c}
+\begin{tabularx}{\textwidth}{c X c X c X c}
 \toprule
 \textbf{Student\_ID} & \textbf{Name} & \textbf{Dept\_ID} & \textbf{Dept\_Name} & \textbf{Course\_ID} & \textbf{Course\_Name} & \textbf{Grade} \\
 \midrule
-101 & Rahim & 10 & CSE & CSE101 & Programming & A \\
-101 & Rahim & 10 & CSE & CSE102 & Database & A- \\
-102 & Karim & 20 & EEE & CSE101 & Programming & B+ \\
-103 & Nabila & 10 & CSE & CSE101 & Programming & A \\
+101 & Shoaib & 10 & CSE & CSE101 & Programming & A \\
+101 & Shoaib & 10 & CSE & CSE102 & Database & A- \\
+102 & Ramim & 20 & EEE & CSE101 & Programming & B+ \\
+103 & Sifat & 10 & CSE & CSE101 & Programming & A \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-This design creates severe data redundancy: student Rahim's name and department are repeated across multiple rows, and course details are duplicated for every enrolled student. This redundancy directly causes three major database anomalies:
+This design creates severe data redundancy: student Shoaib's name and department are repeated across multiple rows, and course details are duplicated for every enrolled student. This redundancy directly causes three major database anomalies:
 
 \subsection{The Three Classic Database Anomalies}
 
@@ -713,7 +713,7 @@ Occurs when a single real-world fact is stored redundantly in multiple rows, req
 \item \textbf{Deletion Anomaly:}
 Occurs when deleting one specific fact unintentionally destroys unrelated information that should have been preserved.
 \begin{itemize}
-\item \textit{Concrete Example:} Student 102 (Karim) is the sole student enrolled in the \texttt{EEE101} course. If Karim drops out and his record is deleted, the university \textbf{unintentionally deletes all record of the existence of EEE101}!
+\item \textit{Concrete Example:} Student 102 (Ramim) is the sole student enrolled in the \texttt{EEE101} course. If Ramim drops out and his record is deleted, the university \textbf{unintentionally deletes all record of the existence of EEE101}!
 \end{itemize}
 \end{enumerate}
 
@@ -2008,11 +2008,11 @@ Foreign Key / Join & Embedded Document / \texttt{\$lookup} & Denormalized hierar
 \begin{lstlisting}[language=Java]
 {
   "_id": 101,
-  "name": "Rahim",
+  "name": "Shoaib",
   "department": "CSE",
   "cgpa": 3.75,
   "contact": {
-    "email": "rahim@example.com",
+    "email": "shoaib@example.com",
     "phone": "01700000000"
   },
   "courses": ["CSE101", "CSE102", "CSE205"]
@@ -2024,9 +2024,9 @@ Unlike flat relational tuples that require join tables for multivalued attribute
 \begin{itemize}
     \item \textbf{Create (Insert):}
 \begin{lstlisting}[language=Java]
-db.students.insertOne({ _id: 101, name: "Rahim", department: "CSE", cgpa: 3.75 });
+db.students.insertOne({ _id: 101, name: "Shoaib", department: "CSE", cgpa: 3.75 });
 db.students.insertMany([
-  { _id: 102, name: "Karim", department: "EEE", cgpa: 3.60 },
+  { _id: 102, name: "Ramim", department: "EEE", cgpa: 3.60 },
   { _id: 103, name: "Nabila", department: "CSE", cgpa: 3.90 }
 ]);
 \end{lstlisting}
@@ -2860,15 +2860,15 @@ This section contains thirty-three meticulously solved examination problems span
 Consider the relation \texttt{Employees}:
 \begin{table}[htbp]
 \centering
-\begin{tabularx}{0.8\textwidth}{c l c c}
+\begin{tabularx}{0.8\textwidth}{c X c c}
 \toprule
 \textbf{Employee\_ID} & \textbf{Employee\_Name} & \textbf{Department} & \textbf{Salary} \\
 \midrule
-101 & Rahim & IT & 50000 \\
-102 & Karim & HR & 45000 \\
-103 & Nabila & Finance & 60000 \\
-104 & Tania & IT & 55000 \\
-105 & Hasan & HR & 48000 \\
+101 & Shoaib & IT & 50000 \\
+102 & Ramim & HR & 45000 \\
+103 & Sifat & Finance & 60000 \\
+104 & Hridoy & IT & 55000 \\
+105 & Tonmoy & HR & 48000 \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -3051,11 +3051,11 @@ A financial ledger requires the strongest standard isolation guarantee to elimin
 
 \begin{enumerate}[label=\textbf{Problem \arabic*.,resume},leftmargin=1.5cm]
 \item \textbf{Identify 1NF Violation and Remediate:}
-A table has row: $\langle 101, \text{'Rahim'}, \text{'01711111111, 01822222222'} \rangle$. Does it satisfy 1NF? How is it resolved?
+A table has row: $\langle 101, \text{'Shoaib'}, \text{'01711111111, 01822222222'} \rangle$. Does it satisfy 1NF? How is it resolved?
 \begin{itemize}
 \item \textbf{Solution:}
 \textbf{No, it violates 1NF} because \texttt{Phone\_Numbers} contains non-atomic multi-valued data.
-\textbf{Remediation:} Split into two rows: $\langle 101, \text{'Rahim'}, \text{'01711111111'} \rangle$ and $\langle 101, \text{'Rahim'}, \text{'01822222222'} \rangle$.
+\textbf{Remediation:} Split into two rows: $\langle 101, \text{'Shoaib'}, \text{'01711111111'} \rangle$ and $\langle 101, \text{'Shoaib'}, \text{'01822222222'} \rangle$.
 \end{itemize}
 
 \item \textbf{Identify Partial Functional Dependency:}
@@ -3204,16 +3204,16 @@ Consider the relational schema below representing an organizational enterprise:
 \begin{minipage}{0.55\textwidth}
 \centering
 \textbf{Employees}
-\begin{tabularx}{\textwidth}{c l c r}
+\begin{tabularx}{0.75\textwidth}{c X c r}
 \toprule
 \textbf{ID} & \textbf{Name} & \textbf{Dept\_ID} & \textbf{Salary} \\
 \midrule
-101 & Rahim  & 10 & 50,000 \\
-102 & Karim  & 20 & 45,000 \\
-103 & Nabila & 10 & 60,000 \\
-104 & Tania  & 30 & 55,000 \\
-105 & Hasan  & 20 & 48,000 \\
-106 & Sara   & 10 & 70,000 \\
+101 & Shoaib  & 10 & 50,000 \\
+102 & Ramim  & 20 & 45,000 \\
+103 & Sifat & 10 & 60,000 \\
+104 & Hridoy  & 30 & 55,000 \\
+105 & Tonmoy  & 20 & 48,000 \\
+106 & Bappi   & 10 & 70,000 \\
 \bottomrule
 \end{tabularx}
 \end{minipage}
@@ -3221,7 +3221,7 @@ Consider the relational schema below representing an organizational enterprise:
 \begin{minipage}{0.40\textwidth}
 \centering
 \textbf{Departments}
-\begin{tabularx}{\textwidth}{c l}
+\begin{tabularx}{0.6\textwidth}{c X}
 \toprule
 \textbf{Dept\_ID} & \textbf{Dept\_Name} \\
 \midrule
@@ -3399,9 +3399,9 @@ try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
 \begin{enumerate}[resume*]
 \item \textbf{Document Insertion:}
-Insert a document into collection \texttt{students} for student Rahim (ID 101, CSE, CGPA 3.75).
+Insert a document into collection \texttt{students} for student Shoaib (ID 101, CSE, CGPA 3.75).
 \begin{lstlisting}[language=Java]
-db.students.insertOne({ _id: 101, name: "Rahim", department: "CSE", cgpa: 3.75 });
+db.students.insertOne({ _id: 101, name: "Shoaib", department: "CSE", cgpa: 3.75 });
 \end{lstlisting}
 
 \item \textbf{Filter by Equality:}
@@ -3417,7 +3417,7 @@ db.students.find({ cgpa: { $gt: 3.50 } });
 \end{lstlisting}
 
 \item \textbf{Atomic In-Place Update:}
-Update Rahim's CGPA to 3.90 in collection \texttt{students}.
+Update Shoaib's CGPA to 3.90 in collection \texttt{students}.
 \begin{lstlisting}[language=Java]
 db.students.updateOne({ _id: 101 }, { $set: { cgpa: 3.90 } });
 \end{lstlisting}

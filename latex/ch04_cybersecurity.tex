@@ -627,7 +627,7 @@ Where:
 \item $D$ = Decryption operation.
 \end{itemize}
 
-\textbf{Example:} Alice and Bob share a secret key. Alice encrypts a message using that key, and Bob uses the same key to decrypt it.
+\textbf{Example:} Tareq and Zunaeed share a secret key. Tareq encrypts a message using that key, and Zunaeed uses the same key to decrypt it.
 
 \textbf{Common algorithm:} AES (Advanced Encryption Standard).
 
@@ -675,10 +675,10 @@ P=D_{K_{\text{private}}}(C)
 \textbf{Example:}
 
 \begin{enumerate}
-\item Bob shares his public key with Alice.
-\item Alice encrypts a message using Bob's public key.
-\item Alice sends the ciphertext to Bob.
-\item Bob decrypts it using his private key.
+\item Zunaeed shares his public key with Tareq.
+\item Tareq encrypts a message using Zunaeed's public key.
+\item Tareq sends the ciphertext to Zunaeed.
+\item Zunaeed decrypts it using his private key.
 \end{enumerate}
 
 The private key must remain secret.
@@ -4160,7 +4160,7 @@ The \textbf{Advanced Encryption Standard (AES)} is the gold-standard symmetric b
 \centering
 \caption{AES Variant Specifications (FIPS 197)}
 \label{tab:aes_specs}
-\begin{tabularx}{\textwidth}{l c c c c}
+\begin{tabularx}{\textwidth}{l >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
 \toprule
 \textbf{AES Variant} & \textbf{Key Size (bits / bytes)} & \textbf{Block Size (bits / bytes)} & \textbf{Number of Rounds} & \textbf{Round Key Size} \\
 \midrule
@@ -6476,21 +6476,21 @@ An engineer proposes encrypting user passwords in a database using AES-256 so th
 \end{itemize}
 
 \item \textbf{Determine the Correct Asymmetric Keys for RSA:}
-Alice wishes to transmit a confidential encrypted message to Bob using RSA. Which key must Alice use for encryption, and which key must Bob use for decryption?
+Tonmoy wishes to transmit a confidential encrypted message to Likhon using RSA. Which key must Tonmoy use for encryption, and which key must Likhon use for decryption?
 \begin{itemize}
 \item \textbf{Solution:}
 \begin{itemize}
-\item Alice encrypts using \textbf{Bob's Public Key} ($K_{\text{pub-Bob}}$).
-\item Bob decrypts using \textbf{Bob's Private Key} ($K_{\text{priv-Bob}}$).
+\item Tonmoy encrypts using \textbf{Likhon's Public Key} ($K_{\text{pub-Likhon}}$).
+\item Likhon decrypts using \textbf{Likhon's Private Key} ($K_{\text{priv-Likhon}}$).
 \end{itemize}
-\[ \boxed{\text{\textbf{Encryption: Bob's Public Key; Decryption: Bob's Private Key}}} \]
+\[ \boxed{\text{\textbf{Encryption: Likhon's Public Key; Decryption: Likhon's Private Key}}} \]
 \end{itemize}
 
 \item \textbf{Digital Signature Verification Keys:}
-Alice digitally signs a legal government contract using her private key and transmits the contract and signature to Bob. Which key does Bob use to verify Alice's signature?
+Tonmoy digitally signs a legal government contract using his private key and transmits the contract and signature to Likhon. Which key does Likhon use to verify Tonmoy's signature?
 \begin{itemize}
-\item \textbf{Solution:} Bob verifies the signature using \textbf{Alice's Public Key} ($K_{\text{pub-Alice}}$).
-\[ \boxed{\text{\textbf{Alice's Public Key}}} \]
+\item \textbf{Solution:} Likhon verifies the signature using \textbf{Tonmoy's Public Key} ($K_{\text{pub-Tonmoy}}$).
+\[ \boxed{\text{\textbf{Tonmoy's Public Key}}} \]
 \end{itemize}
 
 \item \textbf{Cryptographic Mechanism Matching:}

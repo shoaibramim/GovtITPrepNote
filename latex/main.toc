@@ -7,11 +7,11 @@
 \contentsline {subsubsection}{\numberline {1.1.2.2}Important Conditions}{4}{subsubsection.1.1.2.2}%
 \contentsline {subsubsection}{\numberline {1.1.2.3}Applications of Stacks}{5}{subsubsection.1.1.2.3}%
 \contentsline {subsection}{\numberline {1.1.3}What is a Queue?}{5}{subsection.1.1.3}%
-\contentsline {subsubsection}{\numberline {1.1.3.1}Basic Queue Operations}{5}{subsubsection.1.1.3.1}%
-\contentsline {subsubsection}{\numberline {1.1.3.2}Important Queue Terminology}{5}{subsubsection.1.1.3.2}%
+\contentsline {subsubsection}{\numberline {1.1.3.1}Basic Queue Operations}{6}{subsubsection.1.1.3.1}%
+\contentsline {subsubsection}{\numberline {1.1.3.2}Important Queue Terminology}{6}{subsubsection.1.1.3.2}%
 \contentsline {subsubsection}{\numberline {1.1.3.3}Applications of Queues}{6}{subsubsection.1.1.3.3}%
 \contentsline {section}{\numberline {1.2}Differences Between Stack and Queue}{6}{section.1.2}%
-\contentsline {subsection}{\numberline {1.2.1}The Key Difference: Order of Removal}{6}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.1}The Key Difference: Order of Removal}{7}{subsection.1.2.1}%
 \contentsline {subsection}{\numberline {1.2.2}Can a Stack or Queue Access an Arbitrary Element Directly?}{7}{subsection.1.2.2}%
 \contentsline {subsection}{\numberline {1.2.3}Stack versus Queue: Common Exam Traps}{7}{subsection.1.2.3}%
 \contentsline {section}{\numberline {1.3}Implementing a Queue Using Two Stacks}{8}{section.1.3}%
@@ -37,24 +37,24 @@
 \contentsline {subsubsection}{\numberline {1.5.3.2}Explanation of Implementation Details}{14}{subsubsection.1.5.3.2}%
 \contentsline {section}{\numberline {1.6}Time and Space Complexity of the Two-Stack Queue}{14}{section.1.6}%
 \contentsline {subsection}{\numberline {1.6.1}Complexity Comparison}{14}{subsection.1.6.1}%
-\contentsline {subsection}{\numberline {1.6.2}Why is the Amortized Complexity $O(1)$?}{14}{subsection.1.6.2}%
+\contentsline {subsection}{\numberline {1.6.2}Why is the Amortized Complexity $O(1)$?}{15}{subsection.1.6.2}%
 \contentsline {section}{\numberline {1.7}Comparing Both Two-Stack Approaches}{15}{section.1.7}%
-\contentsline {section}{\numberline {1.8}Common Mistakes and Edge Cases}{16}{section.1.8}%
+\contentsline {section}{\numberline {1.8}Common Mistakes and Edge Cases}{15}{section.1.8}%
 \contentsline {subsection}{\numberline {1.8.1}Mistake 1: Transferring Elements on Every Dequeue}{16}{subsection.1.8.1}%
 \contentsline {subsection}{\numberline {1.8.2}Mistake 2: Checking Only One Stack for Emptiness}{16}{subsection.1.8.2}%
 \contentsline {subsection}{\numberline {1.8.3}Mistake 3: Popping an Empty Stack}{16}{subsection.1.8.3}%
 \contentsline {subsection}{\numberline {1.8.4}Mistake 4: Equating Stack Top to Queue Front}{16}{subsection.1.8.4}%
 \contentsline {subsection}{\numberline {1.8.5}Mistake 5: Stating Dequeue is $O(1)$ Worst-Case}{16}{subsection.1.8.5}%
-\contentsline {section}{\numberline {1.9}Likely Recruitment Examination Questions: Stack and Queue}{16}{section.1.9}%
-\contentsline {section}{\numberline {1.10}Quick Revision Summary}{17}{section.1.10}%
+\contentsline {section}{\numberline {1.9}Likely Recruitment Examination Questions: Stack and Queue}{17}{section.1.9}%
+\contentsline {section}{\numberline {1.10}Quick Revision Summary}{18}{section.1.10}%
 \contentsline {section}{\numberline {1.11}What is a Linked List?}{18}{section.1.11}%
 \contentsline {subsection}{\numberline {1.11.1}Important Terminology}{19}{subsection.1.11.1}%
 \contentsline {section}{\numberline {1.12}Why Use Linked Lists Instead of Arrays?}{19}{section.1.12}%
-\contentsline {subsection}{\numberline {1.12.1}Array versus Linked List Comparison}{19}{subsection.1.12.1}%
-\contentsline {section}{\numberline {1.13}Singly Linked List}{19}{section.1.13}%
+\contentsline {subsection}{\numberline {1.12.1}Array versus Linked List Comparison}{20}{subsection.1.12.1}%
+\contentsline {section}{\numberline {1.13}Singly Linked List}{20}{section.1.13}%
 \contentsline {subsection}{\numberline {1.13.1}Definition and Node Structure}{20}{subsection.1.13.1}%
 \contentsline {subsubsection}{\numberline {1.13.1.1}Main Characteristics}{20}{subsubsection.1.13.1.1}%
-\contentsline {subsection}{\numberline {1.13.2}Traversing a Singly Linked List}{20}{subsection.1.13.2}%
+\contentsline {subsection}{\numberline {1.13.2}Traversing a Singly Linked List}{21}{subsection.1.13.2}%
 \contentsline {subsection}{\numberline {1.13.3}Insertion Operations}{21}{subsection.1.13.3}%
 \contentsline {subsubsection}{\numberline {1.13.3.1}A. Insert at the Beginning (Front)}{21}{subsubsection.1.13.3.1}%
 \contentsline {subsubsection}{\numberline {1.13.3.2}B. Insert at the End (Tail)}{21}{subsubsection.1.13.3.2}%
@@ -74,7 +74,7 @@
 \contentsline {subsection}{\numberline {1.14.5}Applications of Doubly Linked Lists}{25}{subsection.1.14.5}%
 \contentsline {section}{\numberline {1.15}Circular Linked List}{25}{section.1.15}%
 \contentsline {subsection}{\numberline {1.15.1}Definition and Principal Variants}{25}{subsection.1.15.1}%
-\contentsline {subsection}{\numberline {1.15.2}Traversing a Circular Singly Linked List}{25}{subsection.1.15.2}%
+\contentsline {subsection}{\numberline {1.15.2}Traversing a Circular Singly Linked List}{26}{subsection.1.15.2}%
 \contentsline {subsection}{\numberline {1.15.3}Insertion Using a Tail Pointer}{26}{subsection.1.15.3}%
 \contentsline {subsection}{\numberline {1.15.4}Applications of Circular Linked Lists}{27}{subsection.1.15.4}%
 \contentsline {section}{\numberline {1.16}Comparison of Linked-List Types}{27}{section.1.16}%
@@ -85,13 +85,13 @@
 \contentsline {section}{\numberline {1.18}Representing a Binary Heap Using an Array}{29}{section.1.18}%
 \contentsline {subsection}{\numberline {1.18.1}Zero-Based Indexing Formulas}{29}{subsection.1.18.1}%
 \contentsline {subsection}{\numberline {1.18.2}One-Based Indexing Formulas}{29}{subsection.1.18.2}%
-\contentsline {subsubsection}{\numberline {1.18.2.1}Example Mapping}{29}{subsubsection.1.18.2.1}%
+\contentsline {subsubsection}{\numberline {1.18.2.1}Example Mapping}{30}{subsubsection.1.18.2.1}%
 \contentsline {section}{\numberline {1.19}Max-Heap Construction: Step by Step}{30}{section.1.19}%
 \contentsline {subsection}{\numberline {1.19.1}The Heapify (Sift-Down) Operation}{30}{subsection.1.19.1}%
 \contentsline {subsection}{\numberline {1.19.2}Step-by-Step Bottom-Up Construction Trace}{30}{subsection.1.19.2}%
 \contentsline {subsection}{\numberline {1.19.3}Why Does Bottom-Up Heap Construction Take $O(n)$?}{31}{subsection.1.19.3}%
 \contentsline {section}{\numberline {1.20}Max-Heap Insertion}{31}{section.1.20}%
-\contentsline {subsection}{\numberline {1.20.1}Algorithm}{31}{subsection.1.20.1}%
+\contentsline {subsection}{\numberline {1.20.1}Algorithm}{32}{subsection.1.20.1}%
 \contentsline {subsection}{\numberline {1.20.2}Step-by-Step Insertion Example}{32}{subsection.1.20.2}%
 \contentsline {section}{\numberline {1.21}Max-Heap Deletion (Extract Maximum)}{32}{section.1.21}%
 \contentsline {subsection}{\numberline {1.21.1}Algorithm}{32}{subsection.1.21.1}%
@@ -1781,91 +1781,91 @@
 \contentsline {subsection}{\numberline {7.2.6}Software Requirements Specification (SRS) Characteristics}{794}{subsection.7.2.6}%
 \contentsline {subsection}{\numberline {7.2.7}Agile Requirements: User Stories, Acceptance Criteria, and Use Cases}{795}{subsection.7.2.7}%
 \contentsline {subsection}{\numberline {7.2.8}Requirements Traceability Matrix (RTM)}{795}{subsection.7.2.8}%
-\contentsline {subsection}{\numberline {7.2.9}Verification versus Validation}{796}{subsection.7.2.9}%
+\contentsline {subsection}{\numberline {7.2.9}Verification versus Validation}{795}{subsection.7.2.9}%
 \contentsline {section}{\numberline {7.3}System Software versus Application Software}{796}{section.7.3}%
 \contentsline {subsection}{\numberline {7.3.1}Architectural Taxonomy}{796}{subsection.7.3.1}%
 \contentsline {subsection}{\numberline {7.3.2}Language Translators: Compilers, Interpreters, and Assemblers}{796}{subsection.7.3.2}%
 \contentsline {section}{\numberline {7.4}Open Source Software and Licensing Models}{797}{section.7.4}%
 \contentsline {subsection}{\numberline {7.4.1}The Open Source Software (OSS) Paradigm}{797}{subsection.7.4.1}%
 \contentsline {subsection}{\numberline {7.4.2}Freeware versus Shareware versus Open Source versus Public Domain}{797}{subsection.7.4.2}%
-\contentsline {subsection}{\numberline {7.4.3}Major Open-Source License Archetypes}{798}{subsection.7.4.3}%
+\contentsline {subsection}{\numberline {7.4.3}Major Open-Source License Archetypes}{797}{subsection.7.4.3}%
 \contentsline {subsection}{\numberline {7.4.4}Open Source in Government and Enterprise Infrastructure}{798}{subsection.7.4.4}%
 \contentsline {section}{\numberline {7.5}Software Development Methodologies: Plan-Driven versus Agile}{798}{section.7.5}%
-\contentsline {subsection}{\numberline {7.5.1}Methodology Definition and Operational Purpose}{799}{subsection.7.5.1}%
+\contentsline {subsection}{\numberline {7.5.1}Methodology Definition and Operational Purpose}{798}{subsection.7.5.1}%
 \contentsline {subsection}{\numberline {7.5.2}The Agile Manifesto: Values and Principles}{799}{subsection.7.5.2}%
 \contentsline {section}{\numberline {7.6}The Waterfall Model}{799}{section.7.6}%
 \contentsline {subsection}{\numberline {7.6.1}Classical Sequential Architecture}{799}{subsection.7.6.1}%
-\contentsline {subsection}{\numberline {7.6.2}Advantages, Disadvantages, and Best-Fit Scenarios}{799}{subsection.7.6.2}%
+\contentsline {subsection}{\numberline {7.6.2}Advantages, Disadvantages, and Best-Fit Scenarios}{800}{subsection.7.6.2}%
 \contentsline {section}{\numberline {7.7}The V-Model (Verification and Validation Model)}{800}{section.7.7}%
 \contentsline {subsection}{\numberline {7.7.1}Architectural Mapping of Development and Testing}{800}{subsection.7.7.1}%
 \contentsline {subsection}{\numberline {7.7.2}When to Use the V-Model}{801}{subsection.7.7.2}%
 \contentsline {section}{\numberline {7.8}Iterative and Incremental Development Models}{801}{section.7.8}%
 \contentsline {subsection}{\numberline {7.8.1}Conceptual Distinction: Iterative versus Incremental}{801}{subsection.7.8.1}%
 \contentsline {subsection}{\numberline {7.8.2}Synergistic Integration in Modern Engineering}{801}{subsection.7.8.2}%
-\contentsline {section}{\numberline {7.9}The Prototyping Model}{802}{section.7.9}%
-\contentsline {subsection}{\numberline {7.9.1}Mechanisms and Classification}{802}{subsection.7.9.1}%
+\contentsline {section}{\numberline {7.9}The Prototyping Model}{801}{section.7.9}%
+\contentsline {subsection}{\numberline {7.9.1}Mechanisms and Classification}{801}{subsection.7.9.1}%
 \contentsline {subsection}{\numberline {7.9.2}Engineering Pitfalls of Prototyping}{802}{subsection.7.9.2}%
 \contentsline {section}{\numberline {7.10}The Spiral Model (Risk-Driven Engineering)}{802}{section.7.10}%
 \contentsline {subsection}{\numberline {7.10.1}The Four Quadrants of the Spiral}{802}{subsection.7.10.1}%
-\contentsline {subsection}{\numberline {7.10.2}When to Use the Spiral Model}{803}{subsection.7.10.2}%
+\contentsline {subsection}{\numberline {7.10.2}When to Use the Spiral Model}{802}{subsection.7.10.2}%
 \contentsline {section}{\numberline {7.11}Rapid Application Development (RAD)}{803}{section.7.11}%
 \contentsline {subsection}{\numberline {7.11.1}Architecture and Core Phases}{803}{subsection.7.11.1}%
 \contentsline {section}{\numberline {7.12}The Big Bang Model}{803}{section.7.12}%
 \contentsline {subsection}{\numberline {7.12.1}Characteristics and Examination Traps}{803}{subsection.7.12.1}%
 \contentsline {section}{\numberline {7.13}Agile Software Development Principles}{803}{section.7.13}%
-\contentsline {subsection}{\numberline {7.13.1}The Agile Philosophy: Adaptability over Dogma}{804}{subsection.7.13.1}%
+\contentsline {subsection}{\numberline {7.13.1}The Agile Philosophy: Adaptability over Dogma}{803}{subsection.7.13.1}%
 \contentsline {subsection}{\numberline {7.13.2}The Twelve Principles of Agile Software}{804}{subsection.7.13.2}%
 \contentsline {section}{\numberline {7.14}The Scrum Framework: Roles, Events, Artifacts, and Velocity}{804}{section.7.14}%
 \contentsline {subsection}{\numberline {7.14.1}Foundational Empiricism and Core Values}{804}{subsection.7.14.1}%
 \contentsline {subsection}{\numberline {7.14.2}The Scrum Team Structure}{805}{subsection.7.14.2}%
 \contentsline {subsection}{\numberline {7.14.3}The Five Formal Scrum Events}{805}{subsection.7.14.3}%
 \contentsline {subsection}{\numberline {7.14.4}Scrum Artifacts and Their Explicit Commitments}{805}{subsection.7.14.4}%
-\contentsline {subsection}{\numberline {7.14.5}Scrum versus Kanban: Flow Management and WIP Limits}{807}{subsection.7.14.5}%
+\contentsline {subsection}{\numberline {7.14.5}Scrum versus Kanban: Flow Management and WIP Limits}{805}{subsection.7.14.5}%
 \contentsline {subsection}{\numberline {7.14.6}Extreme Programming (XP) and Core Engineering Practices}{807}{subsection.7.14.6}%
 \contentsline {subsection}{\numberline {7.14.7}Analytical and Numerical Problems in Agile and Scrum}{807}{subsection.7.14.7}%
 \contentsline {section}{\numberline {7.15}The Software Development Life Cycle (SDLC) Phases}{808}{section.7.15}%
 \contentsline {subsection}{\numberline {7.15.1}The Eight Canonical SDLC Phases}{808}{subsection.7.15.1}%
-\contentsline {subsection}{\numberline {7.15.2}Phase 1: TELOS Feasibility Framework and Economic Payback}{809}{subsection.7.15.2}%
+\contentsline {subsection}{\numberline {7.15.2}Phase 1: TELOS Feasibility Framework and Economic Payback}{808}{subsection.7.15.2}%
 \contentsline {subsection}{\numberline {7.15.3}Phase 7: Maintenance Taxonomies}{809}{subsection.7.15.3}%
 \contentsline {section}{\numberline {7.16}Comparative Analysis and Selection of SDLC Models}{809}{section.7.16}%
 \contentsline {subsection}{\numberline {7.16.1}Master Comparison Matrix of SDLC Models}{809}{subsection.7.16.1}%
 \contentsline {subsection}{\numberline {7.16.2}Strategic Decision Framework for SDLC Selection}{809}{subsection.7.16.2}%
-\contentsline {section}{\numberline {7.17}Software Design Principles, Modularity, and Architecture}{811}{section.7.17}%
-\contentsline {subsection}{\numberline {7.17.1}Design Transformation and Abstraction Tiers}{811}{subsection.7.17.1}%
-\contentsline {subsection}{\numberline {7.17.2}The Golden Rules of Modularity: Cohesion and Coupling}{811}{subsection.7.17.2}%
+\contentsline {section}{\numberline {7.17}Software Design Principles, Modularity, and Architecture}{810}{section.7.17}%
+\contentsline {subsection}{\numberline {7.17.1}Design Transformation and Abstraction Tiers}{810}{subsection.7.17.1}%
+\contentsline {subsection}{\numberline {7.17.2}The Golden Rules of Modularity: Cohesion and Coupling}{810}{subsection.7.17.2}%
 \contentsline {subsubsection}{\numberline {7.17.2.1}Cohesion: The Internal Strength of a Module}{811}{subsubsection.7.17.2.1}%
-\contentsline {subsubsection}{\numberline {7.17.2.2}Coupling: The Degree of Inter-Module Dependency}{813}{subsubsection.7.17.2.2}%
-\contentsline {subsection}{\numberline {7.17.3}Fundamental Design Principles: DRY, KISS, YAGNI, and Separation of Concerns}{813}{subsection.7.17.3}%
-\contentsline {subsection}{\numberline {7.17.4}The SOLID Principles of Object-Oriented Design}{814}{subsection.7.17.4}%
-\contentsline {subsection}{\numberline {7.17.5}Gang of Four (GoF) Design Patterns Taxonomy}{815}{subsection.7.17.5}%
-\contentsline {section}{\numberline {7.18}Software Testing Levels, Techniques, and Defect Classification}{815}{section.7.18}%
-\contentsline {subsection}{\numberline {7.18.1}Terminology: Error, Defect, Bug, and Failure}{815}{subsection.7.18.1}%
+\contentsline {subsubsection}{\numberline {7.17.2.2}Coupling: The Degree of Inter-Module Dependency}{811}{subsubsection.7.17.2.2}%
+\contentsline {subsection}{\numberline {7.17.3}Fundamental Design Principles: DRY, KISS, YAGNI, and Separation of Concerns}{811}{subsection.7.17.3}%
+\contentsline {subsection}{\numberline {7.17.4}The SOLID Principles of Object-Oriented Design}{813}{subsection.7.17.4}%
+\contentsline {subsection}{\numberline {7.17.5}Gang of Four (GoF) Design Patterns Taxonomy}{814}{subsection.7.17.5}%
+\contentsline {section}{\numberline {7.18}Software Testing Levels, Techniques, and Defect Classification}{814}{section.7.18}%
+\contentsline {subsection}{\numberline {7.18.1}Terminology: Error, Defect, Bug, and Failure}{814}{subsection.7.18.1}%
 \contentsline {subsection}{\numberline {7.18.2}The Four Standard Levels of Software Testing}{816}{subsection.7.18.2}%
 \contentsline {subsection}{\numberline {7.18.3}Black-Box versus White-Box versus Gray-Box Testing}{816}{subsection.7.18.3}%
-\contentsline {subsection}{\numberline {7.18.4}Black-Box Testing Methodologies}{816}{subsection.7.18.4}%
+\contentsline {subsection}{\numberline {7.18.4}Black-Box Testing Methodologies}{817}{subsection.7.18.4}%
 \contentsline {subsection}{\numberline {7.18.5}White-Box Structural Testing and Cyclomatic Complexity}{817}{subsection.7.18.5}%
 \contentsline {subsection}{\numberline {7.18.6}Specialized Testing Classifications}{818}{subsection.7.18.6}%
 \contentsline {subsection}{\numberline {7.18.7}Performance Testing Methodologies and Latency Percentiles}{818}{subsection.7.18.7}%
-\contentsline {subsection}{\numberline {7.18.8}Defect Severity versus Defect Priority}{819}{subsection.7.18.8}%
-\contentsline {section}{\numberline {7.19}Software Quality Assurance and Quality Control}{819}{section.7.19}%
-\contentsline {subsection}{\numberline {7.19.1}Process Assurance versus Product Inspection}{819}{subsection.7.19.1}%
+\contentsline {subsection}{\numberline {7.18.8}Defect Severity versus Defect Priority}{818}{subsection.7.18.8}%
+\contentsline {section}{\numberline {7.19}Software Quality Assurance and Quality Control}{820}{section.7.19}%
+\contentsline {subsection}{\numberline {7.19.1}Process Assurance versus Product Inspection}{820}{subsection.7.19.1}%
 \contentsline {subsection}{\numberline {7.19.2}Software Quality Models: ISO/IEC 25010}{820}{subsection.7.19.2}%
 \contentsline {section}{\numberline {7.20}Software Project Management: Estimation, PERT, CPM, and COCOMO}{820}{section.7.20}%
 \contentsline {subsection}{\numberline {7.20.1}Project Constraints and the Iron Triangle}{820}{subsection.7.20.1}%
-\contentsline {subsection}{\numberline {7.20.2}Work Breakdown Structure (WBS) and Gantt Scheduling}{820}{subsection.7.20.2}%
+\contentsline {subsection}{\numberline {7.20.2}Work Breakdown Structure (WBS) and Gantt Scheduling}{821}{subsection.7.20.2}%
 \contentsline {subsection}{\numberline {7.20.3}Program Evaluation and Review Technique (PERT) Mathematics}{821}{subsection.7.20.3}%
-\contentsline {subsection}{\numberline {7.20.4}The Critical Path Method (CPM)}{821}{subsection.7.20.4}%
+\contentsline {subsection}{\numberline {7.20.4}The Critical Path Method (CPM)}{822}{subsection.7.20.4}%
 \contentsline {subsection}{\numberline {7.20.5}Software Risk Management and Exposure Formulations}{822}{subsection.7.20.5}%
 \contentsline {subsection}{\numberline {7.20.6}Parametric Cost Estimation: The Basic COCOMO Model}{823}{subsection.7.20.6}%
 \contentsline {section}{\numberline {7.21}Configuration Management, Version Control, and CI/CD}{823}{section.7.21}%
-\contentsline {subsection}{\numberline {7.21.1}Software Configuration Management (SCM) Lifecycle}{823}{subsection.7.21.1}%
+\contentsline {subsection}{\numberline {7.21.1}Software Configuration Management (SCM) Lifecycle}{824}{subsection.7.21.1}%
 \contentsline {subsection}{\numberline {7.21.2}Centralized (CVCS) versus Distributed Version Control (DVCS)}{824}{subsection.7.21.2}%
 \contentsline {subsection}{\numberline {7.21.3}Essential Git Concepts, Object Model, and Operations}{824}{subsection.7.21.3}%
 \contentsline {subsection}{\numberline {7.21.4}Continuous Integration (CI), Delivery (CD), and Deployment}{825}{subsection.7.21.4}%
 \contentsline {section}{\numberline {7.22}DevOps Engineering, Infrastructure as Code, and Observability}{825}{section.7.22}%
 \contentsline {subsection}{\numberline {7.22.1}The DevOps Philosophy and Cultural Synthesis}{825}{subsection.7.22.1}%
 \contentsline {subsection}{\numberline {7.22.2}The Continuous DevOps Infinity Loop}{825}{subsection.7.22.2}%
-\contentsline {subsection}{\numberline {7.22.3}Infrastructure as Code (IaC)}{825}{subsection.7.22.3}%
+\contentsline {subsection}{\numberline {7.22.3}Infrastructure as Code (IaC)}{826}{subsection.7.22.3}%
 \contentsline {subsection}{\numberline {7.22.4}Monitoring versus Observability: The Three Pillars}{826}{subsection.7.22.4}%
 \contentsline {section}{\numberline {7.23}Web Application Architecture: Multi-Tier Design}{826}{section.7.23}%
 \contentsline {subsection}{\numberline {7.23.1}Client-Server Architectural Foundations}{826}{subsection.7.23.1}%
@@ -2099,150 +2099,150 @@
 \contentsline {subsection}{\numberline {9.2.3}Core CPU Registers}{950}{subsection.9.2.3}%
 \contentsline {subsection}{\numberline {9.2.4}System Bus Architecture}{952}{subsection.9.2.4}%
 \contentsline {subsection}{\numberline {9.2.5}Bus Width and Addressable Memory Calculation}{952}{subsection.9.2.5}%
-\contentsline {subsection}{\numberline {9.2.6}Clock Speed, Clock Period, and Cycle Time}{953}{subsection.9.2.6}%
+\contentsline {subsection}{\numberline {9.2.6}Clock Speed, Clock Period, and Cycle Time}{952}{subsection.9.2.6}%
 \contentsline {subsection}{\numberline {9.2.7}The Instruction Execution Cycle}{953}{subsection.9.2.7}%
 \contentsline {subsection}{\numberline {9.2.8}Von Neumann versus Harvard Architecture}{953}{subsection.9.2.8}%
-\contentsline {subsection}{\numberline {9.2.9}The Von Neumann Bottleneck}{954}{subsection.9.2.9}%
+\contentsline {subsection}{\numberline {9.2.9}The Von Neumann Bottleneck}{953}{subsection.9.2.9}%
 \contentsline {section}{\numberline {9.3}Number Systems, Signed Representations, and Binary Arithmetic}{954}{section.9.3}%
 \contentsline {subsection}{\numberline {9.3.1}Positional Radix Representation}{954}{subsection.9.3.1}%
-\contentsline {subsection}{\numberline {9.3.2}Radix Conversion Procedures}{955}{subsection.9.3.2}%
+\contentsline {subsection}{\numberline {9.3.2}Radix Conversion Procedures}{954}{subsection.9.3.2}%
 \contentsline {subsection}{\numberline {9.3.3}Signed Integer Representations}{955}{subsection.9.3.3}%
-\contentsline {subsection}{\numberline {9.3.4}Two's Complement Subtraction}{956}{subsection.9.3.4}%
+\contentsline {subsection}{\numberline {9.3.4}Two's Complement Subtraction}{955}{subsection.9.3.4}%
 \contentsline {subsection}{\numberline {9.3.5}Arithmetic Overflow versus Hardware Carry}{956}{subsection.9.3.5}%
 \contentsline {subsection}{\numberline {9.3.6}Specialized Binary Codes}{957}{subsection.9.3.6}%
 \contentsline {section}{\numberline {9.4}Boolean Algebra Fundamentals, Axiomatic Laws, and Minimization}{957}{section.9.4}%
-\contentsline {subsection}{\numberline {9.4.1}Boolean Variables and Fundamental Operations}{958}{subsection.9.4.1}%
+\contentsline {subsection}{\numberline {9.4.1}Boolean Variables and Fundamental Operations}{957}{subsection.9.4.1}%
 \contentsline {subsection}{\numberline {9.4.2}Fundamental Laws and Theorems of Boolean Algebra}{958}{subsection.9.4.2}%
 \contentsline {subsection}{\numberline {9.4.3}De Morgan's Theorems}{959}{subsection.9.4.3}%
 \contentsline {subsection}{\numberline {9.4.4}The Principle of Duality}{959}{subsection.9.4.4}%
-\contentsline {subsection}{\numberline {9.4.5}Algebraic Simplification Examples}{960}{subsection.9.4.5}%
+\contentsline {subsection}{\numberline {9.4.5}Algebraic Simplification Examples}{959}{subsection.9.4.5}%
 \contentsline {section}{\numberline {9.5}Standard and Derived Digital Logic Gates}{960}{section.9.5}%
 \contentsline {subsection}{\numberline {9.5.1}Fundamental and Derived Logic Gates}{960}{subsection.9.5.1}%
 \contentsline {subsection}{\numberline {9.5.2}Properties and Applications of XOR and XNOR Gates}{960}{subsection.9.5.2}%
-\contentsline {section}{\numberline {9.6}Universal Gates: NAND and NOR Logic Syntheses}{962}{section.9.6}%
-\contentsline {subsection}{\numberline {9.6.1}Functional Completeness Proof: The NAND Gate}{962}{subsection.9.6.1}%
-\contentsline {subsection}{\numberline {9.6.2}Functional Completeness Proof: The NOR Gate}{963}{subsection.9.6.2}%
-\contentsline {section}{\numberline {9.7}Combinational Logic Circuits}{963}{section.9.7}%
+\contentsline {section}{\numberline {9.6}Universal Gates: NAND and NOR Logic Syntheses}{961}{section.9.6}%
+\contentsline {subsection}{\numberline {9.6.1}Functional Completeness Proof: The NAND Gate}{961}{subsection.9.6.1}%
+\contentsline {subsection}{\numberline {9.6.2}Functional Completeness Proof: The NOR Gate}{962}{subsection.9.6.2}%
+\contentsline {section}{\numberline {9.7}Combinational Logic Circuits}{962}{section.9.7}%
 \contentsline {subsection}{\numberline {9.7.1}Definition of Combinational Logic}{963}{subsection.9.7.1}%
-\contentsline {subsection}{\numberline {9.7.2}Systematic Combinational Design Workflow}{964}{subsection.9.7.2}%
+\contentsline {subsection}{\numberline {9.7.2}Systematic Combinational Design Workflow}{963}{subsection.9.7.2}%
 \contentsline {section}{\numberline {9.8}Half Adder Circuit Design}{964}{section.9.8}%
 \contentsline {subsection}{\numberline {9.8.1}Functional Definition and Truth Table}{964}{subsection.9.8.1}%
 \contentsline {subsection}{\numberline {9.8.2}Boolean Equations and Gate Implementation}{964}{subsection.9.8.2}%
-\contentsline {section}{\numberline {9.9}Full Adder Circuit Design}{965}{section.9.9}%
-\contentsline {subsection}{\numberline {9.9.1}Functional Definition and Truth Table}{965}{subsection.9.9.1}%
+\contentsline {section}{\numberline {9.9}Full Adder Circuit Design}{964}{section.9.9}%
+\contentsline {subsection}{\numberline {9.9.1}Functional Definition and Truth Table}{964}{subsection.9.9.1}%
 \contentsline {subsection}{\numberline {9.9.2}Boolean Expressions and K-Map Simplification}{965}{subsection.9.9.2}%
-\contentsline {subsection}{\numberline {9.9.3}Synthesizing a Full Adder Using Two Half Adders}{966}{subsection.9.9.3}%
-\contentsline {section}{\numberline {9.10}Subtractors, Multi-Bit Adders, and Comparators}{966}{section.9.10}%
-\contentsline {subsection}{\numberline {9.10.1}Half and Full Subtractors}{966}{subsection.9.10.1}%
+\contentsline {subsection}{\numberline {9.9.3}Synthesizing a Full Adder Using Two Half Adders}{965}{subsection.9.9.3}%
+\contentsline {section}{\numberline {9.10}Subtractors, Multi-Bit Adders, and Comparators}{965}{section.9.10}%
+\contentsline {subsection}{\numberline {9.10.1}Half and Full Subtractors}{965}{subsection.9.10.1}%
 \contentsline {subsection}{\numberline {9.10.2}The 4-Bit Parallel Adder/Subtractor Circuit}{966}{subsection.9.10.2}%
-\contentsline {subsection}{\numberline {9.10.3}Ripple Carry Adder (RCA) versus Carry Lookahead Adder (CLA)}{967}{subsection.9.10.3}%
+\contentsline {subsection}{\numberline {9.10.3}Ripple Carry Adder (RCA) versus Carry Lookahead Adder (CLA)}{966}{subsection.9.10.3}%
 \contentsline {subsection}{\numberline {9.10.4}Magnitude Comparator}{967}{subsection.9.10.4}%
-\contentsline {section}{\numberline {9.11}Encoders, Priority Encoders, and Decoders}{968}{section.9.11}%
-\contentsline {subsection}{\numberline {9.11.1}Binary Encoders}{968}{subsection.9.11.1}%
-\contentsline {subsection}{\numberline {9.11.2}Priority Encoders}{968}{subsection.9.11.2}%
+\contentsline {section}{\numberline {9.11}Encoders, Priority Encoders, and Decoders}{967}{section.9.11}%
+\contentsline {subsection}{\numberline {9.11.1}Binary Encoders}{967}{subsection.9.11.1}%
+\contentsline {subsection}{\numberline {9.11.2}Priority Encoders}{967}{subsection.9.11.2}%
 \contentsline {subsection}{\numberline {9.11.3}Binary Decoders}{968}{subsection.9.11.3}%
-\contentsline {section}{\numberline {9.12}Multiplexers (MUX) and Demultiplexers (DEMUX)}{969}{section.9.12}%
-\contentsline {subsection}{\numberline {9.12.1}Multiplexer (Data Selector)}{969}{subsection.9.12.1}%
-\contentsline {subsection}{\numberline {9.12.2}Synthesizing Arbitrary Logic Functions Using Multiplexers}{969}{subsection.9.12.2}%
+\contentsline {section}{\numberline {9.12}Multiplexers (MUX) and Demultiplexers (DEMUX)}{968}{section.9.12}%
+\contentsline {subsection}{\numberline {9.12.1}Multiplexer (Data Selector)}{968}{subsection.9.12.1}%
+\contentsline {subsection}{\numberline {9.12.2}Synthesizing Arbitrary Logic Functions Using Multiplexers}{968}{subsection.9.12.2}%
 \contentsline {subsection}{\numberline {9.12.3}Demultiplexer (Data Distributor)}{969}{subsection.9.12.3}%
 \contentsline {section}{\numberline {9.13}Tri-State Buffers and Bus Contention}{969}{section.9.13}%
-\contentsline {subsection}{\numberline {9.13.1}The Three Operational Logic States}{970}{subsection.9.13.1}%
-\contentsline {subsection}{\numberline {9.13.2}Preventing Bus Contention on Shared System Buses}{970}{subsection.9.13.2}%
-\contentsline {section}{\numberline {9.14}Karnaugh Maps (K-Maps), Canonical Forms, and Boolean Simplification}{970}{section.9.14}%
+\contentsline {subsection}{\numberline {9.13.1}The Three Operational Logic States}{969}{subsection.9.13.1}%
+\contentsline {subsection}{\numberline {9.13.2}Preventing Bus Contention on Shared System Buses}{969}{subsection.9.13.2}%
+\contentsline {section}{\numberline {9.14}Karnaugh Maps (K-Maps), Canonical Forms, and Boolean Simplification}{969}{section.9.14}%
 \contentsline {subsection}{\numberline {9.14.1}Canonical Boolean Forms: Minterms and Maxterms}{970}{subsection.9.14.1}%
-\contentsline {subsection}{\numberline {9.14.2}Why Gray Code Is Mandatory in K-Maps}{971}{subsection.9.14.2}%
+\contentsline {subsection}{\numberline {9.14.2}Why Gray Code Is Mandatory in K-Maps}{970}{subsection.9.14.2}%
 \contentsline {subsection}{\numberline {9.14.3}K-Map Structural Topologies and Cell Adjacency}{971}{subsection.9.14.3}%
-\contentsline {subsection}{\numberline {9.14.4}Rigorous K-Map Grouping Rules}{972}{subsection.9.14.4}%
+\contentsline {subsection}{\numberline {9.14.4}Rigorous K-Map Grouping Rules}{971}{subsection.9.14.4}%
 \contentsline {subsection}{\numberline {9.14.5}Don't-Care Conditions ($d$ or $X$)}{972}{subsection.9.14.5}%
-\contentsline {subsection}{\numberline {9.14.6}Worked K-Map Simplification Examples}{973}{subsection.9.14.6}%
+\contentsline {subsection}{\numberline {9.14.6}Worked K-Map Simplification Examples}{972}{subsection.9.14.6}%
 \contentsline {subsection}{\numberline {9.14.7}Essential Examination Traps in K-Maps}{973}{subsection.9.14.7}%
-\contentsline {section}{\numberline {9.15}Sequential Logic Fundamentals}{974}{section.9.15}%
-\contentsline {subsection}{\numberline {9.15.1}Synchronous versus Asynchronous Sequential Systems}{974}{subsection.9.15.1}%
-\contentsline {section}{\numberline {9.16}Latches: Unclocked Bistable Storage Elements}{974}{section.9.16}%
+\contentsline {section}{\numberline {9.15}Sequential Logic Fundamentals}{973}{section.9.15}%
+\contentsline {subsection}{\numberline {9.15.1}Synchronous versus Asynchronous Sequential Systems}{973}{subsection.9.15.1}%
+\contentsline {section}{\numberline {9.16}Latches: Unclocked Bistable Storage Elements}{973}{section.9.16}%
 \contentsline {subsection}{\numberline {9.16.1}The Cross-Coupled NOR SR Latch}{974}{subsection.9.16.1}%
 \contentsline {subsection}{\numberline {9.16.2}The Cross-Coupled NAND $\overline {\text {S}}\,\overline {\text {R}}$ Latch}{974}{subsection.9.16.2}%
-\contentsline {subsection}{\numberline {9.16.3}Gated D Latch (Transparent Latch)}{975}{subsection.9.16.3}%
-\contentsline {section}{\numberline {9.17}Flip-Flops, Characteristic Equations, and Excitation Tables}{975}{section.9.17}%
-\contentsline {subsection}{\numberline {9.17.1}Comparative Analysis: Latch versus Flip-Flop}{975}{subsection.9.17.1}%
-\contentsline {subsection}{\numberline {9.17.2}The Four Standard Flip-Flop Types}{975}{subsection.9.17.2}%
-\contentsline {subsection}{\numberline {9.17.3}Characteristic Tables and Excitation Tables}{976}{subsection.9.17.3}%
+\contentsline {subsection}{\numberline {9.16.3}Gated D Latch (Transparent Latch)}{974}{subsection.9.16.3}%
+\contentsline {section}{\numberline {9.17}Flip-Flops, Characteristic Equations, and Excitation Tables}{974}{section.9.17}%
+\contentsline {subsection}{\numberline {9.17.1}Comparative Analysis: Latch versus Flip-Flop}{974}{subsection.9.17.1}%
+\contentsline {subsection}{\numberline {9.17.2}The Four Standard Flip-Flop Types}{974}{subsection.9.17.2}%
+\contentsline {subsection}{\numberline {9.17.3}Characteristic Tables and Excitation Tables}{975}{subsection.9.17.3}%
 \contentsline {section}{\numberline {9.18}Timing Parameters, Metastability, and the Race-Around Condition}{976}{section.9.18}%
 \contentsline {subsection}{\numberline {9.18.1}Critical Dynamic Timing Specifications}{976}{subsection.9.18.1}%
-\contentsline {subsection}{\numberline {9.18.2}Metastability}{977}{subsection.9.18.2}%
-\contentsline {subsection}{\numberline {9.18.3}The Race-Around Condition and the Master-Slave Solution}{977}{subsection.9.18.3}%
+\contentsline {subsection}{\numberline {9.18.2}Metastability}{976}{subsection.9.18.2}%
+\contentsline {subsection}{\numberline {9.18.3}The Race-Around Condition and the Master-Slave Solution}{976}{subsection.9.18.3}%
 \contentsline {section}{\numberline {9.19}Asynchronous and Synchronous Counters}{977}{section.9.19}%
-\contentsline {subsection}{\numberline {9.19.1}Asynchronous (Ripple) Counters}{978}{subsection.9.19.1}%
-\contentsline {subsection}{\numberline {9.19.2}Synchronous Counters}{978}{subsection.9.19.2}%
-\contentsline {subsection}{\numberline {9.19.3}Specialized Shift Register Counters}{978}{subsection.9.19.3}%
-\contentsline {section}{\numberline {9.20}Shift Registers}{979}{section.9.20}%
-\contentsline {section}{\numberline {9.21}Finite State Machines: Mealy and Moore Models}{979}{section.9.21}%
+\contentsline {subsection}{\numberline {9.19.1}Asynchronous (Ripple) Counters}{977}{subsection.9.19.1}%
+\contentsline {subsection}{\numberline {9.19.2}Synchronous Counters}{977}{subsection.9.19.2}%
+\contentsline {subsection}{\numberline {9.19.3}Specialized Shift Register Counters}{977}{subsection.9.19.3}%
+\contentsline {section}{\numberline {9.20}Shift Registers}{978}{section.9.20}%
+\contentsline {section}{\numberline {9.21}Finite State Machines: Mealy and Moore Models}{978}{section.9.21}%
 \contentsline {subsection}{\numberline {9.21.1}Moore Machine versus Mealy Machine}{979}{subsection.9.21.1}%
-\contentsline {section}{\numberline {9.22}Instruction Set Architecture and Machine Instructions}{980}{section.9.22}%
-\contentsline {subsection}{\numberline {9.22.1}Machine Instruction Formats}{980}{subsection.9.22.1}%
+\contentsline {section}{\numberline {9.22}Instruction Set Architecture and Machine Instructions}{979}{section.9.22}%
+\contentsline {subsection}{\numberline {9.22.1}Machine Instruction Formats}{979}{subsection.9.22.1}%
 \contentsline {subsection}{\numberline {9.22.2}Instruction Architectural Styles: Address Count}{980}{subsection.9.22.2}%
-\contentsline {subsection}{\numberline {9.22.3}Instruction Categories}{981}{subsection.9.22.3}%
-\contentsline {section}{\numberline {9.23}Addressing Modes and Effective Address Calculations}{981}{section.9.23}%
+\contentsline {subsection}{\numberline {9.22.3}Instruction Categories}{980}{subsection.9.22.3}%
+\contentsline {section}{\numberline {9.23}Addressing Modes and Effective Address Calculations}{980}{section.9.23}%
 \contentsline {subsection}{\numberline {9.23.1}Comprehensive Catalog of Addressing Modes}{981}{subsection.9.23.1}%
 \contentsline {section}{\numberline {9.24}Stacks, Subroutines, and Control Flow Management}{982}{section.9.24}%
-\contentsline {subsection}{\numberline {9.24.1}Call Stack Architecture}{983}{subsection.9.24.1}%
-\contentsline {subsection}{\numberline {9.24.2}Subroutine Call (\texttt {CALL}) and Return (\texttt {RET}) Protocol}{983}{subsection.9.24.2}%
-\contentsline {section}{\numberline {9.25}Input/Output Organization and Data Transfer Paradigms}{984}{section.9.25}%
+\contentsline {subsection}{\numberline {9.24.1}Call Stack Architecture}{982}{subsection.9.24.1}%
+\contentsline {subsection}{\numberline {9.24.2}Subroutine Call (\texttt {CALL}) and Return (\texttt {RET}) Protocol}{982}{subsection.9.24.2}%
+\contentsline {section}{\numberline {9.25}Input/Output Organization and Data Transfer Paradigms}{983}{section.9.25}%
 \contentsline {subsection}{\numberline {9.25.1}DMA Operating Modes}{984}{subsection.9.25.1}%
 \contentsline {subsection}{\numberline {9.25.2}Memory-Mapped I/O versus Isolated (Port-Mapped) I/O}{984}{subsection.9.25.2}%
 \contentsline {section}{\numberline {9.26}Pipelining, Datapath Hazards, and Performance Optimization}{984}{section.9.26}%
-\contentsline {subsection}{\numberline {9.26.1}The Classical 5-Stage RISC Pipeline}{985}{subsection.9.26.1}%
+\contentsline {subsection}{\numberline {9.26.1}The Classical 5-Stage RISC Pipeline}{984}{subsection.9.26.1}%
 \contentsline {subsection}{\numberline {9.26.2}Theoretical Pipeline Speedup Formula}{985}{subsection.9.26.2}%
-\contentsline {subsection}{\numberline {9.26.3}Pipeline Hazards}{986}{subsection.9.26.3}%
-\contentsline {subsubsection}{\numberline {9.26.3.1}A. Structural Hazards (Resource Conflicts)}{986}{subsubsection.9.26.3.1}%
+\contentsline {subsection}{\numberline {9.26.3}Pipeline Hazards}{985}{subsection.9.26.3}%
+\contentsline {subsubsection}{\numberline {9.26.3.1}A. Structural Hazards (Resource Conflicts)}{985}{subsubsection.9.26.3.1}%
 \contentsline {subsubsection}{\numberline {9.26.3.2}B. Data Hazards (Data Dependencies)}{986}{subsubsection.9.26.3.2}%
-\contentsline {subsubsection}{\numberline {9.26.3.3}C. Control Hazards (Branch Hazards)}{987}{subsubsection.9.26.3.3}%
+\contentsline {subsubsection}{\numberline {9.26.3.3}C. Control Hazards (Branch Hazards)}{986}{subsubsection.9.26.3.3}%
 \contentsline {section}{\numberline {9.27}RISC versus CISC Architectural Philosophies}{987}{section.9.27}%
 \contentsline {subsection}{\numberline {9.27.1}Architectural Core Principles}{987}{subsection.9.27.1}%
-\contentsline {subsection}{\numberline {9.27.2}Modern Architectural Convergence}{988}{subsection.9.27.2}%
-\contentsline {section}{\numberline {9.28}Microprocessors versus Microcontrollers}{988}{section.9.28}%
-\contentsline {subsection}{\numberline {9.28.1}Architectural Distinctions}{988}{subsection.9.28.1}%
-\contentsline {section}{\numberline {9.29}Intel 8085 versus 8086 Microprocessors and Memory Segmentation}{989}{section.9.29}%
-\contentsline {subsection}{\numberline {9.29.1}The Intel 8085 Microprocessor}{989}{subsection.9.29.1}%
-\contentsline {subsection}{\numberline {9.29.2}The Intel 8086 Microprocessor}{990}{subsection.9.29.2}%
+\contentsline {subsection}{\numberline {9.27.2}Modern Architectural Convergence}{987}{subsection.9.27.2}%
+\contentsline {section}{\numberline {9.28}Microprocessors versus Microcontrollers}{987}{section.9.28}%
+\contentsline {subsection}{\numberline {9.28.1}Architectural Distinctions}{987}{subsection.9.28.1}%
+\contentsline {section}{\numberline {9.29}Intel 8085 versus 8086 Microprocessors and Memory Segmentation}{988}{section.9.29}%
+\contentsline {subsection}{\numberline {9.29.1}The Intel 8085 Microprocessor}{988}{subsection.9.29.1}%
+\contentsline {subsection}{\numberline {9.29.2}The Intel 8086 Microprocessor}{989}{subsection.9.29.2}%
 \contentsline {subsection}{\numberline {9.29.3}8086 Segmented Memory Architecture and Physical Address Generation}{990}{subsection.9.29.3}%
 \contentsline {section}{\numberline {9.30}32-Bit versus 64-Bit Processor Architectures}{991}{section.9.30}%
 \contentsline {subsection}{\numberline {9.30.1}Addressable Memory Space Scaling}{991}{subsection.9.30.1}%
-\contentsline {subsection}{\numberline {9.30.2}Architectural Trade-offs: 32-Bit versus 64-Bit}{992}{subsection.9.30.2}%
-\contentsline {section}{\numberline {9.31}Memory Hierarchy and Cache Memory Fundamentals}{992}{section.9.31}%
+\contentsline {subsection}{\numberline {9.30.2}Architectural Trade-offs: 32-Bit versus 64-Bit}{991}{subsection.9.30.2}%
+\contentsline {section}{\numberline {9.31}Memory Hierarchy and Cache Memory Fundamentals}{991}{section.9.31}%
 \contentsline {subsection}{\numberline {9.31.1}The Principle of Locality}{992}{subsection.9.31.1}%
-\contentsline {subsection}{\numberline {9.31.2}Cache Hit, Cache Miss, and Hit Ratio}{993}{subsection.9.31.2}%
+\contentsline {subsection}{\numberline {9.31.2}Cache Hit, Cache Miss, and Hit Ratio}{992}{subsection.9.31.2}%
 \contentsline {subsection}{\numberline {9.31.3}The 3 Cs Model of Cache Misses}{993}{subsection.9.31.3}%
-\contentsline {subsection}{\numberline {9.31.4}Average Memory Access Time (AMAT)}{994}{subsection.9.31.4}%
+\contentsline {subsection}{\numberline {9.31.4}Average Memory Access Time (AMAT)}{993}{subsection.9.31.4}%
 \contentsline {section}{\numberline {9.32}Cache Organization, Mapping Techniques, and Replacement Policies}{994}{section.9.32}%
-\contentsline {subsection}{\numberline {9.32.1}Cache Mapping Techniques}{995}{subsection.9.32.1}%
+\contentsline {subsection}{\numberline {9.32.1}Cache Mapping Techniques}{994}{subsection.9.32.1}%
 \contentsline {subsection}{\numberline {9.32.2}Physical Address Breakdown Formulas}{995}{subsection.9.32.2}%
 \contentsline {subsection}{\numberline {9.32.3}Cache Replacement Policies}{995}{subsection.9.32.3}%
 \contentsline {subsection}{\numberline {9.32.4}Cache Write Policies}{996}{subsection.9.32.4}%
 \contentsline {section}{\numberline {9.33}Cache Coherence Protocols and the MESI State Machine}{996}{section.9.33}%
-\contentsline {subsection}{\numberline {9.33.1}The Multicore Cache Coherence Problem}{997}{subsection.9.33.1}%
-\contentsline {subsection}{\numberline {9.33.2}Coherence Hardware Paradigms}{997}{subsection.9.33.2}%
-\contentsline {subsection}{\numberline {9.33.3}The MESI Protocol (Illinois Protocol)}{997}{subsection.9.33.3}%
-\contentsline {section}{\numberline {9.34}Random Access Memory: SRAM versus DRAM and DDR Evolution}{998}{section.9.34}%
-\contentsline {subsection}{\numberline {9.34.1}Static RAM (SRAM) versus Dynamic RAM (DRAM)}{998}{subsection.9.34.1}%
-\contentsline {subsection}{\numberline {9.34.2}Evolution of Synchronous DRAM and DDR Standards}{999}{subsection.9.34.2}%
-\contentsline {section}{\numberline {9.35}Read-Only Memory and Non-Volatile Semiconductor Storage}{999}{section.9.35}%
+\contentsline {subsection}{\numberline {9.33.1}The Multicore Cache Coherence Problem}{996}{subsection.9.33.1}%
+\contentsline {subsection}{\numberline {9.33.2}Coherence Hardware Paradigms}{996}{subsection.9.33.2}%
+\contentsline {subsection}{\numberline {9.33.3}The MESI Protocol (Illinois Protocol)}{996}{subsection.9.33.3}%
+\contentsline {section}{\numberline {9.34}Random Access Memory: SRAM versus DRAM and DDR Evolution}{997}{section.9.34}%
+\contentsline {subsection}{\numberline {9.34.1}Static RAM (SRAM) versus Dynamic RAM (DRAM)}{997}{subsection.9.34.1}%
+\contentsline {subsection}{\numberline {9.34.2}Evolution of Synchronous DRAM and DDR Standards}{998}{subsection.9.34.2}%
+\contentsline {section}{\numberline {9.35}Read-Only Memory and Non-Volatile Semiconductor Storage}{998}{section.9.35}%
 \contentsline {section}{\numberline {9.36}RAM versus ROM: Comprehensive Comparative Analysis}{999}{section.9.36}%
-\contentsline {section}{\numberline {9.37}Solid-State Drives versus Mechanical Hard Disk Drives}{1000}{section.9.37}%
-\contentsline {subsection}{\numberline {9.37.1}Mechanical Hard Disk Drives (HDD)}{1000}{subsection.9.37.1}%
+\contentsline {section}{\numberline {9.37}Solid-State Drives versus Mechanical Hard Disk Drives}{999}{section.9.37}%
+\contentsline {subsection}{\numberline {9.37.1}Mechanical Hard Disk Drives (HDD)}{999}{subsection.9.37.1}%
 \contentsline {subsection}{\numberline {9.37.2}Solid-State Drives (SSD)}{1000}{subsection.9.37.2}%
-\contentsline {section}{\numberline {9.38}Unified Storage Hierarchy Matrix}{1001}{section.9.38}%
-\contentsline {section}{\numberline {9.39}Processor Performance Metrics and Amdahl's Law}{1001}{section.9.39}%
-\contentsline {subsection}{\numberline {9.39.1}The Fundamental CPU Performance Equation}{1001}{subsection.9.39.1}%
+\contentsline {section}{\numberline {9.38}Unified Storage Hierarchy Matrix}{1000}{section.9.38}%
+\contentsline {section}{\numberline {9.39}Processor Performance Metrics and Amdahl's Law}{1000}{section.9.39}%
+\contentsline {subsection}{\numberline {9.39.1}The Fundamental CPU Performance Equation}{1000}{subsection.9.39.1}%
 \contentsline {subsection}{\numberline {9.39.2}Weighted Average CPI}{1002}{subsection.9.39.2}%
 \contentsline {subsection}{\numberline {9.39.3}MIPS and FLOPS Metrics}{1002}{subsection.9.39.3}%
 \contentsline {subsection}{\numberline {9.39.4}Amdahl's Law}{1002}{subsection.9.39.4}%
 \contentsline {section}{\numberline {9.40}Multicore Concurrency, Hardware Multithreading, and Flynn's Taxonomy}{1003}{section.9.40}%
 \contentsline {subsection}{\numberline {9.40.1}Multicore versus Multiprocessor Systems}{1003}{subsection.9.40.1}%
 \contentsline {subsection}{\numberline {9.40.2}Hardware Multithreading and Simultaneous Multithreading (SMT)}{1003}{subsection.9.40.2}%
-\contentsline {subsection}{\numberline {9.40.3}Flynn's Taxonomy}{1004}{subsection.9.40.3}%
+\contentsline {subsection}{\numberline {9.40.3}Flynn's Taxonomy}{1003}{subsection.9.40.3}%
 \contentsline {section}{\numberline {9.41}Endianness: Big-Endian versus Little-Endian Architecture}{1004}{section.9.41}%
 \contentsline {subsection}{\numberline {9.41.1}Architectural Definitions}{1004}{subsection.9.41.1}%
-\contentsline {subsection}{\numberline {9.41.2}Architectural Adoption and Network Byte Order}{1005}{subsection.9.41.2}%
+\contentsline {subsection}{\numberline {9.41.2}Architectural Adoption and Network Byte Order}{1004}{subsection.9.41.2}%
 \contentsline {section}{\numberline {9.42}Logic Families, Circuit Timing, and Digital Interfaces}{1005}{section.9.42}%
 \contentsline {subsection}{\numberline {9.42.1}TTL versus CMOS Logic Families}{1005}{subsection.9.42.1}%
 \contentsline {subsection}{\numberline {9.42.2}Fan-In and Fan-Out Specifications}{1005}{subsection.9.42.2}%
@@ -2258,7 +2258,7 @@
 \contentsline {subsection}{\numberline {9.44.3}Linker versus Loader}{1008}{subsection.9.44.3}%
 \contentsline {section}{\numberline {9.45}Control Unit Design: Hardwired versus Microprogrammed}{1008}{section.9.45}%
 \contentsline {section}{\numberline {9.46}Memory Access Methods}{1009}{section.9.46}%
-\contentsline {section}{\numberline {9.47}Content-Addressable Memory (CAM and TCAM)}{1010}{section.9.47}%
+\contentsline {section}{\numberline {9.47}Content-Addressable Memory (CAM and TCAM)}{1009}{section.9.47}%
 \contentsline {subsection}{\numberline {9.47.1}Operational Mechanism of CAM}{1010}{subsection.9.47.1}%
 \contentsline {subsection}{\numberline {9.47.2}Binary CAM versus Ternary CAM (TCAM)}{1010}{subsection.9.47.2}%
 \contentsline {section}{\numberline {9.48}Memory Bandwidth, Bus Arbitration, and Latency}{1010}{section.9.48}%

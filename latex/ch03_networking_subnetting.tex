@@ -1926,7 +1926,7 @@ Usable hosts:
 \centering
 \caption{Four Subnets Created from 192.168.10.0/24}
 \label{tab:prob1_subnets}
-\begin{tabularx}{\textwidth}{ccccc}
+\begin{tabularx}{\textwidth}{c X X X X}
 \toprule
 \textbf{Subnet \#} & \textbf{Network Address} & \textbf{First Usable Host} & \textbf{Last Usable Host} & \textbf{Broadcast Address} \\
 \midrule
@@ -2420,7 +2420,7 @@ Usable range:
 \centering
 \caption{VLSM Network Allocation for 192.168.10.0/24}
 \label{tab:vlsm_allocation_result}
-\begin{tabularx}{\textwidth}{p{2.8cm} c p{3.2cm} c c}
+\begin{tabularx}{\textwidth}{p{2.8cm} c X c c}
 \toprule
 \textbf{Department} & \textbf{Required} & \textbf{Assigned Subnet} & \textbf{Broadcast} & \textbf{Usable Hosts} \\
 \midrule
@@ -2826,7 +2826,7 @@ If a modulation scheme uses $M$ distinct symbols, then:
 \centering
 \caption{Digital Modulation Schemes, Symbol Constellations, and Spectral Efficiency}
 \label{tab:digital_modulation_symbols}
-\begin{tabular}{ccc}
+\begin{tabularx}{0.85\textwidth}{>{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
 \toprule
 \textbf{Modulation Scheme} & \textbf{Number of Constellation Symbols ($M$)} & \textbf{Spectral Efficiency ($\text{Bits/Symbol} = \log_2 M$)} \\
 \midrule
@@ -2838,7 +2838,7 @@ QPSK & 4 & 2 bits/symbol \\
 256-QAM & 256 & 8 bits/symbol \\
 1024-QAM & 1024 & 10 bits/symbol \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 Example:
 How many bits per symbol are transmitted by 64-QAM?

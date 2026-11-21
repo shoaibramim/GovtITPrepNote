@@ -196,7 +196,7 @@ The RTM is a bidirectional tabular grid linking requirements to system architect
 \small
 \caption{Sample Requirements Traceability Matrix (RTM)}
 \label{tab:sample_rtm}
-\begin{tabularx}{\textwidth}{l p{4cm} p{3.5cm} l c}
+\begin{tabularx}{\textwidth}{l X X l c}
 \toprule
 \textbf{Req ID} & \textbf{Requirement Description} & \textbf{Design / Architecture Module} & \textbf{Test Case ID} & \textbf{Status} \\
 \midrule
@@ -1274,7 +1274,7 @@ Barry Boehm's \textbf{COCOMO (Constructive Cost Model)} provides empirical formu
 \small
 \caption{Basic COCOMO Empirical Coefficients across Project Modes}
 \label{tab:cocomo_coefficients}
-\begin{tabularx}{\textwidth}{l p{5cm} c c c c}
+\begin{tabularx}{\textwidth}{l X c c c c}
 \toprule
 \textbf{Development Mode} & \textbf{Team Characteristics \& Project Complexity} & $\mathbf{a}$ & $\mathbf{b}$ & $\mathbf{c}$ & $\mathbf{d}$ \\
 \midrule
@@ -2337,7 +2337,7 @@ Define the valid and invalid equivalence classes and construct an optimal test s
 \textbf{Step-by-Step Solution:}
 \begin{center}
 \small
-\begin{tabular}{p{3.5cm}p{5.5cm}p{3cm}p{3cm}}
+\begin{tabularx}{\textwidth}{p{2.5cm} X p{3.2cm} p{3.8cm}}
 \toprule
 \textbf{Input Variable} & \textbf{Equivalence Partition} & \textbf{Class Type} & \textbf{Test Input Value} \\
 \midrule
@@ -2348,7 +2348,7 @@ Age & $31 \le \text{Age} \le 32$ & Invalid (General quota) & Age = 31, Quota = G
 Age & Age $> 32$ & Invalid & Age = 35 (Overage reject) \\
 Age & Non-numeric / Negative & Invalid & Age = -5, Age = "abc" \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{center}
 
 \subsection*{Problem 13: Web Server Thread Pool Sizing Calculation}

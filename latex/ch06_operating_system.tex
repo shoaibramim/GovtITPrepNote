@@ -1181,7 +1181,7 @@ Total system downtime over time period $T$ is given by:
 \small
 \caption{Availability Percentages and Maximum Permissible Annual / Monthly Downtime}
 \label{tab:table_of_nines}
-\begin{tabular}{l l l l}
+\begin{tabularx}{\textwidth}{l c >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
 \toprule
 \textbf{Availability ("Nines")} & \textbf{Availability Fraction} & \textbf{Downtime per Year (365 d)} & \textbf{Downtime per Month (30 d)} \\
 \midrule
@@ -1191,7 +1191,7 @@ Total system downtime over time period $T$ is given by:
 \textbf{99.999\% ("Five Nines")} & 0.99999 & $5.26\text{ minutes } (315.4\text{ s})$ & $25.9\text{ seconds}$ \\
 \textbf{99.9999\% ("Six Nines")} & 0.999999 & $31.54\text{ seconds}$ & $2.59\text{ seconds}$ \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subsection{Series versus Parallel System Reliability Mathematics}
@@ -1863,7 +1863,7 @@ Given numeric permission \texttt{1777} on \texttt{/tmp}:
 Traditional UNIX permissions restrict security to three discrete entities (1 user, 1 group, others). \textbf{POSIX ACLs} permit fine-grained discretionary access rules:
 \begin{itemize}
     \item \textbf{Displaying ACLs:} \texttt{getfacl financial\_report.xlsx}
-    \item \textbf{Granting Specific User Privileges:} \texttt{setfacl -m u:alice:rw financial\_report.xlsx}
+    \item \textbf{Granting Specific User Privileges:} \texttt{setfacl -m u:shoaib:rw financial\_report.xlsx}
     \item \textbf{Granting Specific Group Privileges:} \texttt{setfacl -m g:auditors:r financial\_report.xlsx}
     \item \textbf{The ACL Mask:} Defines the absolute ceiling of effective permissions grantable to named users and groups.
 \end{itemize}
