@@ -1,0 +1,2371 @@
+\chapter{Algorithms --- High-Value Programming Problems and Solutions}
+\label{ch:algorithms_problems}
+
+This chapter brings together essential practical algorithm problems and complete implementations frequently tested in Bangladesh government technical recruitment examinations (including Assistant Programmer, Assistant Director (ICT), Assistant Network Engineer, Assistant Maintenance Engineer, and Assistant Database Administrator). It synthesizes mathematical programming, number theory, numerical series, array algorithms, recursion, Dynamic Programming, greedy heuristics, and weighted-graph algorithms.
+
+Each problem includes a precise specification, core mathematical and algorithmic invariants, complete C++17 implementations, execution traces, formal time and space complexity derivations, and critical examination takeaways.
+
+
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section I: Number Theory and Mathematical Programming}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Number Theory and Mathematical Programming}
+
+
+\subsection{Problem 1. Calculate the LCM of two integers}
+
+\textbf{Question:} Write a program to calculate the Least Common Multiple (LCM) of two integers.
+
+The \textbf{Least Common Multiple} of two integers is the smallest positive integer divisible by both numbers, for positive nonzero inputs.
+
+For example:
+
+
+\[
+\operatorname{LCM}(12,18)=36
+\]
+
+
+Multiples of 12 are $12,24,36,48,\ldots$, while multiples of 18 are $18,36,54,\ldots$. The first positive common multiple is 36.
+
+\subsubsection{Mathematical relationship}
+
+The GCD and LCM satisfy:
+
+
+\[
+\boxed{\operatorname{LCM}(a,b)=\frac{|a|}{\operatorname{GCD}(a,b)}|b|}
+\]
+
+
+This formula applies when $a$ and $b$ are not both zero. When either operand is zero, the LCM is conventionally zero.
+
+The formula should be calculated as:
+
+
+\[
+\boxed{\operatorname{LCM}(a,b)=\left(\frac{|a|}{\operatorname{GCD}(a,b)}\right)|b|}
+\]
+
+
+rather than multiplying $a$ and $b$ before dividing, because dividing first reduces the risk of integer overflow.
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include <numeric>
+using namespace std;
+
+long long calculateLCM(long long a, long long b) {
+    if (a == 0 || b == 0) {
+        return 0;
+    }
+
+    long long g = gcd(a, b);
+
+    return (a / g) * b;
+}
+
+int main() {
+    long long a, b;
+    cin >> a >> b;
+
+    cout << "LCM = " << calculateLCM(a, b) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+Input:
+
+\begin{lstlisting}[style=pseudocode]
+12 18
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+LCM = 36
+\end{lstlisting}
+
+This implementation assumes nonnegative inputs and a result representable in \texttt{long long}. For general signed values, normalize the signs carefully and account for the fact that the absolute value of the minimum representable signed integer may not fit in the same type.
+
+\subsubsection{Complexity}
+
+Euclid's GCD algorithm takes $O(\log\min(a,b))$ time for positive inputs. The LCM calculation then requires a constant number of arithmetic operations.
+
+Therefore:
+
+\begin{itemize}
+    \item \textbf{Time:} $O(\log\min(a,b))$.
+    \item \textbf{Auxiliary space:} $O(1)$ for the iterative GCD implementation used internally by the standard library.
+\end{itemize}
+
+\textbf{Exam point:} LCM is efficiently calculated using GCD; generating multiples one by one is unnecessary.
+
+\subsection{Problem 2. Calculate GCD using Euclid's algorithm}
+
+\textbf{Question:} Find the Greatest Common Divisor (GCD) of two positive integers.
+
+The GCD is the largest positive integer that divides both inputs without a remainder.
+
+For example:
+
+
+\[
+\operatorname{GCD}(48,18)=6
+\]
+
+
+\subsubsection{Algorithm}
+
+Euclid's algorithm uses the identity:
+
+
+\[
+\boxed{\gcd(a,b)=\gcd(b,a\bmod b)}
+\]
+
+
+until the second operand becomes zero. The remaining first operand is the GCD.
+
+\subsubsection{Step-by-step calculation}
+
+Find $\gcd(48,18)$.
+
+
+\[
+48\bmod18=12
+\]
+
+
+Thus:
+
+
+\[
+\gcd(48,18)=\gcd(18,12)
+\]
+
+
+Next:
+
+
+\[
+18\bmod12=6
+\]
+
+
+So:
+
+
+\[
+\gcd(18,12)=\gcd(12,6)
+\]
+
+
+Finally:
+
+
+\[
+12\bmod6=0
+\]
+
+
+Therefore:
+
+
+\[
+\boxed{\gcd(48,18)=6}
+\]
+
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+long long gcdEuclid(long long a, long long b) {
+    while (b != 0) {
+        long long remainder = a % b;
+        a = b;
+        b = remainder;
+    }
+
+    return a;
+}
+
+int main() {
+    long long a, b;
+    cin >> a >> b;
+
+    cout << "GCD = " << gcdEuclid(a, b) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+For positive inputs, the algorithm works by repeatedly replacing the larger problem with a smaller remainder problem.
+
+\textbf{Complexity:} $O(\log\min(a,b))$ time and $O(1)$ auxiliary space.
+
+\textbf{Related examination question:} How can the GCD be used to determine whether two integers are relatively prime?
+
+Two positive integers are relatively prime, or coprime, if:
+
+
+\[
+\boxed{\gcd(a,b)=1}
+\]
+
+
+\subsection{Problem 3. Determine whether a number is prime}
+
+\textbf{Question:} Write a program to determine whether a positive integer is a prime number.
+
+A \textbf{prime number} is an integer greater than 1 that has exactly two positive divisors: 1 and itself.
+
+Examples: $2,3,5,7,11,13,17,19$.
+
+The numbers 0 and 1 are not prime. A number greater than 1 that is not prime is called composite.
+
+\subsubsection{Efficient algorithm}
+
+To test an integer $n$:
+
+\begin{enumerate}
+    \item If $n<2$, it is not prime.
+    \item Check whether any integer from 2 through $\sqrt n$ divides it.
+    \item If such a divisor exists, it is composite.
+    \item Otherwise, it is prime.
+\end{enumerate}
+
+Why only test through $\sqrt n$?
+
+If $n=a\times b$ is composite, at least one of its factors must be less than or equal to $\sqrt n$. If both factors were greater than $\sqrt n$, their product would exceed $n$.
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+bool isPrime(long long n) {
+    if (n < 2) {
+        return false;
+    }
+
+    if (n == 2) {
+        return true;
+    }
+
+    if (n % 2 == 0) {
+        return false;
+    }
+
+    for (long long i = 3; i <= n / i; i += 2) {
+        if (n % i == 0) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+int main() {
+    long long n;
+    cin >> n;
+
+    cout << (isPrime(n) ? "Prime" : "Not prime") << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+The condition \texttt{i <= n / i} avoids the possible overflow of \texttt{i * i} when \texttt{n} is a large integer.
+
+Example:
+
+\begin{lstlisting}[style=pseudocode]
+Input: 97
+Output: Prime
+\end{lstlisting}
+
+\subsubsection{Complexity}
+
+The trial-division method tests approximately half the integers up to $\sqrt n$, so:
+
+\begin{itemize}
+    \item \textbf{Time:} $O(\sqrt n)$.
+    \item \textbf{Auxiliary space:} $O(1)$.
+\end{itemize}
+
+The check for even numbers reduces unnecessary work but does not change the asymptotic complexity.
+
+\subsection{\textbf{Problem 4. Generate all prime numbers up to }$N$}
+
+\textbf{Question:} Print every prime number between 2 and a given integer $N$.
+
+For example, if $N=30$, the output should be:
+
+\begin{lstlisting}[style=pseudocode]
+2 3 5 7 11 13 17 19 23 29
+\end{lstlisting}
+
+Testing each number separately with trial division works, but there is a more efficient method for generating many primes.
+
+\subsubsection{The Sieve of Eratosthenes}
+
+The \textbf{Sieve of Eratosthenes} finds all primes up to $N$ by marking multiples of each discovered prime as composite.
+
+Algorithm:
+
+\begin{enumerate}
+    \item Initially mark every integer from 2 to $N$ as potentially prime.
+    \item Start with $p=2$.
+    \item Mark $2p,3p,4p,\ldots$ as composite.
+    \item Find the next unmarked number.
+    \item Repeat until $p^2>N$.
+    \item The remaining unmarked integers are prime.
+\end{enumerate}
+
+Marking begins at $p^2$, because smaller multiples of $p$ have already been processed as multiples of smaller primes.
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> generatePrimes(int n) {
+    vector<int> primes;
+
+    if (n < 2) {
+        return primes;
+    }
+
+    vector<bool> isPrime(n + 1, true);
+    isPrime[0] = false;
+    isPrime[1] = false;
+
+    for (int p = 2; p <= n / p; ++p) {
+        if (isPrime[p]) {
+            for (long long multiple = 1LL * p * p;
+                 multiple <= n;
+                 multiple += p) {
+                isPrime[static_cast<int>(multiple)] = false;
+            }
+        }
+    }
+
+    for (int i = 2; i <= n; ++i) {
+        if (isPrime[i]) {
+            primes.push_back(i);
+        }
+    }
+
+    return primes;
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    vector<int> primes = generatePrimes(n);
+
+    for (int p : primes) {
+        cout << p << " ";
+    }
+
+    cout << '\n';
+    return 0;
+}
+\end{lstlisting}
+
+\subsubsection{Complexity}
+
+\begin{itemize}
+    \item \textbf{Time:} $O(N\log\log N)$.
+    \item \textbf{Space:} $O(N)$.
+\end{itemize}
+
+This is generally more efficient than testing every integer independently when a large collection of primes is needed.
+
+\textbf{Exam distinction:} Prime testing for one number is typically done with trial division up to its square root. Generating all primes up to a limit is commonly done using the Sieve of Eratosthenes.
+
+\subsection{Problem 5. Find the prime factorization of an integer}
+
+\textbf{Question:} Express a positive integer as a product of prime factors.
+
+For example:
+
+
+\[
+360=2^3\times3^2\times5
+\]
+
+
+\subsubsection{Algorithm}
+
+\begin{enumerate}
+    \item Start with the smallest prime candidate, 2.
+    \item While it divides the number, record the factor and divide the number by it.
+    \item Move to the next possible factor.
+    \item Continue while the factor does not exceed the square root of the remaining value.
+    \item If the remaining value is greater than 1, it is itself a prime factor.
+\end{enumerate}
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+void primeFactorization(long long n) {
+    if (n < 2) {
+        cout << "Prime factorization requires n >= 2\n";
+        return;
+    }
+
+    for (long long p = 2; p <= n / p; ++p) {
+        while (n % p == 0) {
+            cout << p << " ";
+            n /= p;
+        }
+    }
+
+    if (n > 1) {
+        cout << n;
+    }
+
+    cout << '\n';
+}
+
+int main() {
+    long long n;
+    cin >> n;
+
+    primeFactorization(n);
+
+    return 0;
+}
+\end{lstlisting}
+
+Input:
+
+\begin{lstlisting}[style=pseudocode]
+360
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+2 2 2 3 3 5
+\end{lstlisting}
+
+\subsubsection{Complexity}
+
+\begin{itemize}
+    \item \textbf{Time:} $O(\sqrt n)$ in the worst case under trial division.
+    \item \textbf{Auxiliary space:} $O(1)$, excluding printed output.
+\end{itemize}
+
+The factors are printed in nondecreasing order.
+
+\textbf{Applications:} Finding divisors, simplifying fractions, determining whether an integer is square-free, and calculating GCD and LCM using prime exponents.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section II: Numerical Series and Mathematical Loops}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Numerical Series and Mathematical Loops}
+
+
+\subsection{\textbf{Problem 6. Calculate the sum of even numbers from 1 to }$N$}
+
+\textbf{Question:} Calculate:
+
+
+\[
+2+4+6+\cdots
+\]
+
+
+up to the largest even number not exceeding $N$.
+
+For example, if $N=10$:
+
+
+\[
+2+4+6+8+10=30
+\]
+
+
+\subsubsection{Mathematical solution}
+
+Let $k$ be the number of even integers in the range from 1 to $N$.
+
+Then:
+
+
+\[
+k=\left\lfloor\frac N2\right\rfloor
+\]
+
+
+The sum is:
+
+
+\[
+2+4+\cdots+2k =2(1+2+\cdots+k)
+\]
+
+
+Using:
+
+
+\[
+1+2+\cdots+k=\frac{k(k+1)}2
+\]
+
+
+we obtain:
+
+
+\[
+\boxed{S_{\text{even}}=k(k+1)}
+\]
+
+
+where:
+
+
+\[
+\boxed{k=\left\lfloor\frac N2\right\rfloor}
+\]
+
+
+Therefore:
+
+
+\[
+\boxed{ S_{\text{even}} = \left\lfloor\frac N2\right\rfloor \left(\left\lfloor\frac N2\right\rfloor+1\right) }
+\]
+
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+long long sumEvenNumbers(long long n) {
+    long long k = n / 2;
+    return k * (k + 1);
+}
+
+int main() {
+    long long n;
+    cin >> n;
+
+    if (n < 0) {
+        cout << "N must be nonnegative\n";
+        return 0;
+    }
+
+    cout << sumEvenNumbers(n) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+Input:
+
+\begin{lstlisting}[style=pseudocode]
+10
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+30
+\end{lstlisting}
+
+For $N=9$, the largest even number is 8, so:
+
+
+\[
+2+4+6+8=20
+\]
+
+
+The formula correctly gives:
+
+
+\[
+k=\lfloor9/2\rfloor=4
+\]
+
+
+
+\[
+S=4(5)=20
+\]
+
+
+\subsubsection{Complexity}
+
+\begin{itemize}
+    \item \textbf{Formula-based solution:} $O(1)$ time and $O(1)$ auxiliary space.
+    \item \textbf{Loop-based solution:} $O(N)$ time and $O(1)$ auxiliary space.
+\end{itemize}
+
+For very large values of $N$, the result may exceed the range of \texttt{long long}. A formula can be constant-time without necessarily being safe for arbitrarily large integers.
+
+\textbf{Exam point:} When a numerical series has a closed-form formula, it can often replace a loop and reduce the running time from linear to constant.
+
+\subsection{Problem 7. Calculate the sum of the first **$N$** natural numbers}
+
+\textbf{Question:} Find:
+
+
+\[
+1+2+3+\cdots+N
+\]
+
+
+The formula is:
+
+
+\[
+\boxed{S=\frac{N(N+1)}2}
+\]
+
+
+\subsubsection{Example}
+
+For $N=100$:
+
+
+\[
+S=\frac{100\times101}{2}
+\]
+
+
+
+\[
+\boxed{S=5050}
+\]
+
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+long long sumNaturalNumbers(long long n) {
+    return n * (n + 1) / 2;
+}
+
+int main() {
+    long long n;
+    cin >> n;
+
+    if (n < 0) {
+        cout << "N must be nonnegative\n";
+        return 0;
+    }
+
+    cout << sumNaturalNumbers(n) << '\n';
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Complexity:} $O(1)$ time and $O(1)$ auxiliary space, assuming the intermediate arithmetic fits the selected type.
+
+A loop that adds every integer from 1 to $N$ would take $O(N)$ time.
+
+\subsubsection{Related formula: Sum of the first **$N$** odd numbers}
+
+The first $N$ positive odd numbers are:
+
+
+\[
+1,3,5,\ldots,(2N-1)
+\]
+
+
+Their sum is:
+
+
+\[
+\boxed{S_{\text{odd}}=N^2}
+\]
+
+
+For example:
+
+
+\[
+1+3+5+7+9=5^2=\boxed{25}
+\]
+
+
+\subsection{Problem 8. Calculate the sum of squares}
+
+\textbf{Question:} Calculate:
+
+
+\[
+1^2+2^2+3^2+\cdots+N^2
+\]
+
+
+The formula is:
+
+
+\[
+\boxed{S=\frac{N(N+1)(2N+1)}6}
+\]
+
+
+\subsubsection{Example}
+
+For $N=5$:
+
+
+\[
+S=1+4+9+16+25=55
+\]
+
+
+Using the formula:
+
+
+\[
+S=\frac{5(6)(11)}6=\boxed{55}
+\]
+
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+long long sumSquares(long long n) {
+    return n * (n + 1) * (2 * n + 1) / 6;
+}
+
+int main() {
+    long long n;
+    cin >> n;
+
+    if (n < 0) {
+        cout << "N must be nonnegative\n";
+        return 0;
+    }
+
+    cout << sumSquares(n) << '\n';
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Complexity:} $O(1)$ time and $O(1)$ auxiliary space, provided the arithmetic does not overflow.
+
+For large inputs, intermediate multiplication may overflow even when the final result fits. A more robust implementation can divide factors by 2 and 3 before multiplication or use a wider/arbitrary-precision integer type.
+
+\subsection{Problem 9. Generate an arithmetic progression}
+
+An \textbf{Arithmetic Progression (AP)} is a numerical sequence in which the difference between consecutive terms is constant.
+
+For example:
+
+
+\[
+3,7,11,15,19,\ldots
+\]
+
+
+The first term is $a=3$, and the common difference is $d=4$.
+
+The $n$-th term is:
+
+
+\[
+\boxed{a_n=a+(n-1)d}
+\]
+
+
+The sum of the first $n$ terms is:
+
+
+\[
+\boxed{S_n=\frac n2\left[2a+(n-1)d\right]}
+\]
+
+
+\subsubsection{Example}
+
+Find the 20th term and the sum of the first 20 terms of:
+
+
+\[
+3,7,11,15,\ldots
+\]
+
+
+Given:
+
+
+\[
+a=3,\qquad d=4,\qquad n=20
+\]
+
+
+The 20th term is:
+
+
+\[
+a_{20}=3+(20-1)4
+\]
+
+
+
+\[
+a_{20}=3+76=\boxed{79}
+\]
+
+
+The sum is:
+
+
+\[
+S_{20}=\frac{20}{2}[2(3)+19(4)]
+\]
+
+
+
+\[
+S_{20}=10(6+76)
+\]
+
+
+
+\[
+\boxed{S_{20}=820}
+\]
+
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+int main() {
+    long long a, d, n;
+    cin >> a >> d >> n;
+
+    if (n <= 0) {
+        cout << "Number of terms must be positive\n";
+        return 0;
+    }
+
+    long long nth = a + (n - 1) * d;
+    long long sum = n * (2 * a + (n - 1) * d) / 2;
+
+    cout << "Nth term: " << nth << '\n';
+    cout << "Sum: " << sum << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Complexity:} $O(1)$ time and $O(1)$ auxiliary space, assuming intermediate calculations fit the integer type.
+
+\textbf{Exam variation:} If a question asks for all terms, printing $n$ values necessarily takes at least $O(n)$ time, even though the $n$-th term can be calculated in $O(1)$.
+
+\subsection{Problem 10. Generate a geometric progression}
+
+A \textbf{Geometric Progression (GP)} is a numerical sequence in which each term is obtained by multiplying the previous term by a constant ratio $r$.
+
+For example:
+
+
+\[
+2,6,18,54,162,\ldots
+\]
+
+
+Here:
+
+
+\[
+a=2,\qquad r=3
+\]
+
+
+The $n$-th term is:
+
+
+\[
+\boxed{a_n=ar^{n-1}}
+\]
+
+
+For $r\neq1$, the sum of the first $n$ terms is:
+
+
+\[
+\boxed{S_n=a\frac{r^n-1}{r-1}}
+\]
+
+
+For $r=1$, every term is $a$, so:
+
+
+\[
+\boxed{S_n=na}
+\]
+
+
+\subsubsection{Example}
+
+Find the 5th term and the sum of the first 5 terms of:
+
+
+\[
+2,6,18,54,162
+\]
+
+
+The fifth term is:
+
+
+\[
+a_5=2(3)^4=\boxed{162}
+\]
+
+
+The sum is:
+
+
+\[
+S_5=2\frac{3^5-1}{3-1}
+\]
+
+
+
+\[
+S_5=2\frac{243-1}{2}
+\]
+
+
+
+\[
+\boxed{S_5=242}
+\]
+
+
+\subsubsection{Exam note}
+
+For integer sequences, powers may grow very rapidly and overflow ordinary integer types. The mathematical formula is valid, but the implementation must consider numerical limits.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section III: Pair-Sum and Two-Element Selection}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Pair-Sum and Two-Element Selection Problems}
+
+
+\subsection{Problem 11. Find two elements whose sum equals a target}
+
+\textbf{Question:} Given an unsorted array and a target $T$, find two elements at distinct positions whose sum is $T$.
+
+Input:
+
+\begin{lstlisting}[style=pseudocode]
+Array:  [8, 3, 2, 7, 11, 6]
+Target: 9
+\end{lstlisting}
+
+One valid answer is:
+
+
+\[
+2+7=9
+\]
+
+
+Another valid answer is:
+
+
+\[
+3+6=9
+\]
+
+
+This problem is often called \textbf{Two Sum} or the pair-sum problem.
+
+\subsubsection{Approach A: Brute force}
+
+Test every pair of positions $i<j$.
+
+\begin{lstlisting}[style=pseudocode]
+For i from 0 to n-2:
+    For j from i+1 to n-1:
+        If A[i] + A[j] == target:
+            Return the pair
+\end{lstlisting}
+
+\textbf{Time:} $O(n^2)$.
+
+\textbf{Auxiliary space:} $O(1)$.
+
+\subsubsection{Approach B: Sorting and two pointers}
+
+Sort the array, then use a pointer at each end.
+
+\begin{itemize}
+    \item If the sum is too small, increment the left pointer.
+    \item If the sum is too large, decrement the right pointer.
+    \item If the sum matches the target, return the pair.
+\end{itemize}
+
+The total time is $O(n\log n)$, dominated by sorting.
+
+\subsubsection{C++ implementation with original indices}
+
+This version returns the original indices rather than merely the values. Sorting pairs preserves the correspondence between each value and its original position.
+
+\begin{lstlisting}[style=cppstyle]
+#include <algorithm>
+#include <iostream>
+#include <utility>
+#include <vector>
+using namespace std;
+
+bool twoSum(
+    const vector<int>& a,
+    long long target,
+    pair<int, int>& answer
+) {
+    vector<pair<int, int>> items;
+
+    for (int i = 0; i < static_cast<int>(a.size()); ++i) {
+        items.push_back({a[i], i});
+    }
+
+    sort(items.begin(), items.end());
+
+    int left = 0;
+    int right = static_cast<int>(items.size()) - 1;
+
+    while (left < right) {
+        long long sum =
+            static_cast<long long>(items[left].first)
+            + items[right].first;
+
+        if (sum == target) {
+            answer = {items[left].second, items[right].second};
+            return true;
+        }
+
+        if (sum < target) {
+            ++left;
+        } else {
+            --right;
+        }
+    }
+
+    return false;
+}
+
+int main() {
+    vector<int> a = {8, 3, 2, 7, 11, 6};
+    long long target = 9;
+
+    pair<int, int> answer;
+
+    if (twoSum(a, target, answer)) {
+        cout << "Original indices: "
+             << answer.first << ", " << answer.second << '\n';
+        cout << "Values: "
+             << a[answer.first] << ", " << a[answer.second] << '\n';
+    } else {
+        cout << "No pair found\n";
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+The returned pair of indices may differ from another valid pair because several solutions can exist.
+
+\textbf{Complexity:} $O(n\log n)$ time and $O(n)$ auxiliary space for the sorted copy and stored indices.
+
+\textbf{Important:} The condition \texttt{left < right} ensures that the same array position cannot be selected twice. Equal values at different positions can still form a valid pair.
+
+\subsubsection{Approach C: Hash set}
+
+A hash-based approach scans the array once. For each value $x$, check whether $T-x$ has already appeared. If it has, a valid pair is found; otherwise, record $x$.
+
+This can achieve expected $O(n)$ time and $O(n)$ space under suitable hash-table performance assumptions.
+
+\textbf{Exam comparison:}
+
+\begin{table}[htbp]
+\centering
+\caption{Algorithmic Approaches to the Pair-Sum (Two Sum) Problem}
+\label{tab:two_sum_comparison}
+\begin{tabularx}{\textwidth}{p{4.2cm} X X}
+\toprule
+\textbf{Method} & \textbf{Time Complexity} & \textbf{Auxiliary Space} \\
+\midrule
+Brute Force & $O(n^2)$ & $O(1)$ \\
+Sorting + Two Pointers & $O(n \log n)$ & $O(n)$ when preserving original indices \\
+Hash Set / Map & Expected $O(n)$ & $O(n)$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+For a question specifically requesting an $O(n\log n)$ solution, sorting and two pointers is the standard method.
+
+\subsection{Problem 12. Find the two largest distinct elements in an array}
+
+\textbf{Question:} Find the largest and second-largest distinct elements without sorting.
+
+Input:
+
+\begin{lstlisting}[style=pseudocode]
+10 25 8 25 17 30 30
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+Largest: 30
+Second largest: 25
+\end{lstlisting}
+
+The second-largest value must be distinct from the largest. A duplicate \texttt{30} must not be counted as the second-largest distinct value.
+
+\subsubsection{Algorithm}
+
+Maintain two values:
+
+\begin{itemize}
+    \item \texttt{largest}: maximum encountered so far.
+    \item \texttt{secondLargest}: maximum encountered value that is strictly smaller than \texttt{largest}.
+\end{itemize}
+
+For every element:
+
+\begin{enumerate}
+    \item If it is larger than \texttt{largest}, move the previous largest into \texttt{secondLargest}, then update \texttt{largest}.
+    \item Otherwise, if it is smaller than \texttt{largest} but greater than \texttt{secondLargest}, update \texttt{secondLargest}.
+    \item Ignore duplicates of \texttt{largest}.
+\end{enumerate}
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include <vector>
+#include <optional>
+using namespace std;
+
+int main() {
+    vector<int> a = {10, 25, 8, 25, 17, 30, 30};
+
+    optional<int> largest;
+    optional<int> secondLargest;
+
+    for (int x : a) {
+        if (!largest || x > *largest) {
+            secondLargest = largest;
+            largest = x;
+        } else if (x < *largest &&
+                   (!secondLargest || x > *secondLargest)) {
+            secondLargest = x;
+        }
+    }
+
+    if (!largest) {
+        cout << "Array is empty\n";
+    } else if (!secondLargest) {
+        cout << "No second-largest distinct element\n";
+    } else {
+        cout << "Largest: " << *largest << '\n';
+        cout << "Second largest: " << *secondLargest << '\n';
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+This uses \texttt{std::optional}, available in C++17, to represent whether a value has been found.
+
+\subsubsection{Complexity}
+
+\begin{itemize}
+    \item \textbf{Time:} $O(n)$, one pass through the array.
+    \item \textbf{Auxiliary space:} $O(1)$.
+\end{itemize}
+
+\textbf{Exam variation:} Find the two smallest distinct elements, or find the two largest elements when duplicates are permitted. The latter problem allows the largest value to be selected twice if it appears at two distinct positions.
+
+\subsection{Problem 13. Select two elements with the minimum absolute difference}
+
+\textbf{Question:} Given an array of integers, find two distinct elements with the smallest absolute difference.
+
+Example:
+
+\begin{lstlisting}[style=pseudocode]
+Array: [10, 3, 20, 12, 8]
+\end{lstlisting}
+
+Sort the array:
+
+\texttt{[3, 8, 10, 12, 20]}
+
+Compare adjacent differences:
+
+\begin{itemize}
+    \item $8-3=5$
+    \item $10-8=2$
+    \item $12-10=2$
+    \item $20-12=8$
+\end{itemize}
+
+The minimum difference is:
+
+
+\[
+\boxed{2}
+\]
+
+
+The pairs \texttt{(8, 10)} and \texttt{(10, 12)} both achieve this minimum.
+
+\subsubsection{Why do adjacent elements suffice?}
+
+After sorting, if two values are not adjacent, there is at least one value between them. Their difference is at least as large as one of the adjacent differences within that interval. Therefore, a minimum-difference pair can be found among adjacent sorted values.
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <limits>
+#include <vector>
+using namespace std;
+
+int main() {
+    vector<int> a = {10, 3, 20, 12, 8};
+
+    if (a.size() < 2) {
+        cout << "At least two elements are required\n";
+        return 0;
+    }
+
+    sort(a.begin(), a.end());
+
+    long long bestDifference = LLONG_MAX;
+    int first = a[0];
+    int second = a[1];
+
+    for (size_t i = 1; i < a.size(); ++i) {
+        long long difference =
+            static_cast<long long>(a[i]) - a[i - 1];
+
+        if (difference < bestDifference) {
+            bestDifference = difference;
+            first = a[i - 1];
+            second = a[i];
+        }
+    }
+
+    cout << "Pair: " << first << ", " << second << '\n';
+    cout << "Minimum difference: "
+         << bestDifference << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+Add \texttt{\#include <climits>} for \texttt{LLONG\_MAX} in this exact implementation.
+
+\subsubsection{Complexity}
+
+Sorting costs $O(n\log n)$, and scanning adjacent elements costs $O(n)$.
+
+Therefore:
+
+
+\[
+\boxed{O(n\log n)}
+\]
+
+
+The sorting step dominates the total complexity.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section IV: Weighted Graphs and Negative Cycles}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Weighted Graphs and Negative-Cycle Detection}
+
+
+\subsection{Problem 14. Determine whether a weighted directed graph contains a negative cycle}
+
+This is a high-value graph problem because it combines graph theory, shortest-path algorithms, edge relaxation, and careful handling of disconnected components.
+
+\subsubsection{Definition}
+
+A \textbf{negative cycle} is a directed cycle whose total edge weight is negative.
+
+For example, consider:
+
+
+\[
+A\rightarrow B \quad (2)
+\]
+
+
+
+\[
+B\rightarrow C \quad (-5)
+\]
+
+
+
+\[
+C\rightarrow A \quad (1)
+\]
+
+
+The total cycle weight is:
+
+
+\[
+2+(-5)+1=-2
+\]
+
+
+Since the total is negative:
+
+
+\[
+\boxed{\text{The graph contains a negative cycle}}
+\]
+
+
+\subsubsection{Why is a negative cycle important?}
+
+If a reachable negative cycle exists, repeatedly traversing that cycle can reduce the path cost without bound.
+
+Consequently, a finite shortest-path distance does not exist for vertices reachable from that cycle, under the usual shortest-walk definition.
+
+This is why standard shortest-path algorithms must account for negative cycles when negative edge weights are permitted.
+
+\subsection{Bellman--Ford Algorithm and Edge Relaxation}
+
+The \textbf{Bellman--Ford algorithm} computes shortest-path distances from a source in a weighted directed graph and can detect negative cycles reachable from that source.
+
+It uses repeated \textbf{edge relaxation}.
+
+For an edge $u\rightarrow v$ with weight $w$, if the path through $u$ improves the distance to $v$, update:
+
+
+\[
+\boxed{ \text{if }dist[u]+w<dist[v], \quad dist[v]=dist[u]+w }
+\]
+
+
+The algorithm repeats this process.
+
+In a graph with $V$ vertices and no reachable negative cycle, a shortest path can be chosen without repeating vertices and therefore uses at most $V-1$ edges. Consequently, $V-1$ rounds of relaxation suffice.
+
+If any distance can still be improved in an additional round, a reachable negative cycle exists.
+
+\subsubsection{Bellman--Ford algorithm}
+
+\begin{enumerate}
+    \item Initialize the source distance to zero.
+    \item Initialize other distances to infinity.
+    \item Relax all edges up to $V-1$ times, stopping early if no update occurs.
+    \item Perform one additional pass over the edges.
+    \item If an edge can still improve a distance from a reachable vertex, report a negative cycle reachable from the source.
+\end{enumerate}
+
+\subsection{Distinction: Reachable vs. Graph-Wide Negative Cycle}
+
+A standard source-based Bellman--Ford implementation detects negative cycles reachable from the chosen source.
+
+However, the question may ask:
+
+\textbf{"Does the graph contain any negative cycle, including one in a disconnected component?"}
+
+For that version, initialize every distance to zero. This is equivalent to adding a hypothetical super-source connected to every vertex by a zero-weight edge.
+
+Then run the Bellman--Ford relaxation process.
+
+This ensures that every component is considered, even if the original graph is disconnected.
+
+\textbf{For the problem as worded here, "contains a negative cycle", the implementation below checks the entire graph.}
+
+\subsection{C++ Implementation: Graph-Wide Negative Cycle Detection}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct Edge {
+    int from;
+    int to;
+    long long weight;
+};
+
+bool hasNegativeCycle(int V, const vector<Edge>& edges) {
+    // Initializing all distances to 0 is equivalent to
+    // adding a super-source connected to every vertex
+    // by a zero-weight edge.
+    vector<long long> dist(V, 0);
+
+    for (int i = 0; i < V; ++i) {
+        bool changed = false;
+
+        for (const Edge& e : edges) {
+            long long candidate = dist[e.from] + e.weight;
+
+            if (candidate < dist[e.to]) {
+                dist[e.to] = candidate;
+                changed = true;
+
+                // An update during the Vth pass indicates
+                // a negative cycle somewhere in the graph.
+                if (i == V - 1) {
+                    return true;
+                }
+            }
+        }
+
+        if (!changed) {
+            return false;
+        }
+    }
+
+    return false;
+}
+
+int main() {
+    int V = 4;
+    vector<Edge> edges = {
+        {0, 1, 1},
+        {1, 2, 1},
+        {2, 1, -3},
+        {2, 3, 2}
+    };
+
+    if (hasNegativeCycle(V, edges)) {
+        cout << "Negative cycle exists\n";
+    } else {
+        cout << "No negative cycle\n";
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+Negative cycle exists
+\end{lstlisting}
+
+The graph contains the cycle:
+
+
+\[
+1\rightarrow2\rightarrow1
+\]
+
+
+Its total weight is:
+
+
+\[
+1+(-3)=-2
+\]
+
+
+Therefore, it is a negative cycle.
+
+\subsubsection{Complexity}
+
+Each relaxation pass examines all $E$ edges, and at most $V$ passes are required.
+
+Therefore:
+
+
+\[
+\boxed{\text{Time}=O(VE)}
+\]
+
+
+The distance array occupies:
+
+
+\[
+\boxed{\text{Auxiliary space}=O(V)}
+\]
+
+
+The edge list occupies $O(E)$ storage, but it is input to the algorithm rather than additional working storage.
+
+\subsubsection{Correctness intuition}
+
+If no negative cycle exists, shortest paths can be represented by paths of at most $V-1$ edges. After sufficiently many relaxation rounds, no further improvement is possible.
+
+A negative cycle permits continued improvements as its negative total cost is traversed repeatedly. An improvement in the $V$-th pass therefore signals a negative cycle under the stated initialization and graph assumptions.
+
+\subsubsection{Common examination traps}
+
+\begin{itemize}
+    \item Checking only $V-1$ passes is not sufficient to detect a negative cycle; an additional check is necessary.
+    \item Source-based Bellman--Ford does not detect negative cycles in unreachable components.
+    \item Initializing all distances to zero is a standard technique for detecting a negative cycle anywhere in a graph.
+    \item An undirected negative-weight edge, when modeled as two opposite directed edges with the same negative weight, produces a negative closed walk by traversing the edge back and forth. Negative-cycle questions commonly assume directed graphs unless otherwise specified.
+    \item Bellman--Ford supports negative edge weights, but no finite shortest-path solution exists for vertices reachable from a relevant negative cycle.
+\end{itemize}
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section V: Recursion and Dynamic Programming Problems}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Recursion and Dynamic Programming Problems}
+
+
+\subsection{Problem 15. Calculate the sum of digits of an integer using recursion}
+
+\textbf{Question:} Write a recursive program to calculate the sum of digits of a nonnegative integer.
+
+For example:
+
+
+\[
+4827\rightarrow4+8+2+7=\boxed{21}
+\]
+
+
+\subsubsection{Algorithm}
+
+The last digit of an integer $n$ is:
+
+
+\[
+n\bmod10
+\]
+
+
+Removing that digit gives:
+
+
+\[
+\left\lfloor\frac n{10}\right\rfloor
+\]
+
+
+Therefore, the sum of digits can be defined recursively:
+
+
+\[
+\boxed{ S(n)= \begin{cases} n,&0\leq n<10\\\ (n\bmod10)+S(\lfloor n/10\rfloor),&n\geq10 \end{cases} }
+\]
+
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+long long sumDigits(long long n) {
+    if (n < 10) {
+        return n;
+    }
+
+    return n % 10 + sumDigits(n / 10);
+}
+
+int main() {
+    long long n;
+    cin >> n;
+
+    if (n < 0) {
+        cout << "Enter a nonnegative integer\n";
+        return 0;
+    }
+
+    cout << sumDigits(n) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+Input:
+
+\begin{lstlisting}[style=pseudocode]
+4827
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+21
+\end{lstlisting}
+
+\subsubsection{Complexity}
+
+An integer with $d$ decimal digits requires one recursive call per digit.
+
+\begin{itemize}
+    \item \textbf{Time:} $O(d)$.
+    \item \textbf{Auxiliary space:} $O(d)$ for the recursion stack.
+\end{itemize}
+
+Since $d=O(\log n)$ for $n>0$, the time complexity can also be written as $O(\log n)$.
+
+\textbf{Exam variation:} Reverse the digits of a number, count its digits, or determine whether its digits form a palindrome.
+
+\subsection{Problem 16. Calculate Fibonacci using Dynamic Programming}
+
+\textbf{Question:} Find the $N$-th Fibonacci number using Dynamic Programming.
+
+The Fibonacci sequence is defined by:
+
+
+\[
+F(0)=0,\qquad F(1)=1
+\]
+
+
+
+\[
+\boxed{F(n)=F(n-1)+F(n-2)}
+\]
+
+
+For $N=10$:
+
+
+\[
+F(10)=\boxed{55}
+\]
+
+
+\subsubsection{Iterative DP solution}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+long long fibonacci(int n) {
+    if (n <= 1) {
+        return n;
+    }
+
+    long long previous2 = 0;
+    long long previous1 = 1;
+
+    for (int i = 2; i <= n; ++i) {
+        long long current = previous1 + previous2;
+        previous2 = previous1;
+        previous1 = current;
+    }
+
+    return previous1;
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    if (n < 0) {
+        cout << "N must be nonnegative\n";
+        return 0;
+    }
+
+    cout << fibonacci(n) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsubsection{Complexity}
+
+\begin{itemize}
+    \item \textbf{Time:} $O(n)$.
+    \item \textbf{Auxiliary space:} $O(1)$.
+\end{itemize}
+
+This is a space-optimized Dynamic Programming implementation. It stores only the two previous values because the recurrence requires no earlier state.
+
+\textbf{Important:} The \texttt{long long} type cannot represent arbitrarily large Fibonacci numbers. An implementation intended for very large $N$ needs arbitrary-precision arithmetic or another representation.
+
+\subsubsection{Comparison of approaches}
+
+\begin{table}[htbp]
+\centering
+\caption{Comparison of Approaches for Fibonacci Calculation}
+\label{tab:fibonacci_approaches}
+\begin{tabularx}{\textwidth}{p{4.5cm} X X}
+\toprule
+\textbf{Method} & \textbf{Time Complexity} & \textbf{Auxiliary Space} \\
+\midrule
+Naive Recursion & Exponential, $\Theta(\varphi^n)$ & $O(n)$ Stack \\
+Memoization (Top-down) & $O(n)$ & $O(n)$ Cache + Stack \\
+Full-table Tabulation & $O(n)$ & $O(n)$ Array \\
+Two-variable DP & $O(n)$ & $O(1)$ Space Optimized \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+This is a standard example for comparing recursion and Dynamic Programming.
+
+\subsection{Problem 17. Calculate factorial iteratively}
+
+\textbf{Question:} Find $N!$ without recursion.
+
+The factorial of a nonnegative integer $N$ is:
+
+
+\[
+\boxed{N!=1\times2\times3\times\cdots\times N}
+\]
+
+
+with:
+
+
+\[
+\boxed{0!=1}
+\]
+
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+unsigned long long factorial(int n) {
+    unsigned long long result = 1;
+
+    for (int i = 2; i <= n; ++i) {
+        result *= static_cast<unsigned long long>(i);
+    }
+
+    return result;
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    if (n < 0) {
+        cout << "N must be nonnegative\n";
+        return 0;
+    }
+
+    cout << factorial(n) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+For $N=5$, the result is:
+
+
+\[
+5!=\boxed{120}
+\]
+
+
+\subsubsection{Complexity}
+
+\begin{itemize}
+    \item \textbf{Time:} $O(n)$.
+    \item \textbf{Auxiliary space:} $O(1)$.
+\end{itemize}
+
+The iterative implementation avoids recursion-stack growth, but its numerical result can still overflow the chosen integer type.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section VI: Additional High-Value Programming Problems}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Additional High-Value Programming Problems}
+
+
+\subsection{Problem 18. Check whether a number is a palindrome}
+
+A \textbf{palindrome number} reads the same forward and backward.
+
+Examples:
+
+\begin{itemize}
+    \item \texttt{121} is a palindrome.
+    \item \texttt{1221} is a palindrome.
+    \item \texttt{123} is not a palindrome.
+\end{itemize}
+
+\subsubsection{Algorithm}
+
+\begin{enumerate}
+    \item Store the original number.
+    \item Reverse its digits using the remainder and integer-division operations.
+    \item Compare the reversed number with the original.
+\end{enumerate}
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+bool isPalindrome(long long n) {
+    if (n < 0) {
+        return false;
+    }
+
+    long long original = n;
+    long long reversed = 0;
+
+    while (n > 0) {
+        int digit = static_cast<int>(n % 10);
+        reversed = reversed * 10 + digit;
+        n /= 10;
+    }
+
+    return original == reversed;
+}
+
+int main() {
+    long long n;
+    cin >> n;
+
+    cout << (isPalindrome(n) ? "Palindrome" : "Not palindrome")
+         << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+Input:
+
+\begin{lstlisting}[style=pseudocode]
+1221
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+Palindrome
+\end{lstlisting}
+
+Under this implementation, zero is considered a palindrome, while negative numbers are not.
+
+\textbf{Complexity:} $O(d)$ time, where $d$ is the number of digits, and $O(1)$ auxiliary space.
+
+\textbf{Important limitation:} The reversed number can overflow for sufficiently large input values. A production implementation should check overflow during reversal or use a different approach.
+
+\subsection{Problem 19. Check whether a number is an Armstrong number}
+
+An \textbf{Armstrong number} in base 10 is a nonnegative integer equal to the sum of its digits, each raised to the power of the number of digits.
+
+For example:
+
+
+\[
+153=1^3+5^3+3^3
+\]
+
+
+
+\[
+153=1+125+27=153
+\]
+
+
+Therefore, 153 is an Armstrong number.
+
+Other examples include 0, 1, 370, 371, and 407.
+
+\subsubsection{Algorithm}
+
+\begin{enumerate}
+    \item Count the number of digits.
+    \item Extract each digit.
+    \item Raise the digit to the required power.
+    \item Sum these powered digits.
+    \item Compare the sum with the original number.
+\end{enumerate}
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+long long integerPower(int base, int exponent) {
+    long long result = 1;
+
+    for (int i = 0; i < exponent; ++i) {
+        result *= base;
+    }
+
+    return result;
+}
+
+bool isArmstrong(long long n) {
+    if (n < 0) {
+        return false;
+    }
+
+    long long original = n;
+    long long temp = n;
+    int digits = 0;
+
+    do {
+        ++digits;
+        temp /= 10;
+    } while (temp > 0);
+
+    long long sum = 0;
+    temp = n;
+
+    do {
+        int digit = static_cast<int>(temp % 10);
+        sum += integerPower(digit, digits);
+        temp /= 10;
+    } while (temp > 0);
+
+    return sum == original;
+}
+
+int main() {
+    long long n;
+    cin >> n;
+
+    cout << (isArmstrong(n) ? "Armstrong" : "Not Armstrong")
+         << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+Input:
+
+\begin{lstlisting}[style=pseudocode]
+153
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+Armstrong
+\end{lstlisting}
+
+\subsubsection{Complexity}
+
+For a number with $d$ digits, the algorithm performs $d$ digit-processing steps, with each digit raised to a power of $d$. The simple exponentiation loop takes $O(d)$ work per digit.
+
+Therefore:
+
+\begin{itemize}
+    \item \textbf{Time:} $O(d^2)$ under this implementation.
+    \item \textbf{Auxiliary space:} $O(1)$.
+\end{itemize}
+
+The implementation assumes intermediate values fit in \texttt{long long}. For larger inputs, overflow checks or a big-integer representation would be necessary.
+
+\subsection{Problem 20. Calculate **$a^n$** using fast exponentiation}
+
+\textbf{Question:} Calculate an integer power:
+
+
+\[
+a^n
+\]
+
+
+efficiently.
+
+A straightforward algorithm multiplies $a$ by itself $n$ times, requiring $O(n)$ multiplications.
+
+\textbf{Fast exponentiation}, also called exponentiation by squaring, reduces the number of multiplications to $O(\log n)$.
+
+\subsubsection{Mathematical principle}
+
+If $n$ is even:
+
+
+\[
+\boxed{a^n=(a^{n/2})^2}
+\]
+
+
+If $n$ is odd:
+
+
+\[
+\boxed{a^n=a(a^{\lfloor n/2\rfloor})^2}
+\]
+
+
+Thus, the exponent can be repeatedly divided by two.
+
+\subsubsection{Example}
+
+Calculate:
+
+
+\[
+2^{10}
+\]
+
+
+Using repeated squaring:
+
+
+\[
+2^2=4
+\]
+
+
+
+\[
+2^4=16
+\]
+
+
+
+\[
+2^8=256
+\]
+
+
+Since $10=8+2$:
+
+
+\[
+2^{10}=2^8\times2^2
+\]
+
+
+
+\[
+\boxed{2^{10}=1024}
+\]
+
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+long long fastPower(long long base, unsigned long long exponent) {
+    long long result = 1;
+
+    while (exponent > 0) {
+        if (exponent & 1ULL) {
+            result *= base;
+        }
+
+        exponent >>= 1ULL;
+
+        if (exponent > 0) {
+            base *= base;
+        }
+    }
+
+    return result;
+}
+
+int main() {
+    long long base;
+    unsigned long long exponent;
+
+    cin >> base >> exponent;
+
+    cout << fastPower(base, exponent) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+Input:
+
+\begin{lstlisting}[style=pseudocode]
+2 10
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+1024
+\end{lstlisting}
+
+\subsubsection{Complexity}
+
+The exponent is halved at every iteration:
+
+
+\[
+\boxed{\text{Time}=O(\log n)}
+\]
+
+
+The algorithm uses a constant number of variables:
+
+
+\[
+\boxed{\text{Auxiliary space}=O(1)}
+\]
+
+
+The code assumes that the final result and intermediate multiplications fit in \texttt{long long}. For large powers, use modular exponentiation or arbitrary-precision arithmetic.
+
+\subsubsection{Related problem: Modular exponentiation}
+
+When only $a^n\bmod M$ is needed, reduce the result and base modulo $M$ during the algorithm.
+
+This avoids unnecessarily constructing the enormous value $a^n$. With careful arithmetic, modular exponentiation also runs in $O(\log n)$ multiplications.
+
+It is widely useful in number theory and algorithmic problems involving large integer calculations.
+
+
+\newpage
+\section{Negative-Cycle Detection: Source-Specific Variation}
+
+
+A common examination variation asks:
+
+\textbf{"Determine whether there is a negative-weight cycle reachable from a particular source vertex."}
+
+This is different from checking whether any negative cycle exists anywhere in the graph.
+
+The earlier implementation initialized every distance to zero and therefore considered all graph components. For a source-specific test, use the following initialization and reachability condition.
+
+\begin{lstlisting}[style=pseudocode]
+dist[source] = 0
+dist[all other vertices] = infinity
+
+Relax all edges up to V - 1 times,
+but only if dist[edge.from] is finite.
+
+For every edge u -> v with weight w:
+    If dist[u] is finite AND dist[u] + w < dist[v]:
+        A negative cycle is reachable from the source.
+\end{lstlisting}
+
+The corresponding extra-pass condition is:
+
+
+\[
+\boxed{ dist[u]\neq\infty \quad\land\quad dist[u]+w(u,v)<dist[v] }
+\]
+
+
+This guard is essential: an edge from an unreachable vertex must not be treated as evidence of a reachable negative cycle.
+
+\subsubsection{Why the distinction matters}
+
+Suppose the graph contains two disconnected components:
+
+\begin{itemize}
+    \item Component 1 has the source vertex and no negative cycle.
+    \item Component 2 contains a negative cycle.
+\end{itemize}
+
+A source-specific Bellman--Ford check for a source in Component 1 should report no \textit{reachable} negative cycle. The global check, which initializes all distances to zero, should report that the graph does contain a negative cycle.
+
+\textbf{Exam rule:} Read the wording carefully. "A negative cycle reachable from source $s$" and "any negative cycle in the graph" are different questions.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section VII: Formulas, Pitfalls, and Final Review}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Master Complexity Reference for Examination Problems}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Master Algorithmic Complexity Reference for High-Value Problems}
+\label{tab:ch09_complexity_reference}
+\begin{tabularx}{\textwidth}{p{4.2cm} p{4.2cm} p{3.2cm} X}
+\toprule
+\textbf{Problem} & \textbf{Recommended Algorithm} & \textbf{Time Complexity} & \textbf{Auxiliary Space} \\
+\midrule
+GCD of two integers & Euclid's algorithm & $O(\log\min(a,b))$ & $O(1)$ iteratively \\
+LCM of two integers & GCD + division first & $O(\log\min(a,b))$ & $O(1)$ \\
+Check whether number is prime & Trial division up to $\sqrt{n}$ & $O(\sqrt{n})$ & $O(1)$ \\
+Generate all primes up to $N$ & Sieve of Eratosthenes & $O(N\log\log N)$ & $O(N)$ \\
+Prime factorization & Trial division & $O(\sqrt{n})$ worst case & $O(1)$ \\
+Sum of even numbers up to $N$ & Closed-form formula & $O(1)$ & $O(1)$ \\
+Sum of natural numbers up to $N$ & Closed-form formula & $O(1)$ & $O(1)$ \\
+Sum of squares up to $N$ & Closed-form formula & $O(1)$ & $O(1)$ \\
+Arithmetic progression sum & Closed-form formula & $O(1)$ & $O(1)$ \\
+Geometric progression sum & Closed-form formula & $O(1)$ operations & $O(1)$ \\
+Pair-sum in an unsorted array & Sorting + two pointers & $O(n\log n)$ & $O(n)$ with copy \\
+Two largest distinct elements & One-pass scan & $O(n)$ & $O(1)$ \\
+Minimum-difference pair & Sort + adjacent scan & $O(n\log n)$ & Depends on sort \\
+Sum of digits & Recursion or loop & $O(d)$ & $O(d)$ recursive, $O(1)$ iterative \\
+Palindrome number & Reverse digits & $O(d)$ & $O(1)$ \\
+Fast exponentiation & Binary exponentiation & $O(\log n)$ mults & $O(1)$ iterative \\
+Fibonacci ($N$-th) & DP with two variables & $O(n)$ & $O(1)$ \\
+Negative cycle anywhere in graph & Bellman--Ford (zero init) & $O(VE)$ & $O(V)$ \\
+Negative cycle from source & Source-init Bellman--Ford & $O(VE)$ & $O(V)$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Here, $d$ is the number of digits in the input integer. The mathematical complexity assumes that integer arithmetic takes constant time and that the required results fit in the selected numeric representation. For arbitrary-precision integers, the cost of arithmetic must also be considered.
+
+\textbf{Implementation note:} In Problem 13, include \texttt{<climits>} to use \texttt{LLONG\_MAX}, or use \texttt{numeric\_limits<long long>::max()} from \texttt{<limits>}.
+
+
+\section{Common Errors to Avoid in Programming Examinations}
+
+
+\begin{quote}
+\textbf{1. Confusing GCD and LCM.}  GCD is the greatest common divisor; LCM is the least common multiple. The relationship between them provides an efficient way to calculate either.
+\end{quote}
+
+\begin{quote}
+\textbf{2. Mishandling the inputs 0 and 1 in prime checking.}  Neither is prime. A prime number must be greater than 1.
+\end{quote}
+
+\begin{quote}
+\textbf{3. Using trial division unnecessarily for large collections of primes.}  Use the Sieve of Eratosthenes when all primes up to a limit are required.
+\end{quote}
+
+\begin{quote}
+\textbf{4. Forgetting integer overflow.}  A formula can be mathematically correct while its C++ implementation produces an incorrect result because intermediate multiplication exceeds the integer type's range.
+\end{quote}
+
+\begin{quote}
+\textbf{5. Confusing a loop with a closed-form formula.}  Summing every even number up to $N$ takes $O(N)$ time with a simple loop, but the formula $k(k+1)$, where $k=\lfloor N/2\rfloor$, takes $O(1)$ arithmetic operations.
+\end{quote}
+
+\begin{quote}
+\textbf{6. Accidentally reusing an element in Pair Sum.}  Use distinct positions. The two-pointer condition \texttt{left < right} ensures that a single position cannot be selected twice.
+\end{quote}
+
+\begin{quote}
+\textbf{7. Losing original indices when sorting.}  If the question requests the positions of a pair, store each value with its original index before sorting.
+\end{quote}
+
+\begin{quote}
+\textbf{8. Claiming Bellman--Ford detects all negative cycles from an arbitrary source.}  Source-initialized Bellman--Ford detects negative cycles reachable from that source. Initialize every distance to zero when checking for negative cycles anywhere in the graph.
+\end{quote}
+
+\begin{quote}
+\textbf{9. Confusing negative edges with negative cycles.}  A negative edge does not automatically imply a negative cycle. A negative cycle requires a closed directed path whose total weight is negative.
+\end{quote}
+
+\begin{quote}
+\textbf{10. Replacing an algorithm's complexity with a single generic result.}  A two-pointer scan is $O(n)$ on sorted input, while sorting an unsorted array first makes the complete Pair-Sum solution $O(n\log n)$.
+\end{quote}
+
+\begin{quote}
+\textbf{11. Ignoring the numerical limits of factorial and Fibonacci.}  Their mathematical values grow rapidly, and ordinary C++ integer types eventually overflow.
+\end{quote}
+
+\begin{quote}
+\textbf{12. Misunderstanding DP state reuse.}  The purpose of memoization and tabulation is to avoid repeatedly solving the same subproblems. Correct state definitions and transitions matter more than merely creating an array called \texttt{dp}.
+\end{quote}
+
+
+\section{Final Practical Competency Checklist}
+
+
+Before completing the Algorithms chapter, you should be able to implement each of the following without consulting the solutions:
+
+\begin{table}[htbp]
+\centering
+\caption{Practical Algorithmic Competency Checklist for Recruitment Candidates}
+\label{tab:recruitment_checklist}
+\begin{tabularx}{\textwidth}{p{6.5cm} X}
+\toprule
+\textbf{Practice Task} & \textbf{Core Competency / Concept Tested} \\
+\midrule
+Calculate GCD and LCM & Euclid's algorithm and overflow-safe division \\
+Check whether a number is prime & Trial division boundary $\sqrt{n}$ and edge cases ($0, 1$) \\
+Generate primes up to $N$ & Sieve of Eratosthenes memory array \\
+Find prime factors & Number theory and factorization termination \\
+Calculate the sum of even numbers & Closed-form mathematical formula versus $O(N)$ loop \\
+Generate arithmetic / geometric progression & Numerical sequences and power overflow mitigation \\
+Find a pair with a target sum & Sorting + two pointers ($O(n\log n)$) versus hash set \\
+Find the two largest distinct elements & One-pass array scan tracking strict inequality \\
+Select the pair with minimum difference & Sorting and adjacent neighbor comparison \\
+Calculate factorial and Fibonacci & Iterative state compression vs recursion overhead \\
+Calculate powers efficiently & Fast exponentiation by repeated squaring ($O(\log n)$) \\
+Detect negative cycle in weighted graph & Global Bellman--Ford edge relaxation and 0-init \\
+Find shortest path with nonnegative weights & Dijkstra's algorithm with min-heap priority queue \\
+Select non-overlapping activities & Greedy optimization sorting by earliest finish time \\
+Solve 0/1 Knapsack & Dynamic Programming state space and reverse loop \\
+Evaluate a recurrence & Master Theorem and recurrence tree bounds \\
+\bottomrule
+\end{tabularx}
+\end{table}

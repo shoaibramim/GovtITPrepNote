@@ -1,0 +1,704 @@
+\chapter{Data Structures --- Stack and Queue}
+\label{ch:stack_and_queue}
+
+This chapter covers the fundamental differences between stacks and queues, followed by a detailed explanation and implementation of a queue using two stacks. The emphasis is on conceptual understanding, algorithms, complexity analysis, practical applications, and common examination questions.
+
+\section{Stack and Queue: Fundamental Concepts}
+
+\subsection{What is a Data Structure?}
+
+A \textbf{data structure} is a way of organizing and storing data so that it can be accessed, modified, and processed efficiently. Examples include arrays, linked lists, stacks, queues, trees, graphs, heaps, and hash tables.
+
+A stack and a queue are both \textbf{linear data structures} because their elements are logically arranged in a sequence. However, they differ in the order in which elements are inserted and removed.
+
+\subsection{What is a Stack?}
+
+A \textbf{stack} is a linear data structure that follows the \textbf{LIFO (Last In, First Out)} principle. The last element inserted into the stack is the first element removed.
+
+A real-life example is a stack of plates in a cafeteria. When a new plate is placed on top, it becomes the first plate available to be removed.
+
+Suppose we insert the following elements in order:
+\[
+10, \; 20, \; 30
+\]
+The top element is $30$. Removing elements produces this sequence:
+\[
+30 \longrightarrow 20 \longrightarrow 10
+\]
+The most recently inserted element is removed first.
+
+\subsubsection{Basic Stack Operations}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l p{7.5cm} X}
+\toprule
+\textbf{Operation} & \textbf{Meaning} & \textbf{Typical Time Complexity} \\
+\midrule
+\texttt{push(x)}           & Insert element $x$ at the top                & $O(1)$ \\
+\texttt{pop()}             & Remove the top element                       & $O(1)$ \\
+\texttt{top()} or \texttt{peek()} & Read the top element without removing it     & $O(1)$ \\
+\texttt{isEmpty()}         & Check whether the stack contains no elements & $O(1)$ \\
+\texttt{size()}            & Return the number of elements                & $O(1)$ when maintained \\
+\bottomrule
+\end{tabularx}
+\caption{Basic stack operations and standard complexities.}
+\end{table}
+
+These complexities assume a standard stack implementation and exclude dynamic-array reallocation during an individual insertion.
+
+\subsubsection{Important Conditions}
+\begin{itemize}
+    \item \textbf{Stack overflow:} An insertion is attempted when a fixed-capacity stack is completely full.
+    \item \textbf{Stack underflow:} A removal or top-element access is attempted when the stack is empty.
+    \item \textbf{Top:} The pointer or index indicating the position at which stack insertion and removal take place.
+\end{itemize}
+
+In a dynamically allocated stack (such as a linked list implementation or \texttt{std::vector}), capacity can grow until system memory is exhausted, so fixed-capacity overflow does not apply.
+
+\subsubsection{Applications of Stacks}
+\begin{enumerate}
+    \item \textbf{Function Calls and Recursion:} Programming language runtimes use a call stack to manage active function calls. Each call creates a stack frame storing local variables, parameters, and the return address.
+    \item \textbf{Undo Operations:} Software applications (such as text editors and graphic tools) store user action history in an undo stack. The most recent action is always the first one to be undone.
+    \item \textbf{Expression Evaluation and Conversion:} Stacks are indispensable for evaluating postfix (Reverse Polish) expressions and converting infix expressions to postfix or prefix notations (e.g., Dijkstra's Shunting-yard algorithm). For example, the postfix expression \texttt{2 3 +} evaluates to $5$.
+    \item \textbf{Parentheses and Delimiter Matching:} Compilers and syntax checkers use stacks to verify that opening and closing brackets (\texttt{()}, \texttt{[]}, \texttt{\{\}}) are properly matched and nested.
+    \item \textbf{Depth-First Search (DFS) and Backtracking:} Stacks facilitate graph traversal, maze exploration, game-tree evaluation, and constraint-satisfaction problems.
+\end{enumerate}
+
+\subsection{What is a Queue?}
+
+A \textbf{queue} is a linear data structure that follows the \textbf{FIFO (First In, First Out)} principle. The first element inserted into the queue is the first element removed.
+
+A real-life example is a line of customers waiting at a service counter. The customer who arrived first is attended to first.
+
+Suppose we insert in order:
+\[
+10, \; 20, \; 30
+\]
+The front element is $10$, and the rear element is $30$. Removing elements produces this sequence:
+\[
+10 \longrightarrow 20 \longrightarrow 30
+\]
+The earliest inserted element is removed first.
+
+\subsubsection{Basic Queue Operations}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l p{7.5cm} X}
+\toprule
+\textbf{Operation} & \textbf{Meaning} & \textbf{Typical Time Complexity} \\
+\midrule
+\texttt{enqueue(x)}        & Insert element $x$ at the rear             & $O(1)$ \\
+\texttt{dequeue()}         & Remove the front element                   & $O(1)$ \\
+\texttt{front()} or \texttt{peek()} & Read the front element without removing it & $O(1)$ \\
+\texttt{isEmpty()}         & Check whether the queue is empty           & $O(1)$ \\
+\texttt{size()}            & Return the number of elements              & $O(1)$ when maintained \\
+\bottomrule
+\end{tabularx}
+\caption{Basic queue operations and standard complexities.}
+\end{table}
+
+These operation complexities assume a suitable queue implementation, such as a circular array queue or a linked list queue maintaining both head (front) and tail (rear) pointers. A naive linear array implementation that shifts elements upon removal incurs an undesirable $O(n)$ time for \texttt{dequeue()}.
+
+\subsubsection{Important Queue Terminology}
+\begin{itemize}
+    \item \textbf{Front (Head):} The end from which elements are inspected and removed.
+    \item \textbf{Rear (Tail):} The end at which new elements are inserted.
+    \item \textbf{Enqueue:} The operation of inserting an element at the rear.
+    \item \textbf{Dequeue:} The operation of removing an element from the front.
+    \item \textbf{Queue underflow:} Attempting to dequeue or peek when the queue contains zero elements.
+    \item \textbf{Queue overflow:} Attempting to enqueue into a fixed-capacity queue that is already full.
+\end{itemize}
+
+\subsubsection{Applications of Queues}
+\begin{enumerate}
+    \item \textbf{CPU and Process Scheduling:} Operating systems maintain queues (ready queues, I/O queues) to schedule processes awaiting execution (e.g., Round-Robin scheduling).
+    \item \textbf{Printer Spooling:} Print jobs sent from multiple applications wait in a FIFO print buffer queue until the printer finishes previous jobs.
+    \item \textbf{Network Packet Buffering:} Switches, routers, and network interfaces buffer incoming and outgoing packets in queues.
+    \item \textbf{Breadth-First Search (BFS):} Graph and tree BFS algorithms explore vertices level-by-level using a FIFO queue.
+    \item \textbf{Asynchronous Request Processing:} Web servers, message brokers (Kafka, RabbitMQ), and worker pools buffer tasks in queues to decouple production from consumption.
+    \item \textbf{Customer Service and Ticketing:} Ticket reservation systems, call centers, and banking counters order requests strictly by arrival time.
+\end{enumerate}
+
+\section{Differences Between Stack and Queue}
+
+The comparison between stacks and queues is a frequent subject in technical interviews, written recruitment exams, and viva voce.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Basis} & \textbf{Stack} & \textbf{Queue} \\
+\midrule
+Operating Principle             & LIFO (Last In, First Out)               & FIFO (First In, First Out) \\
+Full Form                       & Last In, First Out                      & First In, First Out \\
+Insertion Operation             & Push                                    & Enqueue \\
+Removal Operation               & Pop                                     & Dequeue \\
+Insertion Position              & Top                                     & Rear \\
+Removal Position                & Top                                     & Front \\
+Main Access Points              & Top only                                & Front and Rear \\
+Element Removed First           & Most recently inserted element          & Earliest inserted element \\
+Typical Implementation          & Dynamic array or linked list            & Circular array or linked list \\
+Common Applications             & Recursion, undo, parsing, backtracking  & Scheduling, buffering, BFS, spooling \\
+Empty-State Error               & Stack underflow                         & Queue underflow \\
+Fixed-Capacity Full Error       & Stack overflow                          & Queue overflow \\
+Insertion Complexity            & $O(1)$                                  & $O(1)$ \\
+Removal Complexity              & $O(1)$                                  & $O(1)$ \\
+\bottomrule
+\end{tabularx}
+\caption{Comprehensive comparison between Stack and Queue data structures.}
+\end{table}
+
+Both data structures represent abstract data types (ADTs) and can be realized using contiguous arrays or node-based linked lists. Neither is restricted to a single underlying memory layout.
+
+\subsection{The Key Difference: Order of Removal}
+
+Consider an identical sequence of insertions into both structures:
+\begin{enumerate}
+    \item Insert $A$
+    \item Insert $B$
+    \item Insert $C$
+    \item Remove one element
+\end{enumerate}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{0.85\textwidth}{l X X}
+\toprule
+\textbf{Operation} & \textbf{Stack (bottom to top)} & \textbf{Queue (front to rear)} \\
+\midrule
+Insert $A$ & $A$       & $A$ \\
+Insert $B$ & $A, B$    & $A, B$ \\
+Insert $C$ & $A, B, C$ & $A, B, C$ \\
+Remove one & Removes $C$ (leaving $A, B$) & Removes $A$ (leaving $B, C$) \\
+\bottomrule
+\end{tabularx}
+\caption{Visualizing the distinct removal sequences for identical insertion orders.}
+\end{table}
+
+\begin{quote}
+\textbf{Core Exam Takeaway:} A stack and a queue may store identical elements, yet their processing semantics diverge completely: a stack inverts arrival chronology, whereas a queue strictly honors it.
+\end{quote}
+
+\subsection{Can a Stack or Queue Access an Arbitrary Element Directly?}
+
+Neither standard stack nor standard queue supports direct random access ($O(1)$ indexed lookup). 
+\begin{itemize}
+    \item A stack restricts visibility and modification exclusively to its \texttt{top}.
+    \item A queue restricts insertion to its \texttt{rear} and deletion/reading to its \texttt{front}.
+\end{itemize}
+To retrieve the $k$-th element, all preceding elements must be sequentially popped or dequeued, necessitating auxiliary storage if their original values must be preserved. Although an underlying array possesses indexing capability, exposing arbitrary access breaks the ADT abstraction boundary.
+
+\subsection{Stack versus Queue: Common Exam Traps}
+\begin{enumerate}
+    \item \textbf{Principle Mismatch:} Remember: LIFO belongs to stacks; FIFO belongs to queues.
+    \item \textbf{End Symmetry:} In a stack, insertion and removal happen at the \emph{same end} (the top). In a queue, insertion and removal happen at \emph{opposite ends} (rear and front).
+    \item \textbf{Priority Queues are Not Pure FIFO:} In a priority queue, elements are extracted according to priority keys rather than arrival chronology.
+    \item \textbf{Deques (Double-Ended Queues):} A deque generalizes both stacks and queues by permitting insertions and deletions at both ends in $O(1)$ time.
+    \item \textbf{Array Queue Naivety:} A queue built on a standard array without circular wrapping either wastes memory or requires $O(n)$ shifting on dequeue.
+    \item \textbf{Mutual Emulation:} A stack can be implemented using two queues, and a queue can be implemented using two stacks.
+\end{enumerate}
+
+\section{Implementing a Queue Using Two Stacks}
+
+This classic data structure problem appears frequently in recruitment tests (e.g., BPDB, Biman, BCS, BAPEX, Bangladesh Bank IT).
+
+\subsection{The Problem}
+A stack is strictly LIFO; a queue must behave as FIFO. The task is to construct a fully functioning queue supporting:
+\begin{itemize}
+    \item \texttt{enqueue(x)}: Insert an item into the queue.
+    \item \texttt{dequeue()}: Remove the oldest item from the queue.
+    \item \texttt{front() / peek()}: Inspect the oldest item without removal.
+    \item \texttt{isEmpty()}: Determine whether the queue is empty.
+\end{itemize}
+using \textbf{only two standard stack instances}, conventionally denoted $S_1$ and $S_2$, with standard stack primitives (\texttt{push}, \texttt{pop}, \texttt{top}, \texttt{empty}).
+
+\subsection{Why Are Two Stacks Needed?}
+
+Suppose we push the values $10, 20, 30$ onto a single stack $S_1$:
+\[
+\text{Stack } S_1 \text{ (bottom to top): } [10, 20, 30] \quad \Longrightarrow \quad \text{Top} = 30
+\]
+Popping from $S_1$ yields $30, 20, 10$, which violates FIFO order.
+
+Now, pop each element from $S_1$ and push it onto a second stack $S_2$:
+\begin{enumerate}
+    \item Pop $30$ from $S_1$, push to $S_2$.
+    \item Pop $20$ from $S_1$, push to $S_2$.
+    \item Pop $10$ from $S_1$, push to $S_2$.
+\end{enumerate}
+Stack $S_2$ now contains:
+\[
+\text{Stack } S_2 \text{ (bottom to top): } [30, 20, 10] \quad \Longrightarrow \quad \text{Top} = 10
+\]
+When we pop from $S_2$, the first element extracted is $10$---the very first element that was originally entered!
+
+\begin{quote}
+\textbf{The Inversion Principle:} Transferring elements from one LIFO stack to another reverses their ordering:
+\[
+\text{LIFO} \times \text{LIFO} = \text{FIFO}
+\]
+Two reversals restore the original arrival sequence.
+\end{quote}
+
+\section{Method 1: Costly Enqueue, Efficient Dequeue}
+
+In this design, every \texttt{enqueue} proactively rearranges elements so that the oldest element perpetually resides at the top of $S_1$.
+
+\subsection{Algorithm}
+
+\subsubsection{Enqueue Operation (\texttt{ENQUEUE(x)})}
+To insert element $x$:
+\begin{enumerate}
+    \item While $S_1$ is not empty, pop all elements from $S_1$ and push them into $S_2$.
+    \item Push the new element $x$ into $S_1$.
+    \item While $S_2$ is not empty, pop all elements from $S_2$ and push them back into $S_1$.
+\end{enumerate}
+After this two-way transfer, $x$ is placed at the very bottom of $S_1$, and the oldest element is restored to the top.
+
+\subsubsection{Dequeue Operation (\texttt{DEQUEUE()})}
+\begin{enumerate}
+    \item If $S_1$ is empty, report queue underflow.
+    \item Otherwise, pop and return the top element of $S_1$.
+\end{enumerate}
+
+\subsubsection{Front Operation (\texttt{FRONT()})}
+\begin{enumerate}
+    \item If $S_1$ is empty, report queue underflow.
+    \item Otherwise, return the top element of $S_1$ without popping.
+\end{enumerate}
+
+\subsection{Pseudocode}
+
+\begin{lstlisting}[style=pseudocode]
+ENQUEUE(x):
+    while S1 is not empty:
+        S2.push(S1.pop())
+    
+    S1.push(x)
+    
+    while S2 is not empty:
+        S1.push(S2.pop())
+
+DEQUEUE():
+    if S1.isEmpty():
+        error "Queue Underflow"
+    return S1.pop()
+
+FRONT():
+    if S1.isEmpty():
+        error "Queue Underflow"
+    return S1.top()
+\end{lstlisting}
+
+\subsection{Step-by-Step Example}
+Insert $10$, then $20$, then $30$:
+\begin{itemize}
+    \item \textbf{Enqueue 10:} $S_1$ is empty. Push $10$ into $S_1$. $S_1 = [10]$ (top is $10$).
+    \item \textbf{Enqueue 20:} Move $10$ to $S_2$. Push $20$ to $S_1$. Move $10$ back to $S_1$. $S_1 = [20, 10]$ (top is $10$).
+    \item \textbf{Enqueue 30:} Move $10, 20$ to $S_2$. Push $30$ to $S_1$. Move $20, 10$ back to $S_1$. $S_1 = [30, 20, 10]$ (top is $10$).
+\end{itemize}
+Calling \texttt{dequeue()} immediately pops $10$, then $20$, then $30$, exactly preserving FIFO order.
+
+\subsection{Complexity Analysis}
+Let $n$ denote the number of elements in the queue:
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{0.7\textwidth}{l X}
+\toprule
+\textbf{Operation} & \textbf{Time Complexity} \\
+\midrule
+Enqueue      & $O(n)$ \\
+Dequeue      & $O(1)$ \\
+Front / Peek & $O(1)$ \\
+isEmpty      & $O(1)$ \\
+Space        & $O(n)$ total storage \\
+\bottomrule
+\end{tabularx}
+\caption{Complexity profile for Method 1.}
+\end{table}
+
+\textbf{Trade-off:} Dequeue is instantaneous ($O(1)$), but every single enqueue costs $2n$ stack operations ($O(n)$). This approach is only advantageous when reads/removals vastly outnumber insertions.
+
+\section{Method 2: Efficient Enqueue, Costly Dequeue (Recommended)}
+
+This is the standard and widely preferred method because it achieves \textbf{$O(1)$ amortized time complexity} across both insertions and removals.
+
+Here, the two stacks maintain distinct functional responsibilities:
+\begin{itemize}
+    \item $S_1$ (\textbf{Input Stack}): Receives all newly enqueued items.
+    \item $S_2$ (\textbf{Output Stack}): Dispenses items for dequeue and peek operations.
+\end{itemize}
+
+\begin{quote}
+\textbf{The Golden Transfer Rule:} Elements are transferred from $S_1$ to $S_2$ \textbf{if and only if} $S_2$ is completely empty. If $S_2$ already contains elements, never transfer from $S_1$, as doing so would violate FIFO chronology.
+\end{quote}
+
+\subsection{Algorithm}
+
+\subsubsection{Enqueue Operation (\texttt{ENQUEUE(x)})}
+\begin{enumerate}
+    \item Push $x$ directly onto stack $S_1$.
+    \item Do not move any other elements.
+\end{enumerate}
+Time complexity: $O(1)$.
+
+\subsubsection{Dequeue Operation (\texttt{DEQUEUE()})}
+\begin{enumerate}
+    \item If $S_2$ is not empty, pop and return the top element of $S_2$.
+    \item If $S_2$ is empty:
+    \begin{itemize}
+        \item While $S_1$ is not empty, pop the top of $S_1$ and push it onto $S_2$.
+    \end{itemize}
+    \item If $S_2$ is still empty (meaning both $S_1$ and $S_2$ were empty), report queue underflow.
+    \item Otherwise, pop and return the top of $S_2$.
+\end{enumerate}
+
+\subsubsection{Front Operation (\texttt{FRONT()})}
+Same logic as \texttt{dequeue()}, but inspect $S_2.\texttt{top()}$ without popping.
+
+\subsubsection{Pseudocode}
+
+\begin{lstlisting}[style=pseudocode]
+ENQUEUE(x):
+    S1.push(x)
+
+DEQUEUE():
+    if S2.isEmpty():
+        while not S1.isEmpty():
+            S2.push(S1.pop())
+    
+    if S2.isEmpty():
+        error "Queue Underflow"
+    
+    return S2.pop()
+
+FRONT():
+    if S2.isEmpty():
+        while not S1.isEmpty():
+            S2.push(S1.pop())
+            
+    if S2.isEmpty():
+        error "Queue Underflow"
+        
+    return S2.top()
+
+IS_EMPTY():
+    return S1.isEmpty() and S2.isEmpty()
+\end{lstlisting}
+
+\subsection{Step-by-Step Execution Trace}
+
+Consider the execution sequence:
+\texttt{enqueue(10)}, \texttt{enqueue(20)}, \texttt{enqueue(30)}, \texttt{dequeue()}, \texttt{enqueue(40)}, \texttt{dequeue()}, \texttt{dequeue()}, \texttt{dequeue()}, \texttt{dequeue()}.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{c l X X l}
+\toprule
+\textbf{Step} & \textbf{Operation} & \textbf{Stack $S_1$ (bottom $\to$ top)} & \textbf{Stack $S_2$ (bottom $\to$ top)} & \textbf{Result} \\
+\midrule
+1 & \texttt{enqueue(10)} & $[10]$         & Empty       & --- \\
+2 & \texttt{enqueue(20)} & $[10, 20]$     & Empty       & --- \\
+3 & \texttt{enqueue(30)} & $[10, 20, 30]$ & Empty       & --- \\
+4 & \texttt{dequeue()}   & Empty          & $[30, 20]$  & Returns $10$ \\
+5 & \texttt{enqueue(40)} & $[40]$         & $[30, 20]$  & --- \\
+6 & \texttt{dequeue()}   & $[40]$         & $[30]$      & Returns $20$ \\
+7 & \texttt{dequeue()}   & $[40]$         & Empty       & Returns $30$ \\
+8 & \texttt{dequeue()}   & Empty          & Empty       & Returns $40$ (transferred) \\
+9 & \texttt{dequeue()}   & Empty          & Empty       & Underflow (Error) \\
+\bottomrule
+\end{tabularx}
+\caption{Detailed step-by-step state trace of the two stacks.}
+\end{table}
+
+\textbf{Key Observation at Step 5:} When $40$ is enqueued, it is pushed onto $S_1$. It does not displace the elements already waiting in $S_2$ ($20$ and $30$). Those older elements are correctly dequeued first. Only after $S_2$ is exhausted does $40$ transfer to $S_2$. The resulting departure order is $10 \to 20 \to 30 \to 40$.
+
+\subsection{Complete C++ Implementation}
+
+The following standard C++ implementation encapsulates the queue, properly handles underflow via return booleans and output references, and exposes complete queue functionality.
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include <stack>
+using namespace std;
+
+class QueueUsingTwoStacks {
+private:
+    stack<int> S1;  // Input stack for enqueued elements
+    stack<int> S2;  // Output stack for dequeued elements
+
+    // Helper: transfer elements from S1 to S2 only when S2 is empty
+    void moveIfNeeded() {
+        if (S2.empty()) {
+            while (!S1.empty()) {
+                S2.push(S1.top());
+                S1.pop();
+            }
+        }
+    }
+
+public:
+    // Insert an element at the rear of the queue: O(1)
+    void enqueue(int value) {
+        S1.push(value);
+    }
+
+    // Remove the front element: O(1) amortized
+    // Returns false if queue underflow occurs
+    bool dequeue(int& value) {
+        moveIfNeeded();
+
+        if (S2.empty()) {
+            return false; // Queue is empty
+        }
+
+        value = S2.top();
+        S2.pop();
+        return true;
+    }
+
+    // Read the front element without removing it: O(1) amortized
+    bool front(int& value) {
+        moveIfNeeded();
+
+        if (S2.empty()) {
+            return false;
+        }
+
+        value = S2.top();
+        return true;
+    }
+
+    // Check whether the queue is empty: O(1)
+    bool isEmpty() const {
+        return S1.empty() && S2.empty();
+    }
+
+    // Return the total count of queued elements: O(1)
+    size_t size() const {
+        return S1.size() + S2.size();
+    }
+};
+
+int main() {
+    QueueUsingTwoStacks q;
+    int value;
+
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+
+    if (q.front(value)) {
+        cout << "Front: " << value << '\n';
+    }
+
+    if (q.dequeue(value)) {
+        cout << "Removed: " << value << '\n';
+    }
+
+    q.enqueue(40);
+
+    while (q.dequeue(value)) {
+        cout << "Removed: " << value << '\n';
+    }
+
+    cout << "Queue empty: " << (q.isEmpty() ? "Yes" : "No") << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsubsection{Expected Output}
+\begin{lstlisting}[style=pseudocode]
+Front: 10
+Removed: 10
+Removed: 20
+Removed: 30
+Removed: 40
+Queue empty: Yes
+\end{lstlisting}
+
+\subsubsection{Explanation of Implementation Details}
+\begin{itemize}
+    \item \texttt{moveIfNeeded()}: Centralizes the transfer logic. By enforcing \texttt{if (S2.empty())}, elements are only transferred when the output pipeline is exhausted, preserving strict FIFO ordering.
+    \item \texttt{dequeue(int\& value)}: Uses pass-by-reference to safely return the value while providing a boolean return code to distinguish successful extraction from queue underflow.
+    \item \texttt{isEmpty()}: Returns \texttt{true} only when \emph{both} $S_1$ and $S_2$ are empty. A queue is not empty simply because $S_1$ is empty (as unserved elements may still exist in $S_2$).
+\end{itemize}
+
+\section{Time and Space Complexity of the Two-Stack Queue}
+
+Recruitment exams frequently test the distinction between \textbf{worst-case} and \textbf{amortized} complexity for Method 2.
+
+\subsection{Complexity Comparison}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Operation} & \textbf{Method 1 (Costly Enqueue)} & \textbf{Method 2 (Efficient Enqueue)} \\
+\midrule
+Enqueue         & $O(n)$     & $O(1)$ worst-case \\
+Dequeue         & $O(1)$     & $O(1)$ amortized; $O(n)$ worst-case \\
+Front / Peek    & $O(1)$     & $O(1)$ amortized; $O(n)$ worst-case \\
+isEmpty         & $O(1)$     & $O(1)$ \\
+Auxiliary Space & $O(n)$     & $O(n)$ \\
+\bottomrule
+\end{tabularx}
+\caption{Detailed performance comparison between the two approaches.}
+\end{table}
+
+\subsection{Why is the Amortized Complexity $O(1)$?}
+
+To establish that Method 2 requires $O(1)$ amortized time per operation, track the full lifecycle of an arbitrary element $e$:
+\begin{enumerate}
+    \item \textbf{Push onto $S_1$:} Executed once when $e$ is enqueued ($1$ stack push).
+    \item \textbf{Pop from $S_1$:} Executed at most once during a batch transfer to $S_2$ ($1$ stack pop).
+    \item \textbf{Push onto $S_2$:} Executed at most once during the same batch transfer ($1$ stack push).
+    \item \textbf{Pop from $S_2$:} Executed once when $e$ is dequeued ($1$ stack pop).
+\end{enumerate}
+
+Notice that element $e$ is pushed onto $S_1$ exactly once, transferred from $S_1$ to $S_2$ at most once, and popped from $S_2$ exactly once. It is \emph{never} transferred back and forth repeatedly.
+
+Thus, over the entire lifetime of any element, it incurs at most \textbf{4 primitive stack operations}.
+
+For an arbitrary sequence of $m$ queue operations involving $n$ elements:
+\[
+\text{Total Operations} \leq 4n \in O(m)
+\]
+Averaging the total cost over the $m$ operations yields:
+\[
+\text{Amortized Cost per Operation} = \frac{O(m)}{m} = O(1)
+\]
+
+\begin{quote}
+\textbf{Essential Distinction for Viva:}
+\begin{itemize}
+    \item \textbf{Worst-case complexity:} The cost of the single most expensive operation. For Method 2 \texttt{dequeue()}, if $S_2$ is empty and $S_1$ holds $n$ elements, the single call takes $O(n)$ time.
+    \item \textbf{Amortized complexity:} The guaranteed upper bound on average time per operation over any sequence of operations. For Method 2, \texttt{dequeue()} is guaranteed $O(1)$ amortized.
+\end{itemize}
+\end{quote}
+
+\section{Comparing Both Two-Stack Approaches}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Feature} & \textbf{Costly Enqueue (Method 1)} & \textbf{Costly Dequeue (Method 2)} \\
+\midrule
+Front Element Location & Top of $S_1$ at all times & Top of $S_2$ (when $S_2$ nonempty) \\
+Enqueue Strategy       & Rebalance both stacks ($O(n)$) & Direct push to $S_1$ ($O(1)$) \\
+Dequeue Strategy       & Direct pop from $S_1$ ($O(1)$) & Transfer when $S_2$ empty, then pop \\
+Primary Advantage      & Predictable $O(1)$ removal & Fast insertions and $O(1)$ amortized dequeues \\
+Primary Drawback       & Every enqueue is slow & Occasional batch transfer on dequeue \\
+Recommended Use-Case   & Real-time systems prioritizing predictable latency on read & General-purpose workloads (standard solution) \\
+\bottomrule
+\end{tabularx}
+\caption{Strategic architectural comparison between Method 1 and Method 2.}
+\end{table}
+
+\section{Common Mistakes and Edge Cases}
+
+These edge cases are frequent traps in coding tests and interview discussions:
+
+\subsection{Mistake 1: Transferring Elements on Every Dequeue}
+In Method 2, transferring from $S_1$ to $S_2$ on \emph{every} dequeue destroys FIFO order if $S_2$ already holds elements. If $S_2$ holds older elements $[10, 20]$ and $S_1$ holds $30$, pouring $S_1$ into $S_2$ would place the newer element $30$ on top of $10$, which violates queue ordering. 
+\begin{center}
+\textbf{Rule: Only transfer from $S_1$ to $S_2$ when $S_2$ is completely empty.}
+\end{center}
+
+\subsection{Mistake 2: Checking Only One Stack for Emptiness}
+A common bug is writing \texttt{isEmpty() \{ return S1.empty(); \}}. After several enqueues and one dequeue, $S_1$ may be empty while $S_2$ contains multiple queued items. Conversely, after several enqueues without a dequeue, $S_2$ is empty while $S_1$ is full. 
+\begin{center}
+\textbf{Rule: The queue is empty if and only if BOTH $S_1$ and $S_2$ are empty.}
+\end{center}
+
+\subsection{Mistake 3: Popping an Empty Stack}
+In C++, invoking \texttt{S.top()} or \texttt{S.pop()} on an empty \texttt{std::stack} causes undefined behavior (often a segmentation fault). Always guard access with an emptiness check.
+
+\subsection{Mistake 4: Equating Stack Top to Queue Front}
+In Method 2, the top of $S_1$ contains the \emph{newest} element, whereas the front of the queue is the \emph{oldest} element. The front is at the top of $S_2$ (or at the bottom of $S_1$ if no transfer has occurred).
+
+\subsection{Mistake 5: Stating Dequeue is $O(1)$ Worst-Case}
+Never claim that Method 2 \texttt{dequeue()} is $O(1)$ worst-case. In written answers, state: \emph{Enqueue is $O(1)$ worst-case; Dequeue is $O(1)$ amortized and $O(n)$ worst-case.}
+
+\section{Likely Recruitment Examination Questions}
+
+\begin{quote}
+\textbf{Q1: What is the primary difference between a stack and a queue?}\\
+\textbf{Answer:} A stack operates on the LIFO principle (Last In, First Out), where insertions and deletions occur at the same end (the top). A queue operates on the FIFO principle (First In, First Out), where insertions occur at the rear and deletions occur at the front.
+\end{quote}
+
+\begin{quote}
+\textbf{Q2: How can a FIFO queue be implemented using two LIFO stacks?}\\
+\textbf{Answer:} Use an input stack ($S_1$) and an output stack ($S_2$). Push new elements directly onto $S_1$. For dequeue or peek operations, if $S_2$ is empty, transfer all elements from $S_1$ to $S_2$ by repeated popping and pushing, which reverses their order. Then pop from $S_2$. If $S_2$ is not empty, pop directly from $S_2$.
+\end{quote}
+
+\begin{quote}
+\textbf{Q3: What are the time complexities of enqueue and dequeue in the efficient-enqueue method?}\\
+\textbf{Answer:} Enqueue takes $O(1)$ worst-case time. Dequeue takes $O(1)$ amortized time, although an individual dequeue takes $O(n)$ worst-case time when a batch transfer from $S_1$ to $S_2$ is triggered.
+\end{quote}
+
+\begin{quote}
+\textbf{Q4: Why must elements be transferred from $S_1$ to $S_2$ only when $S_2$ is empty?}\\
+\textbf{Answer:} Elements already inside $S_2$ arrived earlier than any elements currently waiting in $S_1$. Pouring elements from $S_1$ while $S_2$ is nonempty would place newer elements on top of older elements, violating FIFO order.
+\end{quote}
+
+\begin{quote}
+\textbf{Q5: What is the auxiliary space complexity of implementing a queue using two stacks?}\\
+\textbf{Answer:} $O(n)$, where $n$ is the total number of elements stored in the queue, because $S_1$ and $S_2$ collectively hold exactly $n$ items.
+\end{quote}
+
+\begin{quote}
+\textbf{Q6: What happens when dequeue is invoked on an empty queue?}\\
+\textbf{Answer:} The operation triggers queue underflow. In a robust implementation, it should be intercepted and handled gracefully (e.g., throwing an underflow exception or returning a boolean status code) without attempting to read from empty internal stacks.
+\end{quote}
+
+\begin{quote}
+\textbf{Q7: What is amortized analysis, and how does it justify the $O(1)$ dequeue cost?}\\
+\textbf{Answer:} Amortized analysis evaluates the average running time per operation over a worst-case sequence of operations. Because every enqueued element is transferred from $S_1$ to $S_2$ at most once in its entire lifetime, $n$ insertions and removals incur at most $4n$ primitive stack operations, guaranteeing an average $O(1)$ cost per operation.
+\end{quote}
+
+\begin{quote}
+\textbf{Q8: Can a stack be implemented using two queues? If so, what is the complexity?}\\
+\textbf{Answer:} Yes. In a costly-push approach, each push transfers elements between the two queues so that the newest element remains at the front ($O(n)$ push, $O(1)$ pop). Alternatively, in a costly-pop approach, push is $O(1)$ and pop shifts $n-1$ elements to the second queue to extract the last inserted element ($O(n)$ pop).
+\end{quote}
+
+\section{Quick Revision Summary}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Topic} & \textbf{Key Fact} \\
+\midrule
+Stack Principle                & LIFO (Last In, First Out) \\
+Queue Principle                & FIFO (First In, First Out) \\
+Stack Operations               & Push and Pop both take place at the Top ($O(1)$) \\
+Queue Operations               & Enqueue at Rear, Dequeue at Front ($O(1)$) \\
+Boundary Errors                & Underflow (empty access) and Overflow (full insertion) \\
+Queue via Two Stacks Core Idea & Transferring elements between two stacks reverses their order \\
+Efficient Enqueue Architecture & Enqueue pushes to $S_1$; Dequeue pops from $S_2$ \\
+Transfer Condition             & Transfer $S_1 \to S_2$ \textbf{only} when $S_2$ is empty \\
+Enqueue Complexity             & $O(1)$ worst-case \\
+Dequeue Complexity             & $O(1)$ amortized; $O(n)$ worst-case \\
+Total Space Complexity         & $O(n)$ \\
+\bottomrule
+\end{tabularx}
+\caption{Quick revision reference for Stack and Queue fundamentals.}
+\end{table}
+
+\begin{quote}
+\textbf{Final Golden Rule:} Two LIFO stacks simulate a FIFO queue because reversing a reversed sequence restores original arrival order. Method 2 guarantees $O(1)$ amortized operation times because every element is transferred at most once during its lifetime.
+\end{quote}

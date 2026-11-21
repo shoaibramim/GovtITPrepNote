@@ -1,0 +1,1215 @@
+\chapter{Data Structures --- Graphs, Hash Tables, and Graph Representations}
+\label{ch:graphs_hashing}
+
+This chapter covers three important areas of data structures for Bangladesh government IT recruitment examinations: graph classifications and mathematical properties, hash tables and collision-resolution techniques, and the comparison between adjacency lists and adjacency matrices.
+
+The emphasis is on definitions, formulas, worked calculations, algorithms, time complexity, practical applications, and common MCQ traps.
+
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section I: Graphs and Their Properties}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{What is a Graph?}
+
+A \textbf{graph} is a non-linear data structure consisting of a set of vertices and a set of edges connecting those vertices.
+
+Mathematically, a graph is commonly represented as:
+\[
+G = (V, E)
+\]
+where:
+\begin{itemize}
+    \item $V$ is the set of vertices (also called nodes).
+    \item $E$ is the set of edges connecting vertices.
+\end{itemize}
+
+For example, consider a computer network with five computers. Each computer can be represented as a vertex, and each network connection can be represented as an edge.
+
+Graphs can model computer networks, road maps, social networks, communication systems, dependencies among software modules, and relationships between database entities.
+
+\subsection{Basic Graph Terminology}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Term} & \textbf{Formal Definition} \\
+\midrule
+Vertex (node)     & An individual entity in the graph. \\
+Edge              & A connection between two vertices in an undirected graph. \\
+Arc               & A directed connection from one vertex to another. \\
+Adjacent vertices & Vertices directly connected by an edge. \\
+Incident edge     & An edge connected to a particular vertex. \\
+Degree            & Number of incident edges for a vertex in an undirected graph. \\
+In-degree         & Number of incoming arcs to a vertex in a directed graph. \\
+Out-degree        & Number of outgoing arcs from a vertex in a directed graph. \\
+Path              & A sequence of vertices connected by edges. \\
+Walk              & A sequence of adjacent vertices in which vertices and edges may repeat. \\
+Trail             & A walk in which no edge is repeated. \\
+Simple path       & A path that does not repeat vertices. \\
+Cycle             & A closed path or closed traversal that returns to its starting vertex. \\
+Connected graph   & An undirected graph in which every pair of vertices has a path between them. \\
+Component         & A maximal connected subgraph of an undirected graph. \\
+Weight            & A numerical value assigned to an edge, such as distance, cost, or latency. \\
+Subgraph          & A graph formed from a subset of vertices and edges of another graph. \\
+\bottomrule
+\end{tabularx}
+\caption{Fundamental graph terminology and definitions.}
+\end{table}
+
+\begin{quote}
+\textbf{Recruitment Exam Distinction:} The terms walk, trail, path, and cycle are sometimes defined with slightly different conventions in textbooks. For recruitment exams, remember:
+\begin{itemize}
+    \item \textbf{Walk:} May repeat both edges and vertices.
+    \item \textbf{Trail:} Cannot repeat edges (may repeat vertices).
+    \item \textbf{Simple Path:} Cannot repeat vertices (and thus cannot repeat edges).
+\end{itemize}
+\end{quote}
+
+\section{Types of Graphs}
+
+\subsection{Undirected Graph}
+An \textbf{undirected graph} is a graph in which edges do not have a direction. An edge connecting vertices $u$ and $v$ is bidirectional and is commonly written as an unordered pair $\{u, v\}$ or $(u, v)$.
+
+\textbf{Properties:}
+\begin{itemize}
+    \item $(u, v)$ is identical to $(v, u)$.
+    \item Traversal is permitted in both directions.
+    \item Used to model bidirectional communication, friendship networks, and two-way roads.
+\end{itemize}
+
+\subsection{Directed Graph (Digraph)}
+A \textbf{directed graph} (or \textbf{digraph}) is a graph in which every edge has a specific direction. Each directed edge is called an \textbf{arc} and is represented as an ordered pair $(u, v)$, directed from $u$ to $v$.
+
+\textbf{Properties:}
+\begin{itemize}
+    \item $(u, v)$ is distinct from $(v, u)$.
+    \item $u$ is the tail or source; $v$ is the head or destination.
+    \item A vertex has both an \textbf{in-degree} (incoming edges) and an \textbf{out-degree} (outgoing edges).
+    \item Used to model one-way traffic, task dependencies, webpage hyperlinks, and function call graphs.
+\end{itemize}
+
+\subsection{Weighted Graph}
+A \textbf{weighted graph} is a graph in which each edge is assigned a numerical value called a weight. Depending on the application, the weight may represent distance, cost, travel time, bandwidth, or network delay.
+
+Shortest-path algorithms such as Dijkstra's algorithm and minimum spanning tree algorithms such as Kruskal's and Prim's operate on weighted graphs.
+
+\subsection{Simple Graph}
+A \textbf{simple graph} is an undirected or directed graph that contains:
+\begin{itemize}
+    \item \textbf{No self-loops:} An edge connecting a vertex to itself.
+    \item \textbf{No parallel (multiple) edges:} Multiple edges connecting the same pair of vertices in the same direction.
+\end{itemize}
+Unless specified otherwise, theoretical exam questions generally assume simple graphs.
+
+\subsection{Multigraph}
+A \textbf{multigraph} is a graph that allows multiple edges between the same pair of vertices. It may or may not allow self-loops depending on the textbook definition.
+
+Multigraphs are useful when modeling multiple flight routes between the same cities or multiple telecommunication links between two switching centers.
+
+\subsection{Pseudograph}
+A \textbf{pseudograph} is a graph that allows both parallel edges and self-loops. It is the most general graph variant encountered in discrete mathematics.
+
+\subsection{Complete Graph}
+A \textbf{complete graph} is a simple undirected graph in which an edge connects every pair of distinct vertices. A complete graph with $n$ vertices is denoted by $K_n$.
+
+Every vertex in $K_n$ is adjacent to every other vertex.
+
+\textbf{Example:} In $K_4$, there are 4 vertices. The total number of edges is:
+\[
+E = \frac{4 \times 3}{2} = 6 \text{ edges.}
+\]
+Each vertex has a degree of:
+\[
+\deg(v) = n - 1 = 4 - 1 = 3.
+\]
+
+\subsection{Regular Graph}
+A graph is \textbf{$k$-regular} if every vertex has the same degree $k$.
+
+\textbf{Example:} A cycle graph $C_n$ (for $n \geq 3$) is 2-regular because every vertex has degree 2. The complete graph $K_n$ is $(n-1)$-regular.
+
+\subsection{Null Graph and Trivial Graph}
+\begin{itemize}
+    \item \textbf{Null graph (Empty graph):} A graph containing a set of vertices but \textbf{no edges} ($E = \emptyset$).
+    \item \textbf{Trivial graph:} A graph consisting of exactly \textbf{one vertex and zero edges}.
+\end{itemize}
+
+\section{Connectivity, Cycles, and Special Graph Classes}
+
+\subsection{Connected and Disconnected Graphs}
+An undirected graph is \textbf{connected} if there is a path between every pair of vertices. Otherwise, it is \textbf{disconnected}.
+
+A disconnected graph consists of two or more independent connected subgraphs called \textbf{connected components}.
+
+\textbf{Useful Properties:}
+\begin{itemize}
+    \item A connected undirected graph with $V$ vertices must have at least $V - 1$ edges.
+    \item If an undirected graph has fewer than $V - 1$ edges, it is guaranteed to be disconnected.
+    \item An undirected graph with $V$ vertices and more than $\frac{(V-1)(V-2)}{2}$ edges is guaranteed to be connected.
+\end{itemize}
+
+\subsection{Strongly Connected and Weakly Connected Directed Graphs}
+For directed graphs:
+\begin{itemize}
+    \item \textbf{Strongly connected:} For every pair of vertices $u$ and $v$, there is a directed path from $u$ to $v$ \textbf{and} a directed path from $v$ to $u$.
+    \item \textbf{Weakly connected:} The graph is not strongly connected, but replacing all directed edges with undirected edges produces a connected undirected graph.
+\end{itemize}
+
+\subsection{Cyclic and Acyclic Graphs}
+\begin{itemize}
+    \item \textbf{Cyclic graph:} A graph containing at least one cycle.
+    \item \textbf{Acyclic graph:} A graph containing no cycles. An undirected acyclic graph is a \textbf{forest}; if it is also connected, it is a \textbf{tree}.
+\end{itemize}
+
+\subsubsection{Directed Acyclic Graph (DAG)}
+A \textbf{directed acyclic graph (DAG)} is a directed graph containing no directed cycles.
+\begin{itemize}
+    \item \textbf{Topological Sorting:} Vertices in a DAG can be linearly ordered such that for every directed edge $(u, v)$, vertex $u$ comes before vertex $v$.
+    \item \textbf{Applications:} Task scheduling, build systems (e.g., Make/Gradle), prerequisite resolution, and spreadsheet formula evaluation.
+\end{itemize}
+
+\subsection{Bipartite Graph}
+A graph is \textbf{bipartite} if its vertex set $V$ can be partitioned into two disjoint subsets $V_1$ and $V_2$ such that every edge connects a vertex in $V_1$ to a vertex in $V_2$. No edge connects two vertices in the same subset.
+
+\begin{tcolorbox}[title=\textbf{Fundamental Theorem on Bipartite Graphs}]
+An undirected graph is bipartite if and only if it contains \textbf{no odd-length cycles}.
+\end{tcolorbox}
+
+\subsubsection{Complete Bipartite Graph}
+A \textbf{complete bipartite graph}, denoted by $K_{a, b}$, partitions vertices into sets of size $a$ and $b$, where every vertex in $V_1$ connects to every vertex in $V_2$.
+\begin{itemize}
+    \item Total vertices: $V = a + b$.
+    \item Total edges: $\boxed{E = a \times b}$.
+\end{itemize}
+
+\subsection{Planar Graph}
+A \textbf{planar graph} is a graph that can be drawn in a plane such that no two edges cross each other.
+
+\begin{tcolorbox}[title=\textbf{Euler's Formula for Connected Planar Graphs}]
+For any connected planar graph with $V$ vertices, $E$ edges, and $F$ faces (including the unbounded outer face):
+\[
+\boxed{V - E + F = 2}
+\]
+For a simple connected planar graph with $V \geq 3$:
+\[
+E \leq 3V - 6
+\]
+\end{tcolorbox}
+The complete graph $K_5$ and the complete bipartite graph $K_{3,3}$ are the two minimal non-planar graphs (Kuratowski's Theorem).
+
+\subsection{Eulerian Graph}
+\begin{itemize}
+    \item \textbf{Eulerian Trail:} A walk that visits every \textbf{edge} of the graph exactly once.
+    \item \textbf{Eulerian Circuit:} An Eulerian trail that starts and ends at the same vertex.
+    \item \textbf{Eulerian Graph:} A connected graph containing an Eulerian circuit.
+\end{itemize}
+
+\textbf{Euler's Condition for Undirected Graphs:}
+\begin{itemize}
+    \item An Eulerian circuit exists if and only if the graph is connected and \textbf{every vertex has an even degree}.
+    \item An Eulerian trail (open path) exists if and only if the graph is connected and \textbf{exactly two vertices have odd degrees} (which serve as start and end vertices).
+\end{itemize}
+
+\subsection{Hamiltonian Graph}
+\begin{itemize}
+    \item \textbf{Hamiltonian Path:} A path that visits every \textbf{vertex} in the graph exactly once.
+    \item \textbf{Hamiltonian Cycle:} A closed loop that visits every vertex exactly once and returns to the start vertex.
+    \item \textbf{Hamiltonian Graph:} A graph containing a Hamiltonian cycle.
+\end{itemize}
+
+\begin{quote}
+\textbf{Recruitment Comparison:} Euler = visit every \textbf{edge} once ($O(V+E)$ polynomial time check). Hamiltonian = visit every \textbf{vertex} once (NP-complete decision problem).
+\end{quote}
+
+\section{Fundamental Graph Formulas}
+
+\subsection{Handshaking Lemma for Undirected Graphs}
+In any undirected graph, the sum of the degrees of all vertices equals twice the number of edges:
+\[
+\boxed{\sum_{v \in V} \deg(v) = 2E}
+\]
+\textbf{Key Consequence:} In any undirected graph, the number of vertices with an \textbf{odd degree must be even}.
+
+\begin{tcolorbox}[title=\textbf{Worked Example: Handshaking Lemma}]
+An undirected graph has six vertices with degrees: $2, 3, 1, 4, 2, 2$. Find the number of edges.\\
+\textbf{Solution:}
+\[
+\sum \deg(v) = 2 + 3 + 1 + 4 + 2 + 2 = 14
+\]
+Applying the handshaking lemma:
+\[
+2E = 14 \implies E = \frac{14}{2} = 7 \text{ edges.}
+\]
+\end{tcolorbox}
+
+\subsection{Directed Graph Degree Formulas}
+In a directed graph:
+\begin{itemize}
+    \item The sum of in-degrees equals the total number of arcs: $\sum \text{in-deg}(v) = E$.
+    \item The sum of out-degrees equals the total number of arcs: $\sum \text{out-deg}(v) = E$.
+    \item Therefore:
+    \[
+    \boxed{\sum_{v \in V} \text{in-deg}(v) = \sum_{v \in V} \text{out-deg}(v) = E}
+    \]
+\end{itemize}
+
+\subsection{Maximum Edges in a Simple Graph}
+\begin{itemize}
+    \item \textbf{Simple Undirected Graph with $n$ vertices:}
+    \[
+    \boxed{E_{\max} = \frac{n(n-1)}{2} = \binom{n}{2}}
+    \]
+    \item \textbf{Simple Directed Graph without self-loops with $n$ vertices:}
+    \[
+    \boxed{E_{\max} = n(n-1)}
+    \]
+\end{itemize}
+
+\begin{tcolorbox}[title=\textbf{Worked Example: Maximum Edges}]
+Find the maximum number of edges in a simple undirected graph with 12 vertices.\\
+\textbf{Solution:}
+\[
+E_{\max} = \frac{12(12-1)}{2} = \frac{12 \times 11}{2} = 66 \text{ edges.}
+\]
+\end{tcolorbox}
+
+\subsection{Trees and Forests}
+\begin{itemize}
+    \item A tree with $V$ vertices has exactly:
+    \[
+    \boxed{E = V - 1}
+    \]
+    \item A forest containing $V$ vertices and $C$ connected components has:
+    \[
+    \boxed{E = V - C}
+    \]
+\end{itemize}
+
+\subsection{Density of a Graph}
+The density $D$ of a simple undirected graph measures the ratio of actual edges to maximum possible edges:
+\[
+D = \frac{2E}{V(V-1)}
+\]
+\begin{itemize}
+    \item If $E \ll V^2$ (typically $E \approx O(V)$), the graph is \textbf{sparse}.
+    \item If $E \approx O(V^2)$ (approaching $E_{\max}$), the graph is \textbf{dense}.
+\end{itemize}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section II: Hash Tables and Collision Resolution}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{What Is a Hash Table?}
+
+A \textbf{hash table} is an associative data structure that maps keys to values, achieving average-case $O(1)$ time complexity for insertions, deletions, and lookups.
+
+\subsection{Basic Components}
+\begin{itemize}
+    \item \textbf{Key:} The unique identifier used to look up or store data (e.g., student ID, roll number).
+    \item \textbf{Value:} The data record associated with the key.
+    \item \textbf{Hash Function:} A mathematical algorithm that converts a key into a valid array index.
+    \item \textbf{Hash Table Array (Bucket Array):} The underlying array where key-value pairs or bucket pointers are stored.
+\end{itemize}
+
+\subsection{What is a Hash Function?}
+A \textbf{hash function} $h(k)$ maps an arbitrary key $k$ from a large universe of keys $U$ to a fixed integer slot in the range $[0, m-1]$, where $m$ is the table size:
+\[
+h : U \longrightarrow \{0, 1, 2, \dots, m-1\}
+\]
+
+\subsection{Characteristics of a Good Hash Function}
+\begin{enumerate}
+    \item \textbf{Deterministic:} The same key must always produce the identical hash index.
+    \item \textbf{Uniform Distribution:} Keys should be uniformly distributed across all slots to minimize clustering and collisions.
+    \item \textbf{Fast Computation:} The function should compute in $O(1)$ time.
+    \item \textbf{Full Range Utilization:} Every slot from $0$ to $m-1$ should be reachable.
+\end{enumerate}
+
+\section{Types of Hash Functions}
+
+\subsection{Division Method}
+The most common hash function computes the remainder of the key divided by the table size $m$:
+\[
+\boxed{h(k) = k \bmod m}
+\]
+\textbf{Best Practice:} The table size $m$ should typically be a \textbf{prime number} not close to a power of 2 or 10, ensuring better distribution and reducing collisions.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{c c c}
+\toprule
+\textbf{Key ($k$)} & \textbf{Calculation ($k \bmod 10$)} & \textbf{Table Index} \\
+\midrule
+23 & $23 \bmod 10$ & 3 \\
+35 & $35 \bmod 10$ & 5 \\
+42 & $42 \bmod 10$ & 2 \\
+78 & $78 \bmod 10$ & 8 \\
+\bottomrule
+\end{tabular}
+\caption{Division hash function with table size $m = 10$.}
+\end{table}
+
+\subsection{Multiplication Method}
+The key $k$ is multiplied by a constant real fraction $A$ where $0 < A < 1$. The fractional part of $k A$ is extracted and multiplied by $m$, followed by taking the floor:
+\[
+\boxed{h(k) = \lfloor m (k A \bmod 1) \rfloor}
+\]
+Donald Knuth suggested using the golden ratio fractional value:
+\[
+A \approx \frac{\sqrt{5} - 1}{2} \approx 0.6180339887\dots
+\]
+An advantage of this method is that the choice of table size $m$ is less critical (powers of 2 are easily accommodated via bit shifts).
+
+\subsection{Mid-Square Method}
+The key is squared, and selected middle digits (or bits) of the result are extracted as the hash code:
+\[
+k \xrightarrow{\quad\text{square}\quad} k^2 \xrightarrow{\quad\text{extract middle digits}\quad} \text{index}
+\]
+\textbf{Example:} For key $44$:
+\[
+44^2 = 1936
+\]
+Extracting the middle two digits gives $93$. This value is then mapped modulo $m$ into the table range.
+
+\subsection{Folding Method}
+The key is partitioned into multiple pieces of equal digit width. These parts are then added together, and the sum modulo $m$ is used:
+\textbf{Example:} For a 9-digit student registration number $123456789$ and $m = 1000$:
+\[
+\text{Parts: } 123, 456, 789 \implies \text{Sum} = 123 + 456 + 789 = 1368
+\]
+\[
+\text{Index} = 1368 \bmod 1000 = 368.
+\]
+
+\subsection{Direct Addressing versus Hashing}
+\begin{itemize}
+    \item \textbf{Direct Addressing:} Uses key $k$ directly as array index $A[k]$. This requires $O(1)$ worst-case time, but requires memory proportional to the size of the entire key universe $|U|$. If the universe is large and sparse (e.g., National ID numbers), it wastes prohibitive amounts of memory.
+    \item \textbf{Hashing:} Uses a hash function to compress a large universe $U$ into a much smaller table array of size $m$, where $m \ll |U|$.
+\end{itemize}
+
+\section{What Is a Collision?}
+
+A \textbf{collision} occurs when two or more distinct keys produce the identical hash index:
+\[
+h(k_1) = h(k_2) \quad \text{where } k_1 \neq k_2
+\]
+Because the universe of keys is far larger than the table size ($|U| > m$), by the \textbf{Pigeonhole Principle}, collisions are theoretically unavoidable in any realistic general hash table.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{c c}
+\toprule
+\textbf{Key} & \textbf{Hash Index ($h(k) = k \bmod 7$)} \\
+\midrule
+10 & $10 \bmod 7 = 3$ \\
+17 & $17 \bmod 7 = 3$ \\
+24 & $24 \bmod 7 = 3$ \\
+31 & $31 \bmod 7 = 3$ \\
+38 & $38 \bmod 7 = 3$ \\
+\bottomrule
+\end{tabular}
+\caption{Collision example: Multiple keys mapping to slot 3.}
+\end{table}
+
+\subsection{Main Collision-Resolution Techniques}
+\begin{enumerate}
+    \item \textbf{Open Hashing (Closed Addressing / Separate Chaining):} Elements that collide at the same slot are chained together in an auxiliary data structure (typically a linked list).
+    \item \textbf{Closed Hashing (Open Addressing):} All elements are stored directly inside the table array. When a collision occurs, alternative vacant slots are probed systematically:
+    \begin{itemize}
+        \item Linear Probing
+        \item Quadratic Probing
+        \item Double Hashing
+    \end{itemize}
+\end{enumerate}
+
+\section{Separate Chaining}
+
+In \textbf{separate chaining}, each table slot contains a pointer/reference to a linked list (or dynamic array/BST) of elements that hash to that slot.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{c l}
+\toprule
+\textbf{Slot Index} & \textbf{Chained Bucket Entries} \\
+\midrule
+0 & Empty \\
+1 & Empty \\
+2 & $[44] \rightarrow \text{NULL}$ \\
+3 & $[10] \rightarrow [17] \rightarrow [24] \rightarrow \text{NULL}$ \\
+4 & Empty \\
+5 & $[12] \rightarrow \text{NULL}$ \\
+6 & $[13] \rightarrow [20] \rightarrow \text{NULL}$ \\
+\bottomrule
+\end{tabular}
+\caption{Separate chaining collision resolution.}
+\end{table}
+
+\subsection{Operations in Separate Chaining}
+\begin{itemize}
+    \item \textbf{Insertion:} Compute $h(k)$. Traverse bucket list to check for duplicate key (update if found), or insert the new node at the front/back in $O(1)$ time.
+    \item \textbf{Searching:} Compute $h(k)$. Linearly search the linked list at index $h(k)$ until the key is found or list ends.
+    \item \textbf{Deletion:} Compute $h(k)$. Traverse bucket list, locate the node, unlink it, and free memory in $O(\text{bucket length})$ time.
+\end{itemize}
+
+\subsection{Complexity of Separate Chaining}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X c}
+\toprule
+\textbf{Operation} & \textbf{Average / Expected Complexity} & \textbf{Worst-Case Complexity} \\
+\midrule
+Search & $O(1 + \alpha)$ & $O(n)$ \\
+Insert & $O(1)$ (at head) or $O(1 + \alpha)$ (with uniqueness check) & $O(n)$ \\
+Delete & $O(1 + \alpha)$ & $O(n)$ \\
+\bottomrule
+\end{tabularx}
+\caption{Time complexity of separate chaining (where $\alpha = n / m$).}
+\end{table}
+
+\section{Open Addressing}
+
+In \textbf{open addressing}, all elements are stored directly within the table array of size $m$. No pointers or external lists are used.
+\begin{itemize}
+    \item The total number of stored keys $n$ can never exceed table capacity $m$ ($n \leq m$, $\alpha \leq 1$).
+    \item When a collision occurs at initial index $h(k)$, a sequence of probe slots $h(k, 0), h(k, 1), h(k, 2), \dots$ is checked until an empty slot is encountered.
+\end{itemize}
+
+\subsection{Linear Probing}
+Linear probing inspects consecutive slots sequentially with step size $1$:
+\[
+\boxed{h(k, i) = (h'(k) + i) \bmod m, \quad i = 0, 1, 2, \dots, m-1}
+\]
+
+\begin{tcolorbox}[title=\textbf{Worked Example: Linear Probing}]
+Given table size $m = 7$, hash function $h'(k) = k \bmod 7$, insert keys: $10, 17, 24, 8$ using linear probing.
+\begin{itemize}
+    \item Insert 10: $h'(10) = 10 \bmod 7 = 3$. Slot 3 is empty $\implies$ place \textbf{10 at index 3}.
+    \item Insert 17: $h'(17) = 17 \bmod 7 = 3$ (Collision). Check $(3+1)\bmod 7 = 4$. Slot 4 empty $\implies$ place \textbf{17 at index 4}.
+    \item Insert 24: $h'(24) = 24 \bmod 7 = 3$ (Collision). Check slot 4 (occupied), check $(3+2)\bmod 7 = 5$. Slot 5 empty $\implies$ place \textbf{24 at index 5}.
+    \item Insert 8: $h'(8) = 8 \bmod 7 = 1$. Slot 1 is empty $\implies$ place \textbf{8 at index 1}.
+\end{itemize}
+Final array state: $\text{Slot 1} = 8, \text{Slot 3} = 10, \text{Slot 4} = 17, \text{Slot 5} = 24$.
+\end{tcolorbox}
+
+\subsubsection*{Primary Clustering}
+The primary disadvantage of linear probing is \textbf{primary clustering}. When multiple colliding or non-colliding keys occupy adjacent consecutive slots, they form long continuous occupied blocks. Any subsequent key hashing into or near this block must traverse the entire cluster, causing search and insertion times to degrade rapidly.
+
+\subsection{Quadratic Probing}
+Quadratic probing reduces primary clustering by spacing probe attempts quadratically:
+\[
+\boxed{h(k, i) = (h'(k) + c_1 i + c_2 i^2) \bmod m}
+\]
+A common standard formulation is:
+\[
+h(k, i) = (h'(k) + i^2) \bmod m
+\]
+\textbf{Secondary Clustering:} While quadratic probing resolves primary clustering, keys that have the same initial hash index $h'(k_1) = h'(k_2)$ follow the identical sequence of probes. This milder phenomenon is called \textbf{secondary clustering}.
+
+\subsection{Double Hashing}
+Double hashing is the most effective open addressing technique. It uses two independent hash functions:
+\[
+\boxed{h(k, i) = (h_1(k) + i \cdot h_2(k)) \bmod m}
+\]
+where $h_1(k)$ computes the initial index and $h_2(k)$ computes the probe step size.
+
+\textbf{Requirements for $h_2(k)$:}
+\begin{itemize}
+    \item $h_2(k)$ must never evaluate to $0$ ($h_2(k) \neq 0$), as this would produce an infinite loop at index $h_1(k)$.
+    \item $h_2(k)$ must be relatively prime to $m$ ($\gcd(h_2(k), m) = 1$) so that every table slot can be probed. A common scheme is $m = \text{prime}$ and $h_2(k) = 1 + (k \bmod (m - 1))$.
+\end{itemize}
+
+\section{Comparison of Collision-Resolution Methods}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{p{2.5cm} X X X X}
+\toprule
+\textbf{Feature} & \textbf{Separate Chaining} & \textbf{Linear Probing} & \textbf{Quadratic Probing} & \textbf{Double Hashing} \\
+\midrule
+Storage Method & Bucket lists outside array & Directly inside table array & Directly inside table array & Directly inside table array \\
+Collision Strategy & Insert into bucket list & Sequential scan ($+i$) & Quadratic offset ($+i^2$) & Step by $h_2(k)$ \\
+Clustering Issue & No array clustering & Severe primary clustering & Secondary clustering & Virtually no clustering \\
+Capacity Limit & Can exceed table size $m$ & Strictly limited ($n \leq m$) & Strictly limited ($n \leq m$) & Strictly limited ($n \leq m$) \\
+Load Factor ($\alpha$) & Can be $> 1$ (often $1$--$3$) & Must stay $\alpha < 0.7$ & Must stay $\alpha < 0.5$ & Can stay $\alpha < 0.8$ \\
+Deletion & Simple list node removal & Requires tombstone flag & Requires tombstone flag & Requires tombstone flag \\
+Cache Efficiency & Poor (pointer chasing) & Excellent (contiguous) & Moderate & Moderate \\
+\bottomrule
+\end{tabularx}
+\caption{Comprehensive comparison of collision-resolution mechanisms.}
+\end{table}
+
+\section{Load Factor and Rehashing}
+
+\subsection{What is Load Factor?}
+The \textbf{load factor} $\alpha$ measures the ratio of the number of stored keys $n$ to the total table capacity $m$:
+\[
+\boxed{\alpha = \frac{n}{m}}
+\]
+\begin{itemize}
+    \item In open addressing, $\alpha$ cannot exceed $1$ ($\alpha \leq 1$).
+    \item In separate chaining, $\alpha$ represents the average length of a bucket chain and can exceed $1$.
+\end{itemize}
+
+\begin{tcolorbox}[title=\textbf{Worked Example: Load Factor}]
+A hash table has 100 buckets and stores 75 entries. Calculate its load factor.\\
+\textbf{Solution:}
+\[
+\alpha = \frac{n}{m} = \frac{75}{100} = 0.75
+\]
+\end{tcolorbox}
+
+\subsection{Why Does Load Factor Matter?}
+As $\alpha$ increases:
+\begin{itemize}
+    \item Collision probability rises sharply.
+    \item Probe sequences in open addressing grow longer, degrading lookup times toward $O(n)$.
+    \item Bucket chains in separate chaining lengthen.
+\end{itemize}
+
+\subsection{Rehashing}
+When the load factor exceeds a predetermined threshold (commonly $\alpha > 0.7$ or $0.75$), the hash table performs \textbf{rehashing}:
+\begin{enumerate}
+    \item Allocate a new array of roughly double the capacity (typically the smallest prime number $> 2m$).
+    \item Recompute hash indices for all existing elements using the new capacity: $h_{\text{new}}(k) = k \bmod m_{\text{new}}$.
+    \item Insert every element into the new table.
+    \item Release old table memory.
+\end{enumerate}
+Although a rehashing operation costs $O(n)$ time, because it occurs infrequently, its amortized cost per insertion remains $O(1)$.
+
+\section{Deletion in Open Addressing: Tombstones}
+
+In open addressing, you \textbf{cannot} simply set a deleted slot to empty (e.g., \texttt{NULL} or $0$).
+
+\textbf{The Broken Chain Problem:} When searching for a key, the algorithm continues probing until it finds the key or hits an \textbf{empty slot} (which signals that the key was never inserted). If an intervening deleted key is simply erased to empty, subsequent searches for keys that probed past that slot will terminate prematurely and return a false "Not Found".
+
+\subsection{The Solution: Tombstones (Deleted Marker)}
+Instead of marking the slot empty, place a special sentinel value called a \textbf{tombstone} (or \texttt{DELETED} flag).
+\begin{itemize}
+    \item \textbf{Search Operation:} When the search encounters a tombstone, it \textbf{continues probing} past it.
+    \item \textbf{Insert Operation:} An insertion can reuse and overwrite a tombstone slot once it confirms the key is not already present further down the probe sequence.
+\end{itemize}
+
+\section{Complexity of Hash Tables}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X c}
+\toprule
+\textbf{Operation} & \textbf{Average / Expected Time} & \textbf{Worst-Case Time} \\
+\midrule
+Search & $O(1)$ (assuming uniform hashing and controlled $\alpha$) & $O(n)$ \\
+Insert & $O(1)$ amortized & $O(n)$ \\
+Delete & $O(1)$ expected & $O(n)$ \\
+Space  & $O(n + m)$ & $O(n + m)$ \\
+\bottomrule
+\end{tabularx}
+\caption{Hash table time and space complexity summary.}
+\end{table}
+
+\subsection{Why is Worst-Case Search $O(n)$?}
+The worst-case search occurs when \textbf{all $n$ keys collide into the identical slot or bucket}. In separate chaining, this reduces to searching a singly linked list of length $n$. In open addressing, it results in probing every occupied slot in the table.
+
+\section{C++ Implementation: Hash Table with Separate Chaining}
+
+\begin{lstlisting}[style=cppstyle, caption={C++ Hash Table implementation using separate chaining.}]
+#include <iostream>
+#include <vector>
+#include <list>
+#include <utility>
+#include <string>
+using namespace std;
+
+class HashTable {
+private:
+    vector<list<pair<int, string>>> table;
+    int capacity;
+
+    size_t hashFunction(int key) const {
+        // Convert negative keys into a valid nonnegative index
+        long long rem = key % capacity;
+        if (rem < 0) rem += capacity;
+        return static_cast<size_t>(rem);
+    }
+
+public:
+    explicit HashTable(int size = 10) : capacity(size), table(size) {}
+
+    void insert(int key, const string& value) {
+        size_t idx = hashFunction(key);
+        for (auto& entry : table[idx]) {
+            if (entry.first == key) {
+                entry.second = value; // Key exists: update value
+                return;
+            }
+        }
+        table[idx].emplace_back(key, value); // Key absent: append
+    }
+
+    bool search(int key, string& outValue) const {
+        size_t idx = hashFunction(key);
+        for (const auto& entry : table[idx]) {
+            if (entry.first == key) {
+                outValue = entry.second;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool remove(int key) {
+        size_t idx = hashFunction(key);
+        for (auto it = table[idx].begin(); it != table[idx].end(); ++it) {
+            if (it->first == key) {
+                table[idx].erase(it);
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+int main() {
+    HashTable ht(7);
+    ht.insert(10, "Dhaka");
+    ht.insert(17, "Chittagong");
+    ht.insert(24, "Rajshahi");
+
+    string val;
+    if (ht.search(17, val)) {
+        cout << "Key 17 found: " << val << '\n';
+    } else {
+        cout << "Key 17 not found\n";
+    }
+
+    ht.remove(17);
+    if (!ht.search(17, val)) {
+        cout << "Key 17 deleted successfully\n";
+    }
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Implementation Notes}
+\begin{itemize}
+    \item \textbf{Negative Key Safety:} Using modulo arithmetic directly on negative integers in C++ can yield negative remainders; adding capacity ensures valid array indexing.
+    \item \textbf{Collision Handling:} Elements hashing to the same slot are appended to that slot's \texttt{std::list}.
+    \item \textbf{Complexity:} Under uniform hashing, expected search, insertion, and deletion are $O(1)$.
+\end{itemize}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section III: Adjacency List vs Adjacency Matrix}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Representing a Graph in Memory}
+
+Graphs can be represented in memory primarily through two classical data structures:
+\begin{enumerate}
+    \item \textbf{Adjacency Matrix:} A 2D array of size $V \times V$.
+    \item \textbf{Adjacency List:} An array of $V$ linked lists or dynamic vectors.
+\end{enumerate}
+
+\section{Adjacency Matrix}
+
+An \textbf{adjacency matrix} is a 2D square matrix $A$ of dimensions $V \times V$, where vertices are indexed from $0$ to $V-1$.
+\[
+A[u][v] = 
+\begin{cases} 
+1 & \text{if an edge exists between } u \text{ and } v \\
+0 & \text{otherwise}
+\end{cases}
+\]
+
+\subsection{Adjacency Matrix Example}
+Consider an undirected graph with vertices $\{A, B, C, D\}$ and edges $(A, B)$, $(A, C)$, $(B, D)$:
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{c c c c c}
+\toprule
+\textbf{Vertex} & \textbf{A} & \textbf{B} & \textbf{C} & \textbf{D} \\
+\midrule
+\textbf{A} & 0 & 1 & 1 & 0 \\
+\textbf{B} & 1 & 0 & 0 & 1 \\
+\textbf{C} & 1 & 0 & 0 & 0 \\
+\textbf{D} & 0 & 1 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Adjacency matrix for an undirected graph (symmetric across main diagonal).}
+\end{table}
+
+\textbf{Key Observations:}
+\begin{itemize}
+    \item For undirected graphs, the adjacency matrix is \textbf{symmetric} ($A[u][v] = A[v][u]$).
+    \item The main diagonal contains all $0$s if the graph has no self-loops.
+    \item The degree of vertex $u$ is the sum of entries in row $u$.
+\end{itemize}
+
+\subsection{Adjacency Matrix for a Directed Graph}
+In a directed graph, $A[u][v] = 1$ denotes a directed edge from $u \to v$. The matrix is generally asymmetric.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{c c c c}
+\toprule
+\textbf{Vertex} & \textbf{A} & \textbf{B} & \textbf{C} \\
+\midrule
+\textbf{A} & 0 & 1 & 0 \\
+\textbf{B} & 0 & 0 & 1 \\
+\textbf{C} & 1 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Adjacency matrix for a directed graph with arcs $A \to B, B \to C, C \to A$.}
+\end{table}
+\begin{itemize}
+    \item \textbf{Out-degree of $u$:} Sum of entries in row $u$.
+    \item \textbf{In-degree of $v$:} Sum of entries in column $v$.
+\end{itemize}
+
+\subsection{Weighted Adjacency Matrix}
+For weighted graphs, store edge weight $w(u, v)$ instead of $1$. If no edge exists, store $\infty$ (or $0$ if weights are strictly positive and distinct from non-edges).
+
+\subsection{Complexity of an Adjacency Matrix}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{X c}
+\toprule
+\textbf{Operation} & \textbf{Complexity} \\
+\midrule
+Space Complexity & $O(V^2)$ \\
+Check if edge $(u, v)$ exists & $O(1)$ \\
+Insert an edge $(u, v)$ & $O(1)$ \\
+Delete an edge $(u, v)$ & $O(1)$ \\
+Find all neighbors of vertex $u$ & $O(V)$ \\
+Add a new vertex & $O(V^2)$ (reallocating/copying 2D array) \\
+\bottomrule
+\end{tabularx}
+\caption{Operational complexities of an adjacency matrix.}
+\end{table}
+
+\subsection{Advantages and Disadvantages}
+\begin{itemize}
+    \item \textbf{Advantages:} $O(1)$ instantaneous edge queries; easy to implement; compact representation for dense graphs.
+    \item \textbf{Disadvantages:} $O(V^2)$ memory waste when graphs are sparse; iterating neighbors always takes $O(V)$ even if a vertex has only 1 edge.
+\end{itemize}
+
+\section{Adjacency List}
+
+An \textbf{adjacency list} represents a graph using an array of $V$ lists. Entry \texttt{adj[u]} contains a list of all vertices adjacent to vertex $u$.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{c l}
+\toprule
+\textbf{Vertex} & \textbf{Adjacent Neighbors} \\
+\midrule
+A & B, C \\
+B & A, D \\
+C & A \\
+D & B \\
+\bottomrule
+\end{tabular}
+\caption{Adjacency list for the undirected graph example.}
+\end{table}
+
+\subsection{Directed Adjacency List}
+For a directed graph, each list contains only outgoing neighbors ($u \to v$):
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{c l}
+\toprule
+\textbf{Vertex} & \textbf{Outgoing Neighbors} \\
+\midrule
+A & B \\
+B & C \\
+C & A \\
+\bottomrule
+\end{tabular}
+\caption{Adjacency list for directed cycle $A \to B \to C \to A$.}
+\end{table}
+
+\subsection{Complexity of an Adjacency List}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{X p{7cm}}
+\toprule
+\textbf{Operation} & \textbf{Complexity} \\
+\midrule
+Space Complexity & $O(V + E)$ ($V$ heads $+ 2E$ list nodes for undirected) \\
+Check if edge $(u, v)$ exists & $O(\deg(u))$ \\
+Insert an edge $(u, v)$ & $O(1)$ (insert at head without uniqueness check) \\
+Delete an edge $(u, v)$ & $O(\deg(u))$ (traverse list to find node) \\
+Find all neighbors of vertex $u$ & $O(\deg(u))$ \\
+Add a new vertex & $O(1)$ amortized (appending new list) \\
+\bottomrule
+\end{tabularx}
+\caption{Operational complexities of an adjacency list.}
+\end{table}
+
+\subsection{Advantages and Disadvantages}
+\begin{itemize}
+    \item \textbf{Advantages:} Optimal $O(V + E)$ memory for sparse graphs; iterates neighbors in optimal $O(\deg(u))$ time; adding vertices is trivial.
+    \item \textbf{Disadvantages:} Checking if edge $(u, v)$ exists takes $O(\deg(u))$ rather than $O(1)$; pointer overhead in linked lists.
+\end{itemize}
+
+\section{Adjacency List vs Adjacency Matrix: Complete Comparison}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{3.2cm} X X}
+\toprule
+\textbf{Evaluation Basis} & \textbf{Adjacency Matrix} & \textbf{Adjacency List} \\
+\midrule
+Internal Representation & $V \times V$ 2D array & Array of $V$ lists / dynamic vectors \\
+Space Complexity & $O(V^2)$ & $O(V + E)$ \\
+Edge Existence Test & $O(1)$ instant lookup & $O(\deg(u))$ linear scan in list \\
+Iterating Neighbors & $O(V)$ scan across entire row & $O(\deg(u))$ optimal traversal \\
+Edge Insertion & $O(1)$ & $O(1)$ \\
+Edge Deletion & $O(1)$ & $O(\deg(u))$ \\
+Vertex Insertion & $O(V^2)$ (reallocate matrix) & $O(1)$ amortized \\
+Best Suited For & \textbf{Dense graphs} ($E \approx V^2$) & \textbf{Sparse graphs} ($E \ll V^2$) \\
+Memory Waste in Sparse & Extremely high ($0$s dominate) & Minimal \\
+Traversal (BFS/DFS) & $O(V^2)$ & $O(V + E)$ \\
+\bottomrule
+\end{tabularx}
+\caption{Master comparison between adjacency matrix and adjacency list.}
+\end{table}
+
+\subsection{Worked Memory Comparison}
+
+\begin{tcolorbox}[title=\textbf{Worked Example: Memory Requirements}]
+Suppose a social network graph has $V = 1,000$ vertices and $E = 2,000$ edges. Compare storage requirements:
+\begin{itemize}
+    \item \textbf{Adjacency Matrix:} Requires $V^2 = 1,000^2 = 1,000,000$ cells.
+    \item \textbf{Adjacency List:} Structural size is proportional to $V + E = 1,000 + 2,000 = 3,000$ elements (or $1,000 + 4,000 = 5,000$ directed node instances).
+    \item \textbf{Maximum possible edges:}
+    \[
+    E_{\max} = \frac{1000 \times 999}{2} = 499,500 \text{ edges.}
+    \]
+    Since $2,000 \ll 499,500$, the graph is extremely sparse ($0.4\%$ density). An adjacency list saves over $99\%$ of memory!
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Worked Example: Choosing the Right Representation}
+\begin{itemize}
+    \item \textbf{Scenario A:} A graph has 10,000 vertices but only 15,000 edges. $\implies$ \textbf{Choose Adjacency List} (sparse, matrix would need $10^8$ cells).
+    \item \textbf{Scenario B:} A 200-node graph where nearly all pairs are connected and millions of edge-existence checks occur. $\implies$ \textbf{Choose Adjacency Matrix} (dense, $O(1)$ edge test).
+    \item \textbf{Scenario C:} A pathfinding algorithm frequently traverses neighbors. $\implies$ \textbf{Choose Adjacency List} ($O(\deg(u))$ vs $O(V)$ scan).
+\end{itemize}
+
+\section{Graph Traversal: BFS and DFS}
+
+\subsection{Breadth-First Search (BFS)}
+\textbf{BFS} explores vertices level by level in increasing order of their distance from the source vertex.
+\begin{itemize}
+    \item \textbf{Data Structure:} Uses a \textbf{Queue} (FIFO) and a \texttt{visited[]} array.
+    \item \textbf{Algorithm:} Mark start visited and enqueue; while queue is not empty, dequeue vertex $u$, process it, and enqueue all unvisited neighbors.
+    \item \textbf{Key Feature:} Finds the \textbf{shortest path} (minimum edges) in unweighted graphs.
+\end{itemize}
+
+\subsection{Depth-First Search (DFS)}
+\textbf{DFS} explores as deeply as possible along each branch before backtracking.
+\begin{itemize}
+    \item \textbf{Data Structure:} Uses a \textbf{Stack} (LIFO) or \textbf{System Call Stack} (recursion) and a \texttt{visited[]} array.
+    \item \textbf{Algorithm:} Mark current vertex visited, process it, and recursively visit all unvisited neighbors.
+    \item \textbf{Key Features:} Cycle detection, topological sorting in DAGs, connected components, finding strongly connected components (Kosaraju/Tarjan).
+\end{itemize}
+
+\subsection{Traversal Complexity}
+\begin{itemize}
+    \item With \textbf{Adjacency List:} $\boxed{O(V + E)}$ time complexity.
+    \item With \textbf{Adjacency Matrix:} $\boxed{O(V^2)}$ time complexity.
+    \item Space complexity for both: $O(V)$ for the visited array and recursion stack / queue.
+\end{itemize}
+
+\section{C++ Implementation of Adjacency List and Matrix}
+
+\subsection{Adjacency List Implementation}
+
+\begin{lstlisting}[style=cppstyle, caption={C++ Graph implementation using Adjacency List.}]
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class GraphList {
+private:
+    int V;
+    vector<vector<int>> adj;
+
+public:
+    explicit GraphList(int vertices) : V(vertices), adj(vertices) {}
+
+    void addEdge(int u, int v) {
+        if (u < 0 || u >= V || v < 0 || v >= V) return;
+        adj[u].push_back(v);
+        adj[v].push_back(u); // Bidirectional for undirected graph
+    }
+
+    void display() const {
+        for (int i = 0; i < V; ++i) {
+            cout << i << ": ";
+            for (int neighbor : adj[i]) {
+                cout << neighbor << ' ';
+            }
+            cout << '\n';
+        }
+    }
+};
+
+int main() {
+    GraphList g(4);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 3);
+    g.display();
+    return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=pseudocode, caption={Output of Adjacency List program.}]
+0: 1 2 
+1: 0 3 
+2: 0 
+3: 1 
+\end{lstlisting}
+
+\subsection{Adjacency Matrix Implementation}
+
+\begin{lstlisting}[style=cppstyle, caption={C++ Graph implementation using Adjacency Matrix.}]
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class GraphMatrix {
+private:
+    int V;
+    vector<vector<int>> matrix;
+
+public:
+    explicit GraphMatrix(int vertices)
+        : V(vertices), matrix(vertices, vector<int>(vertices, 0)) {}
+
+    void addEdge(int u, int v) {
+        if (u < 0 || u >= V || v < 0 || v >= V) return;
+        matrix[u][v] = 1;
+        matrix[v][u] = 1; // Symmetric for undirected graph
+    }
+
+    bool hasEdge(int u, int v) const {
+        if (u < 0 || u >= V || v < 0 || v >= V) return false;
+        return matrix[u][v] == 1;
+    }
+
+    void display() const {
+        for (int i = 0; i < V; ++i) {
+            for (int j = 0; j < V; ++j) {
+                cout << matrix[i][j] << ' ';
+            }
+            cout << '\n';
+        }
+    }
+};
+
+int main() {
+    GraphMatrix g(4);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 3);
+
+    g.display();
+    cout << "Edge 0-2 exists: " << (g.hasEdge(0, 2) ? "Yes" : "No") << '\n';
+    return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=pseudocode, caption={Output of Adjacency Matrix program.}]
+0 1 1 0 
+1 0 0 1 
+1 0 0 0 
+0 1 0 0 
+Edge 0-2 exists: Yes
+\end{lstlisting}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section IV: Memorization Facts, Examination Q\&A, and Quick Revision}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Additional Graph Properties Worth Memorizing}
+
+\begin{enumerate}
+    \item \textbf{A tree is connected and acyclic:} A tree with $V$ vertices has exactly $V - 1$ edges.
+    \item \textbf{A forest is an acyclic undirected graph:} If it contains $C$ connected components, the total number of edges is $E = V - C$.
+    \item \textbf{Every tree is bipartite:} Its vertices can be partitioned into two sets by distance parity (even/odd depth) from the root.
+    \item \textbf{Bipartite Odd-Cycle Rule:} A graph is bipartite if and only if it contains \textbf{no odd cycles}.
+    \item \textbf{Minimum edges for connectivity:} A connected undirected graph with $V$ vertices requires at least $V - 1$ edges.
+    \item \textbf{Sum of degrees is always even:} In any undirected graph, $\sum \deg(v) = 2E$, which is an even integer.
+    \item \textbf{Directed degree invariant:} For any directed graph, $\sum \text{in-deg}(v) = \sum \text{out-deg}(v) = E$.
+    \item \textbf{Complete simple undirected graph edges:} $K_n$ contains exactly $\frac{n(n-1)}{2}$ edges.
+    \item \textbf{DAG implies topological sorting:} Every directed acyclic graph has at least one valid topological sort.
+    \item \textbf{Eulerian vs Hamiltonian:} Eulerian traversal visits every \textbf{edge} once; Hamiltonian traversal visits every \textbf{vertex} once.
+    \item \textbf{Strong connectivity is for directed graphs:} Undirected graphs are simply connected or disconnected.
+    \item \textbf{Shortest path guarantee:} BFS guarantees the shortest path (minimum edge count) in unweighted graphs. For weighted graphs with non-negative edges, Dijkstra's algorithm must be used.
+\end{enumerate}
+
+\section{Likely Recruitment Examination Questions}
+
+\subsection{Questions on Graphs}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{8cm} X}
+\toprule
+\textbf{Recruitment Examination Question} & \textbf{Direct Technical Answer} \\
+\midrule
+What is the maximum number of edges in a simple undirected graph with $n$ vertices? & $\frac{n(n-1)}{2}$ \\
+What is the maximum number of arcs in a simple directed graph without self-loops? & $n(n-1)$ \\
+What is the sum of degrees in an undirected graph? & $2E$ (Handshaking Lemma) \\
+What is the sum of in-degrees in a directed graph? & $E$ (Total number of directed edges) \\
+How many edges does a tree with $n$ vertices have? & $n - 1$ \\
+How many edges does a complete bipartite graph $K_{a,b}$ have? & $a \times b$ \\
+When does an undirected graph have an Euler circuit? & When connected and \textbf{every vertex has an even degree} \\
+When does an undirected graph have an Euler trail? & When connected and \textbf{exactly two vertices have odd degree} \\
+What is the key defining property of a DAG? & Directed Acyclic Graph (admits topological sort) \\
+What is the time complexity of BFS using adjacency list? & $O(V + E)$ \\
+What data structure is used to implement BFS? & \textbf{Queue} \\
+What data structure is used to implement DFS? & \textbf{Stack} (or recursion call stack) \\
+\bottomrule
+\end{tabularx}
+\caption{Key examination questions on graphs.}
+\end{table}
+
+\subsection{Questions on Hash Tables}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{8cm} X}
+\toprule
+\textbf{Recruitment Examination Question} & \textbf{Direct Technical Answer} \\
+\midrule
+What is a hash collision? & Two distinct keys producing identical hash index ($h(k_1) = h(k_2)$) \\
+What is the division hash function formula? & $h(k) = k \bmod m$ \\
+Why should table size $m$ be a prime number? & Reduces collisions caused by common factors \\
+What is the definition of load factor $\alpha$? & $\alpha = n / m$ (entries / capacity) \\
+Can the load factor exceed 1 in separate chaining? & \textbf{Yes} (each bucket can hold multiple items) \\
+Can the load factor exceed 1 in open addressing? & \textbf{No} ($\alpha \leq 1$, all items stored inside array) \\
+What is primary clustering in linear probing? & Consecutive occupied slots grouping into large blocks \\
+What formula defines quadratic probing? & $h(k, i) = (h'(k) + c_1 i + c_2 i^2) \bmod m$ \\
+What formula defines double hashing? & $h(k, i) = (h_1(k) + i \cdot h_2(k)) \bmod m$ \\
+Why can't $h_2(k)$ evaluate to zero in double hashing? & It would produce an infinite loop at index $h_1(k)$ \\
+Why are tombstones used during deletion? & To prevent breaking the probe chain for subsequent lookups \\
+What is expected search complexity in a hash table? & $O(1)$ under uniform distribution and low $\alpha$ \\
+What is worst-case search complexity in a hash table? & $O(n)$ (when all keys collide into one slot) \\
+What is rehashing? & Resizing the table (typically $2\times$) and re-inserting all keys \\
+\bottomrule
+\end{tabularx}
+\caption{Key examination questions on hash tables.}
+\end{table}
+
+\subsection{Questions on Graph Representation}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{8cm} X}
+\toprule
+\textbf{Recruitment Examination Question} & \textbf{Direct Technical Answer} \\
+\midrule
+What is the space complexity of an adjacency matrix? & $O(V^2)$ \\
+What is the space complexity of an adjacency list? & $O(V + E)$ \\
+What is the time complexity to check if edge $(u,v)$ exists in matrix? & $O(1)$ \\
+What is the time complexity to check if edge $(u,v)$ exists in list? & $O(\deg(u))$ \\
+What is the time complexity to find all neighbors in matrix? & $O(V)$ \\
+What is the time complexity to find all neighbors in list? & $O(\deg(u))$ \\
+Which representation is preferred for sparse graphs? & \textbf{Adjacency List} (saves massive memory) \\
+Which representation is preferred for dense graphs? & \textbf{Adjacency Matrix} ($O(1)$ lookup, compact) \\
+What is the time complexity of BFS using adjacency matrix? & $O(V^2)$ \\
+Why is an undirected adjacency matrix symmetric? & Because $(u, v)$ and $(v, u)$ represent the identical edge \\
+\bottomrule
+\end{tabularx}
+\caption{Key examination questions on graph representations.}
+\end{table}
+
+\section{Final Quick-Revision Sheet}
+
+\subsection{Graphs Summary}
+\begin{itemize}
+    \item \textbf{Definition:} $G = (V, E)$.
+    \item \textbf{Handshaking Lemma:} $\sum \deg(v) = 2E$. Odd degree vertex count is always even.
+    \item \textbf{Directed Degrees:} $\sum \text{in-deg}(v) = \sum \text{out-deg}(v) = E$.
+    \item \textbf{Max Edges (Undirected):} $\frac{V(V-1)}{2}$.
+    \item \textbf{Max Edges (Directed, no loops):} $V(V-1)$.
+    \item \textbf{Tree:} Connected, acyclic graph with $E = V - 1$.
+    \item \textbf{Forest:} Acyclic graph with $C$ components: $E = V - C$.
+    \item \textbf{Complete Bipartite $K_{a,b}$:} $E = a \times b$.
+    \item \textbf{Planar Euler Formula:} $V - E + F = 2$.
+    \item \textbf{DAG:} Admits topological sorting; no directed cycles.
+    \item \textbf{Euler vs Hamiltonian:} Euler = edges; Hamiltonian = vertices.
+    \item \textbf{Traversals:} BFS uses Queue ($O(V+E)$ list, $O(V^2)$ matrix); DFS uses Stack ($O(V+E)$ list, $O(V^2)$ matrix).
+\end{itemize}
+
+\subsection{Hash Tables Summary}
+\begin{itemize}
+    \item \textbf{Hash Function:} Deterministic $O(1)$ mapping from key space to table index $[0, m-1]$.
+    \item \textbf{Load Factor:} $\alpha = n / m$.
+    \item \textbf{Division Method:} $h(k) = k \bmod m$ (use prime $m$).
+    \item \textbf{Collision Resolution:}
+    \begin{itemize}
+        \item \textbf{Separate Chaining:} Buckets outside array; $\alpha$ can exceed 1; simple deletion.
+        \item \textbf{Linear Probing:} $h(k, i) = (h'(k) + i) \bmod m$; suffers from primary clustering.
+        \item \textbf{Quadratic Probing:} $h(k, i) = (h'(k) + i^2) \bmod m$; suffers from secondary clustering.
+        \item \textbf{Double Hashing:} $h(k, i) = (h_1(k) + i \cdot h_2(k)) \bmod m$; best open addressing.
+    \end{itemize}
+    \item \textbf{Tombstones:} Required in open addressing deletion to maintain unbroken probe chains.
+    \item \textbf{Complexities:} Expected $O(1)$ search/insert/delete; worst-case $O(n)$ under total collision.
+    \item \textbf{Rehashing:} Allocate $2\times$ array (prime size) and re-insert all keys when $\alpha > 0.75$.
+\end{itemize}
+
+\subsection{Adjacency List vs Matrix Summary}
+\begin{itemize}
+    \item \textbf{Adjacency Matrix:} $O(V^2)$ memory; $O(1)$ edge query; $O(V)$ neighbor search; ideal for dense graphs.
+    \item \textbf{Adjacency List:} $O(V + E)$ memory; $O(\deg(u))$ edge query; $O(\deg(u))$ neighbor search; ideal for sparse graphs.
+    \item \textbf{BFS/DFS Complexity:} $O(V + E)$ with list; $O(V^2)$ with matrix.
+\end{itemize}
+
+\begin{quote}
+\textbf{Core Takeaway for Recruitment Exams:} Connect each theoretical definition to its mathematical formula and operational time/space costs. For graphs, memorize handshaking degree sums, maximum edges, and tree formulas. For hash tables, master collision-resolution mechanics, load factor constraints, and tombstones. For graph representations, select matrices for dense edge lookups and lists for sparse neighbor traversals.
+\end{quote}

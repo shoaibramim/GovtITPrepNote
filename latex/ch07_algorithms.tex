@@ -1,0 +1,1728 @@
+\chapter{Algorithms --- Sorting, Searching, and Graph Algorithms}
+\label{ch:algorithms}
+
+This chapter covers fundamental algorithms for technical recruitment examinations: Bubble Sort, Insertion Sort, Merge Sort, Quick Sort, and specialized sorting methods, followed by two-pointer search strategies, Binary Search, Breadth-First Search (BFS), Depth-First Search (DFS), and the informed A* Search algorithm.
+
+The emphasis is on algorithmic design, step-by-step execution traces, pseudocode, complete production-ready C++ implementations, mathematical complexity analysis, heuristic optimality, and common examination pitfalls.
+
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section I: Fundamentals of Sorting}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Fundamentals of Sorting}
+
+\subsection{What is Sorting?}
+
+\textbf{Sorting} is the process of arranging a collection of data in a specific sequential order according to a designated key or comparison criterion.
+
+The two fundamental orderings are:
+\begin{itemize}
+    \item \textbf{Ascending order (Non-decreasing):} Elements increase from smallest to largest, e.g., $3, 7, 12, 19$.
+    \item \textbf{Descending order (Non-increasing):} Elements decrease from largest to smallest, e.g., $19, 12, 7, 3$.
+\end{itemize}
+
+Sorting applies across fundamental data types: integers, floating-point numbers, strings, dates, employee records, database rows, and custom objects. For example, a government recruitment portal sorts applicants by merit marks, roll numbers, or alphabetical name order.
+
+\subsection{Why is Sorting Important?}
+
+Sorting dramatically enhances downstream computational efficiency:
+\begin{itemize}
+    \item \textbf{Binary Search:} Enables logarithmic $O(\log n)$ item location in arrays with random access.
+    \item \textbf{Database Indexing:} B-trees and B+ trees maintain sorted key order to service range queries efficiently.
+    \item \textbf{Duplicate Detection:} Identifies duplicate records by scanning contiguous neighbors in $O(n)$ time.
+    \item \textbf{Algorithmic Prerequisite:} Greedy algorithms (Kruskal's MST, interval scheduling), divide-and-conquer routines, and convex hull algorithms rely directly on pre-sorted data.
+\end{itemize}
+
+\section{Important Sorting Terminology}
+
+Technical recruitment examinations regularly test sorting properties beyond raw asymptotic time complexity:
+
+\subsection{Stable Sorting}
+
+A sorting algorithm is \textbf{stable} if elements with equal sorting keys preserve their original relative order in the sorted output.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{c l c}
+\toprule
+\textbf{Original Index} & \textbf{Candidate Name} & \textbf{Exam Marks} \\
+\midrule
+1 & Rahim  & 85 \\
+2 & Karim  & 92 \\
+3 & Salma  & 85 \\
+4 & Nabila & 78 \\
+\bottomrule
+\end{tabular}
+\caption{Candidate records prior to sorting by marks.}
+\end{table}
+
+Sorting by marks in ascending order:
+\begin{itemize}
+    \item \textbf{Stable Result:} $\text{Nabila (78)} \to \textbf{Rahim (85)} \to \textbf{Salma (85)} \to \text{Karim (92)}$. Rahim appears before Salma because Rahim preceded Salma in the input.
+    \item \textbf{Unstable Result:} $\text{Nabila (78)} \to \textbf{Salma (85)} \to \textbf{Rahim (85)} \to \text{Karim (92)}$. Salma is placed ahead of Rahim, reversing their input chronology.
+\end{itemize}
+
+\begin{quote}
+\textbf{Engineering Significance:} Stability is vital in multi-key sorting (e.g., sorting first by Student Name, then stably sorting by Department ID, preserving alphabetical order within each department).
+\end{quote}
+
+\subsection{In-Place Sorting}
+
+An algorithm is \textbf{in-place} if it transforms the input using $O(1)$ (constant) auxiliary memory beyond the original input container, allowing at most $O(\log n)$ stack space for recursion:
+\begin{itemize}
+    \item \textbf{In-place algorithms:} Bubble Sort, Insertion Sort, Selection Sort, Heap Sort, and array-based Quick Sort.
+    \item \textbf{Not in-place algorithms:} Conventional array Merge Sort ($O(n)$ auxiliary array), Counting Sort, and Radix Sort.
+\end{itemize}
+
+\subsection{Adaptive Sorting}
+
+An algorithm is \textbf{adaptive} if its execution time improves when the input sequence is already sorted or nearly sorted:
+\begin{itemize}
+    \item \textbf{Insertion Sort} is inherently adaptive, running in $O(n)$ linear time on already sorted inputs.
+    \item \textbf{Optimized Bubble Sort} (with a swap-detection flag) is adaptive ($O(n)$ on sorted input).
+    \item \textbf{Merge Sort} is non-adaptive in its standard top-down implementation, performing $\Theta(n \log n)$ operations regardless of initial order.
+\end{itemize}
+
+\subsection{Comparison-Based vs Non-Comparison-Based Sorting}
+
+\begin{itemize}
+    \item \textbf{Comparison-Based Sorts:} Determine relative order exclusively by pairwise comparisons ($A[i] \leq A[j]$). Examples: Bubble, Insertion, Selection, Merge, Quick, and Heap Sort. \textbf{Theoretical Lower Bound:} $\Omega(n \log n)$ worst-case time.
+    \item \textbf{Non-Comparison-Based Sorts:} Exploit intrinsic mathematical properties or digit representations of keys (e.g., bounded integer ranges). Examples: Counting Sort, Radix Sort, Bucket Sort. Can achieve linear $O(n)$ time.
+\end{itemize}
+
+\subsection{Internal vs External Sorting}
+
+\begin{itemize}
+    \item \textbf{Internal Sorting:} All data resides entirely inside primary random-access memory (RAM).
+    \item \textbf{External Sorting:} The dataset exceeds RAM capacity and resides on secondary external storage (SSD/HDD). Algorithms (e.g., External Merge Sort) optimize sequential block I/O.
+\end{itemize}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section II: Bubble Sort}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Bubble Sort}
+
+\textbf{Bubble Sort} is a simple comparison-based sorting algorithm that repeatedly steps through the array, compares adjacent elements, and swaps them if they are in the wrong order. With each complete pass, the largest unsorted element "bubbles up" to its correct position at the end of the array.
+
+\subsection{Algorithmic Steps}
+\begin{enumerate}
+    \item Traverse the array from index $0$ to $n-2$.
+    \item Compare adjacent pair $(A[j], A[j+1])$. If $A[j] > A[j+1]$, swap them.
+    \item At the end of pass $i$, the $(i+1)^{\text{th}}$ largest element is locked into position $n - 1 - i$.
+    \item If a complete pass finishes without a single swap, terminate early (array is sorted).
+\end{enumerate}
+
+\subsection{Step-by-Step Example}
+Sort $A = [5, 1, 4, 2, 8]$ in ascending order:
+\begin{itemize}
+    \item \textbf{Pass 1:}
+    \begin{itemize}
+        \item Compare $5, 1 \implies \text{swap} \implies [1, 5, 4, 2, 8]$
+        \item Compare $5, 4 \implies \text{swap} \implies [1, 4, 5, 2, 8]$
+        \item Compare $5, 2 \implies \text{swap} \implies [1, 4, 2, 5, 8]$
+        \item Compare $5, 8 \implies \text{no swap} \implies [1, 4, 2, 5, 8]$
+        \item Largest element $8$ is in its permanent position.
+    \end{itemize}
+    \item \textbf{Pass 2:}
+    \begin{itemize}
+        \item Compare $1, 4 \implies \text{no swap} \implies [1, 4, 2, 5, 8]$
+        \item Compare $4, 2 \implies \text{swap} \implies [1, 2, 4, 5, 8]$
+        \item Compare $4, 5 \implies \text{no swap} \implies [1, 2, 4, 5, 8]$
+        \item Second largest element $5$ is locked into place.
+    \end{itemize}
+    \item \textbf{Pass 3:}
+    \begin{itemize}
+        \item Compare $1, 2 \implies \text{no swap}$; Compare $2, 4 \implies \text{no swap}$.
+        \item No swaps occurred $\implies$ \textbf{Early termination triggered!}
+    \end{itemize}
+\end{itemize}
+Final sorted array: $\mathbf{[1, 2, 4, 5, 8]}$.
+
+\subsection{Pseudocode}
+
+\begin{lstlisting}[style=pseudocode, caption={Optimized Bubble Sort Pseudocode.}]
+BUBBLE_SORT(A, n):
+    for i = 0 to n - 2:
+        swapped = false
+        for j = 0 to n - 2 - i:
+            if A[j] > A[j + 1]:
+                swap(A[j], A[j + 1])
+                swapped = true
+        if swapped == false:
+            break
+\end{lstlisting}
+
+\subsection{C++ Implementation}
+
+\begin{lstlisting}[style=cppstyle, caption={C++ Optimized Bubble Sort Implementation.}]
+#include <iostream>
+#include <vector>
+#include <utility>
+using namespace std;
+
+void bubbleSort(vector<int>& a) {
+    int n = static_cast<int>(a.size());
+    for (int i = 0; i < n - 1; i++) {
+        bool swapped = false;
+        for (int j = 0; j < n - 1 - i; j++) {
+            if (a[j] > a[j + 1]) {
+                swap(a[j], a[j + 1]);
+                swapped = true;
+            }
+        }
+        if (!swapped) break; // Early termination
+    }
+}
+
+int main() {
+    vector<int> a = {5, 1, 4, 2, 8};
+    bubbleSort(a);
+    for (int x : a) cout << x << " ";
+    cout << '\n';
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Complexity Analysis}
+\begin{itemize}
+    \item \textbf{Worst-Case Time:} Occurs when the array is in reverse sorted order. Total comparisons:
+    \[
+    (n-1) + (n-2) + \dots + 1 = \frac{n(n-1)}{2} \implies \boxed{O(n^2)}
+    \]
+    \item \textbf{Average-Case Time:} Quadratic pairwise inversions $\implies \boxed{O(n^2)}$.
+    \item \textbf{Best-Case Time:} Occurs when array is already sorted. The \texttt{swapped} flag triggers exit after $n-1$ comparisons $\implies \boxed{O(n)}$.
+    \item \textbf{Auxiliary Space:} Modifies the array in place $\implies \boxed{O(1)}$.
+\end{itemize}
+
+\subsection{Properties Summary}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Property} & \textbf{Characteristics} \\
+\midrule
+Best-Case Time    & $O(n)$ (with \texttt{swapped} flag optimization) \\
+Average-Case Time & $O(n^2)$ \\
+Worst-Case Time   & $O(n^2)$ \\
+Auxiliary Space   & $O(1)$ (In-place) \\
+Stability         & \textbf{Stable} (equal elements are never swapped when using $A[j] > A[j+1]$) \\
+Adaptivity        & \textbf{Adaptive} (benefits from existing order) \\
+Practical Usage   & Primarily educational; useful for tiny or nearly sorted lists \\
+\bottomrule
+\end{tabularx}
+\caption{Properties of Bubble Sort.}
+\end{table}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section III: Insertion Sort}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Insertion Sort}
+
+\textbf{Insertion Sort} incrementally constructs a sorted subarray at the front of the array. For each new element (the \texttt{key}), it scans backward through the sorted prefix, shifts larger elements one position to the right, and inserts the key into its correct relative position.
+
+\subsection{Algorithmic Steps}
+\begin{enumerate}
+    \item The first element $A[0]$ is trivially sorted.
+    \item For $i = 1$ to $n-1$: designate $\text{key} = A[i]$ and set $j = i - 1$.
+    \item While $j \geq 0$ and $A[j] > \text{key}$: shift $A[j+1] = A[j]$, and decrement $j$.
+    \item Place $\text{key}$ at the vacated slot: $A[j+1] = \text{key}$.
+\end{enumerate}
+
+\subsection{Step-by-Step Example}
+Sort $A = [5, 1, 4, 2, 8]$:
+\begin{itemize}
+    \item Initial sorted prefix: $[5]$.
+    \item \textbf{Pass 1 ($i = 1$, key = 1):} $5 > 1 \implies$ shift $5 \implies$ insert $1 \implies \mathbf{[1, 5}, 4, 2, 8]$.
+    \item \textbf{Pass 2 ($i = 2$, key = 4):} $5 > 4 \implies$ shift $5$; $1 < 4 \implies$ stop $\implies$ insert $4 \implies \mathbf{[1, 4, 5}, 2, 8]$.
+    \item \textbf{Pass 3 ($i = 3$, key = 2):} $5 > 2, 4 > 2 \implies$ shift $5, 4$; $1 < 2 \implies$ stop $\implies$ insert $2 \implies \mathbf{[1, 2, 4, 5}, 8]$.
+    \item \textbf{Pass 4 ($i = 4$, key = 8):} $8 > 5 \implies$ no shifts required $\implies \mathbf{[1, 2, 4, 5, 8]}$.
+\end{itemize}
+
+\subsection{Pseudocode}
+
+\begin{lstlisting}[style=pseudocode, caption={Insertion Sort Pseudocode.}]
+INSERTION_SORT(A, n):
+    for i = 1 to n - 1:
+        key = A[i]
+        j = i - 1
+        while j >= 0 and A[j] > key:
+            A[j + 1] = A[j]
+            j = j - 1
+        A[j + 1] = key
+\end{lstlisting}
+
+\begin{quote}
+\textbf{Stability Condition:} Using strict inequality \texttt{A[j] > key} ensures stability. If non-strict \texttt{A[j] >= key} were used, equal keys would shift past each other, destroying stability!
+\end{quote}
+
+\subsection{C++ Implementation}
+
+\begin{lstlisting}[style=cppstyle, caption={C++ Insertion Sort Implementation.}]
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void insertionSort(vector<int>& a) {
+    int n = static_cast<int>(a.size());
+    for (int i = 1; i < n; i++) {
+        int key = a[i];
+        int j = i - 1;
+        while (j >= 0 && a[j] > key) {
+            a[j + 1] = a[j];
+            j--;
+        }
+        a[j + 1] = key;
+    }
+}
+
+int main() {
+    vector<int> a = {5, 1, 4, 2, 8};
+    insertionSort(a);
+    for (int x : a) cout << x << " ";
+    cout << '\n';
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Complexity and Properties}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Property} & \textbf{Characteristics} \\
+\midrule
+Best-Case Time    & $\boxed{O(n)}$ (Array already sorted; inner loop test fails immediately) \\
+Average-Case Time & $\boxed{O(n^2)}$ (Average $n^2/4$ shifts) \\
+Worst-Case Time   & $\boxed{O(n^2)}$ (Reverse sorted array; $\frac{n(n-1)}{2}$ shifts) \\
+Auxiliary Space   & $\boxed{O(1)}$ (In-place) \\
+Stability         & \textbf{Stable} \\
+Online Property   & \textbf{Online} (can sort a live stream of data as elements arrive) \\
+Practical Usage   & Base sort for small subarrays ($n \leq 16$--$32$) in hybrid algorithms (TimSort, Introsort) \\
+\bottomrule
+\end{tabularx}
+\caption{Properties of Insertion Sort.}
+\end{table}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section IV: Merge Sort}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Merge Sort}
+
+\textbf{Merge Sort} is an optimal divide-and-conquer sorting algorithm. It recursively bisects the array into halves until subarrays contain single elements, and then merges the sorted halves into a complete sorted array in linear time.
+
+\subsection{Algorithmic Structure}
+\begin{enumerate}
+    \item \textbf{Divide:} Bisect the array into two halves at midpoint $\text{mid} = \text{left} + (\text{right} - \text{left})/2$.
+    \item \textbf{Conquer:} Recursively invoke \texttt{mergeSort} on left half $[\text{left}, \text{mid}]$ and right half $[\text{mid}+1, \text{right}]$.
+    \item \textbf{Combine:} Merge the two sorted subarrays using a linear two-pointer merge procedure.
+\end{enumerate}
+
+\subsection{Step-by-Step Example}
+Sort $A = [5, 1, 4, 2, 8]$:
+\begin{enumerate}
+    \item \textbf{Divide Tree:}
+    \[
+    [5, 1, 4, 2, 8] \implies [5, 1] \text{ and } [4, 2, 8]
+    \]
+    \[
+    [5, 1] \implies [5], [1]; \qquad [4, 2, 8] \implies [4], [2, 8] \implies [2], [8]
+    \]
+    \item \textbf{Merge Stage 1:}
+    \begin{itemize}
+        \item Merge $[5]$ and $[1] \implies [1, 5]$.
+        \item Merge $[2]$ and $[8] \implies [2, 8]$.
+    \end{itemize}
+    \item \textbf{Merge Stage 2:}
+    \begin{itemize}
+        \item Merge $[4]$ with $[2, 8] \implies [2, 4, 8]$.
+    \end{itemize}
+    \item \textbf{Merge Stage 3 (Final Merge):}
+    \begin{itemize}
+        \item Merge $[1, 5]$ and $[2, 4, 8]$:
+        \item Compare $1 < 2 \implies \text{take } 1$
+        \item Compare $5 > 2 \implies \text{take } 2$
+        \item Compare $5 > 4 \implies \text{take } 4$
+        \item Compare $5 < 8 \implies \text{take } 5$
+        \item Append remainder $8 \implies \mathbf{[1, 2, 4, 5, 8]}$.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{C++ Implementation}
+
+\begin{lstlisting}[style=cppstyle, caption={C++ Merge Sort Implementation.}]
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void merge(vector<int>& a, int left, int mid, int right) {
+    vector<int> temp;
+    temp.reserve(right - left + 1);
+
+    int i = left;
+    int j = mid + 1;
+
+    while (i <= mid && j <= right) {
+        if (a[i] <= a[j]) { // '<=' ensures stability
+            temp.push_back(a[i++]);
+        } else {
+            temp.push_back(a[j++]);
+        }
+    }
+
+    while (i <= mid)   temp.push_back(a[i++]);
+    while (j <= right) temp.push_back(a[j++]);
+
+    for (int k = 0; k < static_cast<int>(temp.size()); k++) {
+        a[left + k] = temp[k];
+    }
+}
+
+void mergeSort(vector<int>& a, int left, int right) {
+    if (left >= right) return;
+    int mid = left + (right - left) / 2;
+    mergeSort(a, left, mid);
+    mergeSort(a, mid + 1, right);
+    merge(a, left, mid, right);
+}
+
+int main() {
+    vector<int> a = {5, 1, 4, 2, 8};
+    mergeSort(a, 0, static_cast<int>(a.size()) - 1);
+    for (int x : a) cout << x << " ";
+    cout << '\n';
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Complexity Analysis}
+\begin{itemize}
+    \item \textbf{Recurrence Relation:}
+    \[
+    \boxed{T(n) = 2T(n/2) + O(n)}
+    \]
+    By the Master Theorem (Case 2: $a=2, b=2, f(n)=n \implies n^{\log_2 2} = n$), the solution is:
+    \[
+    \boxed{T(n) = O(n \log n)}
+    \]
+    This bound holds strictly across \textbf{Best, Average, and Worst Cases}.
+    \item \textbf{Space Complexity:} The merge procedure requires an auxiliary buffer of size $n$, yielding $\boxed{O(n)}$ auxiliary space for array sorting.
+\end{itemize}
+
+\subsection{Properties and Architectural Strengths}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Property} & \textbf{Characteristics} \\
+\midrule
+Best / Average / Worst Time & $\boxed{O(n \log n)}$ guaranteed \\
+Auxiliary Space             & $O(n)$ for arrays; $O(\log n)$ call stack \\
+Stability                   & \textbf{Stable} (preserves order when $A[i] \leq A[j]$) \\
+In-Place?                   & \textbf{No} (requires $O(n)$ temporary buffer for arrays) \\
+Linked Lists Suitability    & \textbf{Ideal}: Linked lists can be merged in $O(1)$ extra space by pointer redirection without array shifting! \\
+External Sorting            & \textbf{Standard choice}: Excellent sequential streaming access patterns on secondary disks. \\
+\bottomrule
+\end{tabularx}
+\caption{Properties of Merge Sort.}
+\end{table}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section V: Quick Sort}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Quick Sort}
+
+\textbf{Quick Sort} is a divide-and-conquer algorithm that selects a \textbf{pivot element} and partitions the array such that elements smaller than the pivot are placed to its left, and elements greater are placed to its right. The pivot is locked into its final sorted position, and the partitions are sorted recursively.
+
+\subsection{Pivot Selection Strategies}
+\begin{itemize}
+    \item \textbf{Last element / First element:} Simplest, but degrades to $O(n^2)$ on already sorted arrays.
+    \item \textbf{Randomized Pivot:} Selects a random index; guarantees $O(n \log n)$ expected time regardless of input ordering.
+    \item \textbf{Median-of-Three:} Selects the median of $\{\text{first}, \text{middle}, \text{last}\}$ elements.
+\end{itemize}
+
+\subsection{Lomuto Partition Scheme}
+Using the last element as pivot:
+\begin{lstlisting}[style=pseudocode, caption={Lomuto Partition Algorithm.}]
+PARTITION(A, low, high):
+    pivot = A[high]
+    i = low - 1
+    for j = low to high - 1:
+        if A[j] <= pivot:
+            i = i + 1
+            swap(A[i], A[j])
+    swap(A[i + 1], A[high])
+    return i + 1
+\end{lstlisting}
+
+\subsection{C++ Implementation}
+
+\begin{lstlisting}[style=cppstyle, caption={C++ Quick Sort Implementation.}]
+#include <iostream>
+#include <vector>
+#include <utility>
+using namespace std;
+
+int partitionArray(vector<int>& a, int low, int high) {
+    int pivot = a[high];
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+        if (a[j] <= pivot) {
+            i++;
+            swap(a[i], a[j]);
+        }
+    }
+    swap(a[i + 1], a[high]);
+    return i + 1;
+}
+
+void quickSort(vector<int>& a, int low, int high) {
+    if (low >= high) return;
+    int pivotIndex = partitionArray(a, low, high);
+    quickSort(a, low, pivotIndex - 1);
+    quickSort(a, pivotIndex + 1, high);
+}
+
+int main() {
+    vector<int> a = {5, 1, 4, 2, 8};
+    quickSort(a, 0, static_cast<int>(a.size()) - 1);
+    for (int x : a) cout << x << " ";
+    cout << '\n';
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Complexity Analysis}
+\begin{itemize}
+    \item \textbf{Best Case ($O(n \log n)$):} Pivot divides array into balanced halves ($n/2, n/2$):
+    \[
+    T(n) = 2T(n/2) + O(n) \implies O(n \log n)
+    \]
+    \item \textbf{Average Case ($O(n \log n)$):} Even unbalanced splits (e.g., $90\% / 10\%$) yield logarithmic tree depth $\implies O(n \log n)$.
+    \item \textbf{Worst Case ($O(n^2)$):} Occurs when pivot is always the smallest or largest element (e.g., already sorted array with last-element pivot):
+    \[
+    T(n) = T(n-1) + O(n) \implies O(n^2)
+    \]
+    \item \textbf{Space Complexity:} In-place array modification, but recursion stack uses:
+    \[
+    \boxed{O(\log n) \text{ average}, \quad O(n) \text{ worst-case}}
+    \]
+\end{itemize}
+
+\subsection{Properties Summary}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Property} & \textbf{Characteristics} \\
+\midrule
+Best-Case Time    & $O(n \log n)$ \\
+Average-Case Time & $O(n \log n)$ \\
+Worst-Case Time   & $\boxed{O(n^2)}$ \\
+Auxiliary Space   & $O(\log n)$ average recursion stack; $O(n)$ worst-case \\
+Stability         & \textbf{Unstable} (long-distance swaps disrupt relative order of equal keys) \\
+In-Place?         & \textbf{Yes} (partitions array in place) \\
+Performance Note  & Best cache locality and lowest constant factors among $O(n \log n)$ comparison sorts \\
+\bottomrule
+\end{tabularx}
+\caption{Properties of Quick Sort.}
+\end{table}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section VI: Comparative Analysis of Core Algorithms}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Comparative Analysis of Core Algorithms}
+
+\subsection{Master Evaluation of the Four Fundamental Sorts}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{p{2.6cm} X X X X}
+\toprule
+\textbf{Feature} & \textbf{Bubble Sort} & \textbf{Insertion Sort} & \textbf{Merge Sort} & \textbf{Quick Sort} \\
+\midrule
+Paradigm & Adjacent comparisons & Incremental sorted prefix insertion & Divide-and-Conquer & Partition around Pivot \\
+Best Time & $O(n)$ (optimized) & $O(n)$ & $O(n \log n)$ & $O(n \log n)$ \\
+Average Time & $O(n^2)$ & $O(n^2)$ & $O(n \log n)$ & $O(n \log n)$ \\
+Worst Time & $O(n^2)$ & $O(n^2)$ & $O(n \log n)$ & $O(n^2)$ \\
+Space & $O(1)$ & $O(1)$ & $O(n)$ (Buffer) & $O(\log n)$ (Stack) \\
+Stability & \textbf{Stable} & \textbf{Stable} & \textbf{Stable} & \textbf{Unstable} \\
+In-Place & \textbf{Yes} & \textbf{Yes} & \textbf{No} & \textbf{Yes} \\
+Adaptive & \textbf{Yes} & \textbf{Yes} & \textbf{No} & \textbf{No} \\
+Primary Strength & Simple to teach & Fastest on small / nearly sorted data & Predictable $O(n \log n)$ and stable & High cache speed, in-place \\
+Primary Weakness & Sluggish $O(n^2)$ & Sluggish $O(n^2)$ on large data & Requires $O(n)$ extra memory & Unstable; $O(n^2)$ worst case \\
+\bottomrule
+\end{tabularx}
+\caption{Comprehensive comparison of the four fundamental sorting algorithms.}
+\end{table}
+
+\subsection{Strategic Decision Criteria}
+\begin{itemize}
+    \item \textbf{Merge Sort vs Quick Sort:} Merge Sort guarantees $O(n \log n)$ and stability at the cost of $O(n)$ memory. Quick Sort avoids extra memory and provides superior cache performance, but can degrade to $O(n^2)$ and is unstable.
+    \item \textbf{Insertion Sort vs Bubble Sort:} Both are $O(n^2)$ average and $O(n)$ best, but Insertion Sort performs far fewer writes and comparisons, making it universally preferred for small arrays.
+\end{itemize}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section VII: Other Important Sorting Algorithms}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Other Important Sorting Algorithms}
+
+\subsection{Selection Sort}
+Repeatedly identifies the minimum element from the unsorted section and swaps it with the first unsorted element.
+\begin{itemize}
+    \item \textbf{Time Complexity:} $\boxed{\Theta(n^2)}$ in Best, Average, and Worst cases (always performs $\frac{n(n-1)}{2}$ comparisons).
+    \item \textbf{Auxiliary Space:} $O(1)$ (In-place).
+    \item \textbf{Stability:} \textbf{Unstable} (e.g., sorting $[4a, 4b, 1]$ swaps $4a$ with $1$, placing $4a$ after $4b$).
+    \item \textbf{Key Feature:} Performs at most $\boxed{n - 1 \text{ swaps}}$, making it optimal when \textbf{memory write operations are exceptionally expensive}.
+\end{itemize}
+
+\subsection{Heap Sort}
+Builds a max-heap in $O(n)$ time, then repeatedly extracts the root maximum and sifts down:
+\begin{itemize}
+    \item \textbf{Time Complexity:} $\boxed{O(n \log n)}$ in Best, Average, and Worst cases.
+    \item \textbf{Auxiliary Space:} $\boxed{O(1)}$ (In-place array manipulation).
+    \item \textbf{Stability:} \textbf{Unstable}.
+    \item \textbf{Comparison with Quick Sort:} Guarantees $O(n \log n)$ without extra memory, but exhibits poorer hardware cache locality due to jumping indices ($2i + 1, 2i + 2$).
+\end{itemize}
+
+\subsection{Shell Sort}
+Diminishing increment sort extending Insertion Sort by comparing elements separated by a \textbf{gap} $h$, shrinking $h$ until $h = 1$:
+\begin{itemize}
+    \item \textbf{Complexity:} Strongly depends on the gap sequence (e.g., Shell's original $N/2^k$ is $O(n^2)$; Knuth's $(3^k - 1)/2$ is $O(n^{3/2})$; Sedgewick's sequence achieves $O(n^{4/3})$).
+    \item \textbf{Space:} $O(1)$ in-place; \textbf{Unstable}.
+\end{itemize}
+
+\subsection{Counting Sort}
+Non-comparison integer sorting that counts occurrences of each value in range $[0, k]$:
+\begin{itemize}
+    \item \textbf{Time Complexity:} $\boxed{O(n + k)}$. Linear when $k = O(n)$.
+    \item \textbf{Auxiliary Space:} $\boxed{O(n + k)}$ using frequency count and output arrays.
+    \item \textbf{Stability:} \textbf{Stable} (when iterating input backward during placement).
+    \item \textbf{Constraint:} Inefficient when $k \gg n$ (e.g., sorting 10 keys in range $1$ to $1,000,000$).
+\end{itemize}
+
+\subsection{Radix Sort}
+Processes keys digit-by-digit from Least Significant Digit (LSD) to Most Significant Digit (MSD) using a stable sub-sort (typically Counting Sort):
+\begin{itemize}
+    \item \textbf{Time Complexity:} $\boxed{O(d(n + b))}$, where $d$ is digit count and $b$ is base ($b = 10$).
+    \item \textbf{Auxiliary Space:} $O(n + b)$; \textbf{Stable}.
+    \item \textbf{Linear Time:} For fixed-width 32-bit or 64-bit integers, $d$ is constant, yielding linear $O(n)$ sorting!
+\end{itemize}
+
+\subsection{Bucket Sort}
+Distributes $n$ uniformly distributed elements over $[0, 1)$ into $k$ buckets using index $\lfloor n \cdot x \rfloor$, sorts individual buckets, and concatenates them:
+\begin{itemize}
+    \item \textbf{Time Complexity:} Expected $\boxed{O(n + k)}$ on uniform inputs; Worst-case $\boxed{O(n^2)}$ under heavy clustering.
+    \item \textbf{Space:} $O(n + k)$.
+\end{itemize}
+
+\subsection{TimSort}
+State-of-the-art hybrid algorithm combining Insertion Sort and Merge Sort:
+\begin{itemize}
+    \item Identifies natural contiguous ascending/descending subsequences (\textbf{runs}).
+    \item Extends short runs using Insertion Sort, then merges them with galloping mode.
+    \item \textbf{Time Complexity:} Best $O(n)$ (strictly sorted data); Average/Worst $\boxed{O(n \log n)}$.
+    \item \textbf{Space:} $O(n)$; \textbf{Stable}.
+    \item \textbf{Standard Adoption:} Default sorting engine in Python (\texttt{list.sort}), Java (\texttt{Arrays.sort} for objects), and Android.
+\end{itemize}
+
+\subsection{Introsort (Introspective Sort)}
+Hybrid algorithm providing Quick Sort's speed with guaranteed $O(n \log n)$ worst-case safety:
+\begin{itemize}
+    \item Begins with Quick Sort.
+    \item Monitors recursion depth; if depth exceeds $2 \lfloor \log_2 n \rfloor$, switches automatically to \textbf{Heap Sort}.
+    \item Switches to \textbf{Insertion Sort} for tiny partitions ($n < 16$).
+    \item \textbf{Time Complexity:} Guaranteed $\boxed{O(n \log n)}$ worst-case; Space $O(\log n)$; \textbf{Unstable}.
+    \item \textbf{Standard Adoption:} Standard implementation of C++ \texttt{std::sort()}.
+\end{itemize}
+
+\subsection{Tree Sort}
+Inserts all $n$ items into a Binary Search Tree (BST), then traverses it \textbf{inorder}:
+\begin{itemize}
+    \item \textbf{Time Complexity:} $O(n \log n)$ average; degrades to $\boxed{O(n^2)}$ on skewed trees. With self-balancing trees (AVL/Red-Black), guarantees $O(n \log n)$.
+    \item \textbf{Space:} $O(n)$ for tree nodes.
+\end{itemize}
+
+\subsection{External Merge Sort}
+Designed for massive datasets exceeding physical RAM:
+\begin{enumerate}
+    \item \textbf{Run Generation:} Stream chunks of data into RAM, sort internally, and write sorted runs to disk.
+    \item \textbf{Multi-Way Merge:} Concurrently merge $k$ sorted runs into a unified output stream using min-heaps.
+\end{enumerate}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section VIII: Master Comparative Reference Table}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Master Comparative Reference Table}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{p{3.2cm} p{1.8cm} p{1.8cm} p{1.8cm} p{2.6cm} c c}
+\toprule
+\textbf{Algorithm} & \textbf{Best Time} & \textbf{Average Time} & \textbf{Worst Time} & \textbf{Auxiliary Space} & \textbf{Stable?} & \textbf{In-Place?} \\
+\midrule
+Bubble Sort (Opt) & $O(n)$ & $O(n^2)$ & $O(n^2)$ & $O(1)$ & Yes & Yes \\
+Insertion Sort    & $O(n)$ & $O(n^2)$ & $O(n^2)$ & $O(1)$ & Yes & Yes \\
+Selection Sort    & $O(n^2)$ & $O(n^2)$ & $O(n^2)$ & $O(1)$ & No & Yes \\
+Merge Sort        & $O(n \log n)$ & $O(n \log n)$ & $O(n \log n)$ & $O(n)$ & Yes & No \\
+Quick Sort        & $O(n \log n)$ & $O(n \log n)$ & $O(n^2)$ & $O(\log n)$ stack & No & Yes \\
+Heap Sort         & $O(n \log n)$ & $O(n \log n)$ & $O(n \log n)$ & $O(1)$ & No & Yes \\
+Shell Sort        & $O(n \log n)$ & $O(n^{4/3})$ & $O(n^2)$ & $O(1)$ & No & Yes \\
+Counting Sort     & $O(n + k)$ & $O(n + k)$ & $O(n + k)$ & $O(n + k)$ & Yes & No \\
+Radix Sort        & $O(d(n + b))$ & $O(d(n + b))$ & $O(d(n + b))$ & $O(n + b)$ & Yes & No \\
+Bucket Sort       & $O(n + k)$ & $O(n + k)$ & $O(n^2)$ & $O(n + k)$ & Yes & No \\
+TimSort           & $O(n)$ & $O(n \log n)$ & $O(n \log n)$ & $O(n)$ & Yes & No \\
+Introsort         & $O(n \log n)$ & $O(n \log n)$ & $O(n \log n)$ & $O(\log n)$ stack & No & Yes \\
+Tree Sort (BST)   & $O(n \log n)$ & $O(n \log n)$ & $O(n^2)$ & $O(n)$ & No & No \\
+Pigeonhole Sort   & $O(n + k)$ & $O(n + k)$ & $O(n + k)$ & $O(n + k)$ & Yes & No \\
+Comb Sort         & $O(n \log n)$ & $O(n^2 / 2^p)$ & $O(n^2)$ & $O(1)$ & No & Yes \\
+\bottomrule
+\end{tabularx}
+\caption{Master comparative table of 15 sorting algorithms.}
+\end{table}
+
+\subsection{Fundamental Comparison-Sorting Theorems}
+
+\begin{tcolorbox}[title=\textbf{Theorem: Lower Bound for Comparison-Based Sorting}]
+Any comparison-based sorting algorithm requires at least $\mathbf{\Omega(n \log n)}$ comparisons in the worst case.\\
+\textbf{Proof Sketch:} A decision tree sorting $n$ distinct keys must have at least $n!$ leaves (one for each permutation). A binary decision tree of height $h$ has at most $2^h$ leaves:
+\[
+2^h \geq n! \implies h \geq \log_2(n!)
+\]
+By Stirling's approximation ($\ln n! \approx n \ln n - n$):
+\[
+h \geq \sum_{i=1}^n \log_2 i \geq \sum_{i=n/2}^n \log_2(n/2) = \frac{n}{2} \log_2\left(\frac{n}{2}\right) = \Omega(n \log n).
+\]
+\end{tcolorbox}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section IX: Solved Examination Problems}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Solved Examination Problems}
+
+\subsection{Problem 1: Trace Bubble Sort Swaps}
+\textbf{Problem Statement:} Sort $A = [7, 3, 5, 2]$ using Bubble Sort. Determine intermediate arrays and total swap count.
+\begin{itemize}
+    \item \textbf{Pass 1:}
+    \begin{itemize}
+        \item Swap $7, 3 \implies [3, 7, 5, 2]$ (Swap 1)
+        \item Swap $7, 5 \implies [3, 5, 7, 2]$ (Swap 2)
+        \item Swap $7, 2 \implies [3, 5, 2, 7]$ (Swap 3)
+    \end{itemize}
+    \item \textbf{Pass 2:}
+    \begin{itemize}
+        \item Compare $3, 5 \implies$ no swap
+        \item Swap $5, 2 \implies [3, 2, 5, 7]$ (Swap 4)
+    \end{itemize}
+    \item \textbf{Pass 3:}
+    \begin{itemize}
+        \item Swap $3, 2 \implies [2, 3, 5, 7]$ (Swap 5)
+    \end{itemize}
+\end{itemize}
+Total Swaps: $\boxed{3 + 1 + 1 = 5 \text{ swaps}}$.
+
+\subsection{Problem 2: Count Inversions in an Array}
+An \textbf{inversion} is a pair $(i, j)$ such that $i < j$ and $A[i] > A[j]$.
+\begin{itemize}
+    \item For $A = [3, 1, 2]$: Inversions are $(3, 1)$ and $(3, 2) \implies \boxed{\text{Inversion Count} = 2}$.
+    \item Maximum inversions in an array of size $n$:
+    \[
+    \boxed{I_{\max} = \frac{n(n-1)}{2}} \quad (\text{occurs on strictly reverse-sorted arrays})
+    \]
+    For $n = 5$ ($[5, 4, 3, 2, 1]$): $I_{\max} = \frac{5 \times 4}{2} = \boxed{10 \text{ inversions}}$.
+\end{itemize}
+
+\subsection{Problem 3: Identify the Algorithm from Its Properties}
+\textbf{Question:} An algorithm runs in $O(n \log n)$ worst-case time, operates in $O(1)$ auxiliary memory, and is not stable. Which algorithm is it?\\
+\textbf{Answer: Heap Sort.}
+\begin{itemize}
+    \item Merge Sort requires $O(n)$ space.
+    \item Quick Sort has $O(n^2)$ worst case and $O(\log n)$ stack space.
+    \item Insertion Sort has $O(n^2)$ worst case.
+\end{itemize}
+
+\subsection{Problem 4: Strategic Algorithm Selection}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{6.5cm} p{3.5cm} X}
+\toprule
+\textbf{Real-World Operational Scenario} & \textbf{Optimal Algorithm} & \textbf{Justification} \\
+\midrule
+Tiny or nearly sorted array & \textbf{Insertion Sort} & Adaptive $O(n)$ time, minimal constant overhead \\
+Large array needing $O(n \log n)$ guarantee and $O(1)$ space & \textbf{Heap Sort} & Worst-case optimal and in-place \\
+Large dataset requiring stable sorting & \textbf{Merge Sort} & Stable and predictable $O(n \log n)$ \\
+Bounded integers in small range ($k \approx n$) & \textbf{Counting Sort} & Linear $O(n + k)$ non-comparison speed \\
+Fixed-width integers / Strings by digits & \textbf{Radix Sort} & Linear $O(d(n + b))$ time \\
+General in-memory sorting & \textbf{Quick Sort / Introsort} & Fastest practical cache execution \\
+Dataset larger than physical RAM & \textbf{External Merge Sort} & Optimized sequential disk block transfers \\
+Partially ordered real-world workloads & \textbf{TimSort} & Exploits natural ordered runs \\
+Strictly minimize physical memory write operations & \textbf{Selection Sort} & Performs at most $n - 1$ swaps \\
+\bottomrule
+\end{tabularx}
+\caption{Strategic sorting algorithm selection chart.}
+\end{table}
+
+\subsection{Problem 5: Determine Sorting Stability}
+\textbf{Question:} Input records: $(\text{Rahim}, 80), (\text{Karim}, 90), (\text{Salma}, 80)$.\\
+Sorted ascending by marks:
+\[
+\text{Option A: } (\text{Rahim}, 80), (\text{Salma}, 80), (\text{Karim}, 90)
+\]
+\[
+\text{Option B: } (\text{Salma}, 80), (\text{Rahim}, 80), (\text{Karim}, 90)
+\]
+\textbf{Answer: Option A is stable.} Rahim appeared before Salma in the original input; preserving this relative order confirms stability.
+
+\subsection{Problem 6: C++ Standard Library Guarantees}
+\begin{itemize}
+    \item \texttt{std::sort()}: Guarantees $\mathbf{O(n \log n)}$ comparisons in the worst case (C++11 standard). Typically implemented via \textbf{Introsort}. It is \textbf{unstable}.
+    \item \texttt{std::stable\_sort()}: Guarantees \textbf{stability} in $O(n \log n)$ time with auxiliary memory. Implemented via \textbf{Merge Sort / TimSort}.
+\end{itemize}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section X: Examination Traps and Quick Revision}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Sorting Examination Traps}
+
+\begin{enumerate}
+    \item \textbf{Bubble Sort Best Case:} Only $O(n)$ when the early-termination flag is implemented. Unoptimized Bubble Sort is always $\Theta(n^2)$.
+    \item \textbf{Insertion Sort Comparison Operator:} Must use \texttt{A[j] > key} for stability. Using \texttt{>=} ruins stability.
+    \item \textbf{Merge Sort Memory:} Conventional array Merge Sort is \textbf{not in-place}; it requires $O(n)$ buffer storage.
+    \item \textbf{Quick Sort Worst Case:} Conventional Quick Sort is $\mathbf{O(n^2)}$, not $O(n \log n)$. It occurs on already sorted input with first/last pivot.
+    \item \textbf{Heap Sort Stability:} Standard Heap Sort is \textbf{unstable} due to long-distance swaps between root and leaf nodes.
+    \item \textbf{Selection Sort Comparisons:} Selection Sort \textbf{always} performs $\frac{n(n-1)}{2}$ comparisons ($\Theta(n^2)$), even if the array is already sorted.
+    \item \textbf{Counting Sort Scope:} Runs in $O(n + k)$, not unconditional $O(n)$. It is only linear when range $k \leq O(n)$.
+    \item \textbf{Radix Sort Prerequisite:} LSD Radix Sort \textbf{strictly requires} a stable inner sub-sort to preserve prior digit orders.
+    \item \textbf{Shell Sort Complexity:} Cannot be stated without specifying the gap sequence! Basic halving sequence is $O(n^2)$.
+    \item \textbf{TimSort vs Introsort:} TimSort is \textbf{stable} (Python); Introsort is \textbf{unstable} (C++ \texttt{std::sort}).
+\end{enumerate}
+
+\section{Sorting Quick-Revision Sheet}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{3.5cm} p{2cm} p{2cm} p{2cm} c X}
+\toprule
+\textbf{Algorithm} & \textbf{Best Time} & \textbf{Average Time} & \textbf{Worst Time} & \textbf{Stable?} & \textbf{Auxiliary Space} \\
+\midrule
+Bubble Sort (Opt)  & $O(n)$ & $O(n^2)$ & $O(n^2)$ & Yes & $O(1)$ \\
+Insertion Sort     & $O(n)$ & $O(n^2)$ & $O(n^2)$ & Yes & $O(1)$ \\
+Selection Sort     & $O(n^2)$ & $O(n^2)$ & $O(n^2)$ & No  & $O(1)$ \\
+Merge Sort         & $O(n \log n)$ & $O(n \log n)$ & $O(n \log n)$ & Yes & $O(n)$ \\
+Quick Sort         & $O(n \log n)$ & $O(n \log n)$ & $O(n^2)$ & No  & $O(\log n)$ \\
+Heap Sort          & $O(n \log n)$ & $O(n \log n)$ & $O(n \log n)$ & No  & $O(1)$ \\
+Counting Sort      & $O(n + k)$ & $O(n + k)$ & $O(n + k)$ & Yes & $O(n + k)$ \\
+Radix Sort         & $O(d(n + b))$ & $O(d(n + b))$ & $O(d(n + b))$ & Yes & $O(n + b)$ \\
+TimSort            & $O(n)$ & $O(n \log n)$ & $O(n \log n)$ & Yes & $O(n)$ \\
+Introsort          & $O(n \log n)$ & $O(n \log n)$ & $O(n \log n)$ & No  & $O(\log n)$ \\
+\bottomrule
+\end{tabularx}
+\caption{Rapid-fire revision summary of key sorting algorithms.}
+\end{table}
+
+\begin{quote}
+\textbf{Final Advice for the Examination Hall:} For each algorithm, ensure you can seamlessly:
+\begin{enumerate}
+    \item \textbf{Trace:} Execute 2--3 passes by hand on a 5-element array.
+    \item \textbf{Classify:} State time complexity (best, avg, worst), space complexity, stability, and in-place status.
+    \item \textbf{Justify:} Explain \textit{why} the algorithm achieves that complexity (e.g., recurrence relation, tree height, or inversion elimination).
+\end{enumerate}
+\end{quote}
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section XI: Pair-Sum Algorithm with $O(n \log n)$ Complexity}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Pair-Sum Algorithm with $O(n \log n)$ Complexity}
+
+\subsection{Problem Definition}
+
+Given an array of $n$ integers and a target value $T$, determine whether there exist two distinct array elements whose sum equals $T$:
+\[
+A[i] + A[j] = T \quad (i \neq j)
+\]
+For example, given $A = [2, 7, 11, 15, 3, 6]$ and $T = 9$:
+\begin{itemize}
+    \item Valid pair: $2 + 7 = 9$
+    \item Valid pair: $3 + 6 = 9$
+\end{itemize}
+
+\subsection{Method 1: Brute Force ($O(n^2)$)}
+Check all distinct pairs using nested loops:
+\[
+\text{Total candidate pairs} = \binom{n}{2} = \frac{n(n-1)}{2} \implies O(n^2) \text{ time, } O(1) \text{ space.}
+\]
+While simple, this quadratic approach is unacceptable for large datasets in recruitment assessments.
+
+\subsection{Method 2: Sorting and Two Pointers ($O(n \log n)$)}
+
+\subsubsection*{Core Mechanism}
+\begin{enumerate}
+    \item Sort the array in ascending order: $O(n \log n)$.
+    \item Initialize two pointers: \texttt{left} at index $0$, \texttt{right} at index $n - 1$.
+    \item Calculate running sum $S = A[\text{left}] + A[\text{right}]$:
+    \begin{itemize}
+        \item \textbf{Case 1 ($S == T$):} Target pair found! Return $(A[\text{left}], A[\text{right}])$.
+        \item \textbf{Case 2 ($S < T$):} Sum is too small. Since array is sorted, increment \texttt{left} to evaluate a larger element.
+        \item \textbf{Case 3 ($S > T$):} Sum is too large. Decrement \texttt{right} to evaluate a smaller element.
+    \end{itemize}
+    \item Terminate when a pair is found or when $\text{left} \geq \text{right}$.
+\end{enumerate}
+
+\subsection{Step-by-Step Example}
+Given $A = [8, 3, 2, 7, 11, 6]$ and $T = 9$:
+\begin{enumerate}
+    \item Sort the array: $[2, 3, 6, 7, 8, 11]$.
+    \item Initialize: $\text{left} = 0 \; (A[0] = 2)$, $\text{right} = 5 \; (A[5] = 11)$.
+\end{enumerate}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{c c c c l}
+\toprule
+\textbf{Step} & \textbf{Left ($A[\text{left}]$)} & \textbf{Right ($A[\text{right}]$)} & \textbf{Sum ($S$)} & \textbf{Algorithmic Decision} \\
+\midrule
+1 & 2 & 11 & 13 & $13 > 9 \implies$ Sum too large; decrement \texttt{right} \\
+2 & 2 & 8  & 10 & $10 > 9 \implies$ Sum too large; decrement \texttt{right} \\
+3 & 2 & 7  & 9  & $\mathbf{9 == 9 \implies \text{Pair Found: } (2, 7)}$ \\
+\bottomrule
+\end{tabular}
+\caption{Two-pointer convergence trace for Target $T = 9$.}
+\end{table}
+
+\subsection{C++ Implementation}
+
+\begin{lstlisting}[style=cppstyle, caption={C++ Solution for Pair-Sum using Sorting and Two Pointers.}]
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <utility>
+using namespace std;
+
+bool findPairSum(const vector<int>& input, long long target, pair<int, int>& result) {
+    vector<int> a = input;
+    sort(a.begin(), a.end()); // O(n log n)
+
+    int left = 0;
+    int right = static_cast<int>(a.size()) - 1;
+
+    while (left < right) {
+        long long sum = static_cast<long long>(a[left]) + a[right];
+
+        if (sum == target) {
+            result = {a[left], a[right]};
+            return true;
+        } else if (sum < target) {
+            left++;
+        } else {
+            right--;
+        }
+    }
+    return false;
+}
+
+int main() {
+    vector<int> a = {8, 3, 2, 7, 11, 6};
+    long long target = 9;
+    pair<int, int> result;
+
+    if (findPairSum(a, target, result)) {
+        cout << "Pair found: (" << result.first << ", " << result.second << ")\n";
+    } else {
+        cout << "No valid pair exists\n";
+    }
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Complexity Analysis:}
+\begin{itemize}
+    \item \textbf{Sorting Time:} $O(n \log n)$.
+    \item \textbf{Two-Pointer Scan Time:} $O(n)$ (each pointer moves at most $n$ times).
+    \item \textbf{Total Time Complexity:} $\boxed{O(n \log n)}$.
+    \item \textbf{Auxiliary Space:} $O(1)$ if in-place sorting is allowed; $O(n)$ if sorting a cloned array.
+\end{itemize}
+
+\subsection{Important Variations}
+\begin{itemize}
+    \item \textbf{Return Original Array Indices:} Store elements as pairs $(\text{value}, \text{originalIndex})$. Sort by value in $O(n \log n)$, run two pointers, and retrieve the original indices.
+    \item \textbf{Already Sorted Array:} Skips sorting! Two-pointer scan alone runs in $\boxed{O(n)}$ linear time.
+    \item \textbf{Hash Set Alternative:} Using a hash table offers expected $O(n)$ time by looking up $T - A[i]$, but requires $O(n)$ auxiliary memory and risks worst-case $O(n^2)$ time under hash collisions.
+\end{itemize}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section XII: Binary Search}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Binary Search}
+
+\textbf{Binary Search} is an optimal logarithmic searching algorithm that operates on a sorted collection by repeatedly bisecting the search interval into halves. At each step, comparing the target against the middle element allows discarding half of the remaining elements.
+
+\subsection{The Four Essential Prerequisites}
+\begin{enumerate}
+    \item \textbf{Sorted Sequence:} The underlying data must be strictly sorted according to the comparison rule.
+    \item \textbf{Monotonic Comparison:} Comparison logic must match the sort order (ascending vs descending).
+    \item \textbf{Random Access $O(1)$:} Direct index calculation is required. Linked lists \textbf{cannot} achieve $O(\log n)$ binary search because accessing the midpoint requires traversing $O(n)$ node links.
+    \item \textbf{Boundary Exclusions:} Must update boundaries as $\text{low} = \text{mid} + 1$ and $\text{high} = \text{mid} - 1$ to prevent infinite loops.
+\end{enumerate}
+
+\subsection{Algorithmic Formulation}
+
+\begin{lstlisting}[style=pseudocode, caption={Binary Search Algorithm.}]
+BINARY_SEARCH(A, target):
+    low = 0
+    high = length(A) - 1
+
+    while low <= high:
+        mid = low + floor((high - low) / 2) // Prevents integer overflow
+        if A[mid] == target:
+            return mid
+        else if A[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+
+    return -1 // Target not found
+\end{lstlisting}
+
+\begin{quote}
+\textbf{Integer Overflow Avoidance:} In programming languages with fixed integer widths, writing \texttt{mid = (low + high) / 2} can cause arithmetic overflow when $\text{low} + \text{high} > 2^{31}-1$. The algebraically equivalent form:
+\[
+\boxed{\text{mid} = \text{low} + \left\lfloor \frac{\text{high} - \text{low}}{2} \right\rfloor}
+\]
+is completely immune to integer overflow.
+\end{quote}
+
+\subsection{Trace of Successful Search}
+Search for target $T = 23$ in sorted array:
+\[
+A = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91], \quad n = 10
+\]
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{c c c c c l}
+\toprule
+\textbf{Iteration} & \textbf{Low} & \textbf{High} & \textbf{Mid} & \textbf{$A[\text{mid}]$} & \textbf{Decision} \\
+\midrule
+1 & 0 & 9 & 4 & 16 & $16 < 23 \implies \text{low} = 4 + 1 = 5$ (Search right half) \\
+2 & 5 & 9 & 7 & 56 & $56 > 23 \implies \text{high} = 7 - 1 = 6$ (Search left half) \\
+3 & 5 & 6 & 5 & 23 & $\mathbf{23 == 23 \implies \text{Target Found at index 5!}}$ \\
+\bottomrule
+\end{tabular}
+\caption{Trace of binary search locating target 23 in 3 iterations.}
+\end{table}
+
+\subsection{Trace When Target is Absent}
+Search for $T = 24$ in the same array:
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{c c c c c l}
+\toprule
+\textbf{Iteration} & \textbf{Low} & \textbf{High} & \textbf{Mid} & \textbf{$A[\text{mid}]$} & \textbf{Decision} \\
+\midrule
+1 & 0 & 9 & 4 & 16 & $16 < 24 \implies \text{low} = 5$ \\
+2 & 5 & 9 & 7 & 56 & $56 > 24 \implies \text{high} = 6$ \\
+3 & 5 & 6 & 5 & 23 & $23 < 24 \implies \text{low} = 6$ \\
+4 & 6 & 6 & 6 & 38 & $38 > 24 \implies \text{high} = 5$ \\
+\bottomrule
+\end{tabular}
+\caption{Trace of binary search when target 24 is absent.}
+\end{table}
+At iteration 5, $\text{low} = 6 > \text{high} = 5$. The loop terminates and returns $-1$.
+
+\subsection{Binary Search with Duplicate Keys}
+When array contains duplicate elements (e.g., $[2, 4, 4, 4, 7, 9]$):
+\begin{itemize}
+    \item \textbf{Lower Bound ($\texttt{lower\_bound}$):} First index where $A[i] \geq \text{target}$ (Index $1$).
+    \item \textbf{Upper Bound ($\texttt{upper\_bound}$):} First index where $A[i] > \text{target}$ (Index $4$).
+    \item \textbf{Frequency Calculation:}
+    \[
+    \boxed{\text{Frequency}(x) = \text{upper\_bound}(x) - \text{lower\_bound}(x) = 4 - 1 = 3}
+    \]
+\end{itemize}
+
+\subsection{Complexity Summary}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Execution Case} & \textbf{Time / Space Complexity} \\
+\midrule
+Best-Case Time          & $O(1)$ (Target located at initial midpoint) \\
+Average-Case Time       & $O(\log n)$ \\
+Worst-Case Time         & $\boxed{O(\log n)}$ ($\lfloor \log_2 n \rfloor + 1$ comparisons) \\
+Iterative Space         & $\boxed{O(1)}$ auxiliary space \\
+Recursive Space         & $O(\log n)$ auxiliary stack memory \\
+\bottomrule
+\end{tabularx}
+\caption{Complexity of Binary Search.}
+\end{table}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section XIII: Breadth-First Search (BFS)}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Breadth-First Search (BFS)}
+
+\textbf{Breadth-First Search (BFS)} is an uninformed graph traversal algorithm that explores vertices in strictly increasing order of their distance (edge count) from a designated starting vertex. It operates level by level using a \textbf{FIFO Queue}.
+
+\subsection{Algorithmic Steps}
+\begin{enumerate}
+    \item Initialize all vertices as unvisited.
+    \item Mark start vertex $s$ as visited and enqueue it.
+    \item While queue is not empty:
+    \begin{itemize}
+        \item Dequeue vertex $u$ and process it.
+        \item For every neighbor $v$ of $u$: if $v$ is unvisited, mark $v$ as visited, record predecessor $\text{parent}[v] = u$, and enqueue $v$.
+    \end{itemize}
+\end{enumerate}
+
+\begin{quote}
+\textbf{Vital Implementation Rule:} Mark a vertex as \textbf{visited at the time of enqueueing}, not when dequeueing! Delaying the visited flag causes duplicate enqueues from shared predecessors, ballooning queue memory.
+\end{quote}
+
+\subsection{Step-by-Step BFS Trace}
+Given graph adjacency lists:
+\begin{lstlisting}[style=pseudocode]
+A: B, C
+B: A, D, E
+C: A, F
+D: B
+E: B, F
+F: C, E
+\end{lstlisting}
+Traversing starting from $A$:
+\begin{itemize}
+    \item \textbf{Start:} Enqueue $A \implies \text{Queue} = [A]$, $\text{Visited} = \{A\}$.
+    \item \textbf{Process $A$:} Dequeue $A$, enqueue unvisited neighbors $B, C \implies \text{Queue} = [B, C]$.
+    \item \textbf{Process $B$:} Dequeue $B$, enqueue unvisited neighbors $D, E \implies \text{Queue} = [C, D, E]$.
+    \item \textbf{Process $C$:} Dequeue $C$, enqueue unvisited neighbor $F \implies \text{Queue} = [D, E, F]$.
+    \item \textbf{Process $D$:} Dequeue $D$, no unvisited neighbors $\implies \text{Queue} = [E, F]$.
+    \item \textbf{Process $E$:} Dequeue $E$, neighbors already visited $\implies \text{Queue} = [F]$.
+    \item \textbf{Process $F$:} Dequeue $F$, neighbors already visited $\implies \text{Queue} = []$.
+\end{itemize}
+\textbf{BFS Traversal Sequence:} $\boxed{A, B, C, D, E, F}$.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{c l}
+\toprule
+\textbf{Distance from Source $A$} & \textbf{Vertices at Level} \\
+\midrule
+Level 0 & $A$ \\
+Level 1 & $B, C$ \\
+Level 2 & $D, E, F$ \\
+\bottomrule
+\end{tabular}
+\caption{BFS distance level decomposition.}
+\end{table}
+
+\subsection{Shortest-Path Reconstruction}
+Because BFS explores by concentric edge levels, it guarantees the \textbf{shortest path} (minimum edge count) in unweighted graphs. Tracking parent pointers:
+\[
+\text{parent}[B] = A, \quad \text{parent}[C] = A, \quad \text{parent}[F] = C
+\]
+Tracing backward from $F$: $F \to C \to A$. Reversing gives:
+\[
+\boxed{A \longrightarrow C \longrightarrow F \quad (\text{Shortest Path of Length 2})}
+\]
+
+\subsection{C++ Implementation}
+
+\begin{lstlisting}[style=cppstyle, caption={C++ Breadth-First Search Implementation.}]
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+vector<int> bfs(const vector<vector<int>>& adj, int start) {
+    int n = static_cast<int>(adj.size());
+    vector<bool> visited(n, false);
+    vector<int> order;
+    if (start < 0 || start >= n) return order;
+
+    queue<int> q;
+    visited[start] = true;
+    q.push(start);
+
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        order.push_back(u);
+
+        for (int v : adj[u]) {
+            if (!visited[v]) {
+                visited[v] = true;
+                q.push(v);
+            }
+        }
+    }
+    return order;
+}
+
+int main() {
+    int V = 6;
+    vector<vector<int>> adj(V);
+    auto addEdge = [&](int u, int v) {
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    };
+
+    addEdge(0, 1); addEdge(0, 2); addEdge(1, 3);
+    addEdge(1, 4); addEdge(2, 5); addEdge(4, 5);
+
+    vector<int> order = bfs(adj, 0);
+    cout << "BFS Order: ";
+    for (int x : order) cout << x << " ";
+    cout << '\n';
+    return 0;
+}
+\end{lstlisting}
+
+\textbf{Complexity:} Time $\boxed{O(V + E)}$ with adjacency list; Auxiliary space $\boxed{O(V)}$ for queue and visited vector.
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section XIV: Depth-First Search (DFS)}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Depth-First Search (DFS)}
+
+\textbf{Depth-First Search (DFS)} is a graph traversal algorithm that explores as deep as possible along each branch before backtracking. It operates on \textbf{LIFO} principles via program recursion or an explicit stack.
+
+\subsection{Recursive C++ Implementation}
+
+\begin{lstlisting}[style=cppstyle, caption={C++ Recursive Depth-First Search.}]
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void dfsUtil(const vector<vector<int>>& adj, int u, vector<bool>& visited, vector<int>& order) {
+    visited[u] = true;
+    order.push_back(u);
+
+    for (int v : adj[u]) {
+        if (!visited[v]) {
+            dfsUtil(adj, v, visited, order);
+        }
+    }
+}
+
+vector<int> dfs(const vector<vector<int>>& adj, int start) {
+    int n = static_cast<int>(adj.size());
+    vector<bool> visited(n, false);
+    vector<int> order;
+    if (start >= 0 && start < n) {
+        dfsUtil(adj, start, visited, order);
+    }
+    return order;
+}
+
+int main() {
+    int V = 6;
+    vector<vector<int>> adj(V);
+    auto addEdge = [&](int u, int v) {
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    };
+
+    addEdge(0, 1); addEdge(0, 2); addEdge(1, 3);
+    addEdge(1, 4); addEdge(2, 5); addEdge(4, 5);
+
+    vector<int> order = dfs(adj, 0);
+    cout << "DFS Order: ";
+    for (int x : order) cout << x << " ";
+    cout << '\n';
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Iterative C++ Implementation}
+
+\begin{lstlisting}[style=cppstyle, caption={C++ Iterative DFS using Explicit Stack.}]
+vector<int> dfsIterative(const vector<vector<int>>& adj, int start) {
+    int n = static_cast<int>(adj.size());
+    vector<bool> visited(n, false);
+    vector<int> order;
+    if (start < 0 || start >= n) return order;
+
+    vector<int> st;
+    st.push_back(start);
+
+    while (!st.empty()) {
+        int u = st.back();
+        st.pop_back();
+
+        if (visited[u]) continue;
+        visited[u] = true;
+        order.push_back(u);
+
+        // Push neighbors in reverse to explore smaller indices first
+        for (int i = static_cast<int>(adj[u].size()) - 1; i >= 0; --i) {
+            int v = adj[u][i];
+            if (!visited[v]) st.push_back(v);
+        }
+    }
+    return order;
+}
+\end{lstlisting}
+
+\subsection{Applications of DFS}
+\begin{itemize}
+    \item \textbf{Cycle Detection:} Back-edges in directed graphs indicate cycles.
+    \item \textbf{Topological Sorting:} Order vertices of a DAG by finishing times.
+    \item \textbf{Strongly Connected Components:} Tarjan's and Kosaraju's algorithms.
+    \item \textbf{Maze Solving and Backtracking:} Path existence and Sudoku solvers.
+\end{itemize}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section XV: BFS vs DFS --- Comparative Analysis}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{BFS vs DFS --- Comparative Analysis}
+
+\subsection{Comprehensive Comparison Table}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{3.5cm} X X}
+\toprule
+\textbf{Basis of Comparison} & \textbf{Breadth-First Search (BFS)} & \textbf{Depth-First Search (DFS)} \\
+\midrule
+Full Form & Breadth-First Search & Depth-First Search \\
+Core Traversal Mechanism & Explores frontier level by level & Dives deeply along paths; backtracks \\
+Primary Data Structure & \textbf{Queue} (FIFO) & \textbf{Stack} (LIFO) or Call Stack \\
+Shortest Path Guarantee & \textbf{Yes} (in unweighted graphs) & \textbf{No} (may find longer path first) \\
+Time (Adjacency List) & $\boxed{O(V + E)}$ & $\boxed{O(V + E)}$ \\
+Time (Adjacency Matrix) & $O(V^2)$ & $O(V^2)$ \\
+Auxiliary Space & $O(V)$ (stores broad level frontier) & $O(V)$ (stores recursive call stack) \\
+Cycle Detection & Requires color / cross-edge tracking & Natural via back-edge detection \\
+Topological Sort & Kahn's in-degree algorithm & Reverse post-order traversal \\
+Suitability & Shortest paths, peer-to-peer networks & Decision trees, mazes, reachability \\
+\bottomrule
+\end{tabularx}
+\caption{Core architectural comparison between BFS and DFS.}
+\end{table}
+
+\subsection{Why DFS Does Not Guarantee Shortest Path}
+Consider reaching node $F$ from $A$ in our example graph:
+\begin{itemize}
+    \item \textbf{Path 1:} $A \to C \to F$ (Length $= 2$ edges).
+    \item \textbf{Path 2:} $A \to B \to E \to F$ (Length $= 3$ edges).
+\end{itemize}
+BFS explores level 1 ($B, C$), then level 2 ($F$), discovering $F$ along the 2-edge path. DFS dives into $B$, then $D$, backtracks to $E$, and discovers $F$ along the 3-edge path first! Hence, DFS \textbf{cannot be relied on} for shortest paths.
+
+\subsection{Traversing Disconnected Graphs}
+If a graph contains multiple disconnected components, a single BFS or DFS from $s$ visits only $s$'s component. To traverse the entire forest:
+\begin{lstlisting}[style=pseudocode]
+for each vertex v in V:
+    if not visited[v]:
+        BFS(v)  // or DFS(v)
+\end{lstlisting}
+The overall complexity remains strictly $\boxed{O(V + E)}$.
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section XVI: A* Search Algorithm}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{A* Search Algorithm}
+
+\textbf{A* (A-Star)} is an informed (heuristic-guided) search algorithm that computes the least-cost path from a start node to a goal node. Unlike uninformed searches (BFS, DFS, Dijkstra), A* uses domain knowledge via a \textbf{heuristic function} to direct exploration toward the goal.
+
+\subsection{The Evaluation Function}
+A* selects the next node to expand from a min-priority queue based on the evaluation function:
+\[
+\boxed{f(n) = g(n) + h(n)}
+\]
+where:
+\begin{itemize}
+    \item $g(n)$: The exact cost incurred from the start node to node $n$.
+    \item $h(n)$: The heuristic estimate of the remaining cost from node $n$ to the goal.
+    \item $f(n)$: The estimated total cost of the cheapest solution passing through node $n$.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{c c c c l}
+\toprule
+\textbf{Candidate Node} & \textbf{Cost Incurred $g(n)$} & \textbf{Heuristic $h(n)$} & \textbf{Total Score $f(n)$} & \textbf{Priority Selection} \\
+\midrule
+Node $A$ & 3 & 8 & 11 & Secondary candidate \\
+Node $B$ & 5 & 2 & \textbf{7} & \textbf{Selected first ($f=7 < 11$)} \\
+\bottomrule
+\end{tabular}
+\caption{A* decision: Node $B$ is prioritized despite higher $g(n)$ because its remaining cost is tiny.}
+\end{table}
+
+\subsection{Heuristic Properties for Optimality}
+
+\subsubsection{1. Admissible Heuristic (Never Overestimates)}
+A heuristic $h(n)$ is \textbf{admissible} if it never overestimates the actual true minimum cost $h^*(n)$ to reach the goal:
+\[
+\boxed{0 \leq h(n) \leq h^*(n), \quad \text{with } h(\text{goal}) = 0}
+\]
+\textbf{Guaranteed Optimality:} If $h(n)$ is admissible, A* tree search is guaranteed to return an \textbf{optimal (lowest cost) path}.
+
+\subsubsection{2. Consistent (Monotone) Heuristic}
+A heuristic is \textbf{consistent} if for every node $u$ and successor $v$ connected by edge of cost $c(u, v)$:
+\[
+\boxed{h(u) \leq c(u, v) + h(v)}
+\]
+This satisfies the triangle inequality. With a consistent heuristic, the $f$-values along any path are non-decreasing, and A* graph search \textbf{never needs to reopen an already closed node}.
+
+\subsection{Why A* Can Be Faster Than BFS (Worked Grid Example)}
+Consider navigating an unweighted grid from $(0, 0)$ to $(4, 0)$ with unit movement costs:
+\begin{itemize}
+    \item \textbf{BFS Approach:} Expands blindly in circular concentric Manhattan diamonds. Before reaching distance 4, BFS expands:
+    \[
+    \text{Level 0 (1)} + \text{Level 1 (4)} + \text{Level 2 (8)} + \text{Level 3 (12)} = \boxed{25 \text{ expanded states!}}
+    \]
+    \item \textbf{A* Approach (Manhattan Heuristic $h(x, y) = |4-x| + |y|$):}
+    For points along the direct axis:
+    \[
+    (0,0) \to (1,0) \to (2,0) \to (3,0) \to (4,0) \implies \text{all have } f = g + h = 4!
+    \]
+    Any point off the direct axis (e.g., $(0, 1)$) has $g=1, h=5 \implies f=6$. A* expands \textbf{only 5 states}, avoiding 20 useless expansions!
+\end{itemize}
+
+\subsection{Comparison: BFS vs A*}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{3.5cm} X X}
+\toprule
+\textbf{Feature} & \textbf{Breadth-First Search (BFS)} & \textbf{A* Search Algorithm} \\
+\midrule
+Search Strategy & Uninformed (level-by-level) & Informed (heuristic guided) \\
+Data Structure & FIFO Queue & Min-Priority Queue (ordered by $f(n)$) \\
+Edge Weights & Unweighted graphs only & Supports arbitrary non-negative weights \\
+Heuristic Knowledge & None ($h=0$) & Active heuristic $h(n)$ \\
+Shortest Path on Weighted & Fails & \textbf{Guaranteed optimal} (if $h$ is admissible) \\
+Special Case $h(n) = 0$ & Equivalent to BFS on unit edges & Becomes \textbf{Dijkstra's / Uniform-Cost Search} \\
+\bottomrule
+\end{tabularx}
+\caption{Key distinctions between BFS and A* Search.}
+\end{table}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section XVII: Complete C++ Implementation of A* Search}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Complete C++ Implementation of A* Search}
+
+\begin{lstlisting}[style=cppstyle, caption={C++ A* Search Algorithm on Weighted Graph.}]
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <limits>
+#include <algorithm>
+using namespace std;
+
+struct Edge {
+    int to;
+    long long cost;
+};
+
+struct State {
+    long long f, g;
+    int node;
+};
+
+struct CompareState {
+    bool operator()(const State& a, const State& b) const {
+        return a.f > b.f; // Min-heap: lowest f-score popped first
+    }
+};
+
+struct AStarResult {
+    bool found = false;
+    long long cost = 0;
+    vector<int> path;
+};
+
+AStarResult aStar(const vector<vector<Edge>>& graph, const vector<long long>& h, int start, int goal) {
+    int n = static_cast<int>(graph.size());
+    const long long INF = numeric_limits<long long>::max() / 4;
+
+    vector<long long> gScore(n, INF);
+    vector<int> parent(n, -1);
+    priority_queue<State, vector<State>, CompareState> open;
+
+    gScore[start] = 0;
+    open.push({h[start], 0, start});
+
+    while (!open.empty()) {
+        State cur = open.top();
+        open.pop();
+        int u = cur.node;
+
+        if (cur.g != gScore[u]) continue; // Stale queue entry
+        if (u == goal) break;             // Goal reached
+
+        for (const Edge& edge : graph[u]) {
+            int v = edge.to;
+            long long tentativeG = gScore[u] + edge.cost;
+
+            if (tentativeG < gScore[v]) {
+                gScore[v] = tentativeG;
+                parent[v] = u;
+                open.push({tentativeG + h[v], tentativeG, v});
+            }
+        }
+    }
+
+    if (gScore[goal] == INF) return {};
+
+    AStarResult res;
+    res.found = true;
+    res.cost = gScore[goal];
+    for (int v = goal; v != -1; v = parent[v]) res.path.push_back(v);
+    reverse(res.path.begin(), res.path.end());
+    return res;
+}
+
+int main() {
+    // Vertices: 0=S, 1=A, 2=B, 3=C, 4=D, 5=G
+    int V = 6;
+    vector<vector<Edge>> graph(V);
+    auto addEdge = [&](int u, int v, long long w) { graph[u].push_back({v, w}); };
+
+    addEdge(0, 1, 1); addEdge(0, 2, 2); addEdge(0, 3, 1);
+    addEdge(1, 5, 9); addEdge(2, 5, 2); addEdge(3, 4, 1); addEdge(4, 5, 100);
+
+    vector<long long> h = {4, 9, 2, 100, 100, 0}; // Admissible heuristic
+    AStarResult res = aStar(graph, h, 0, 5);
+
+    if (res.found) {
+        cout << "Path: ";
+        for (size_t i = 0; i < res.path.size(); ++i) {
+            cout << res.path[i] << (i + 1 < res.path.size() ? " -> " : "\n");
+        }
+        cout << "Total Cost: " << res.cost << '\n';
+    }
+    return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=pseudocode, caption={Execution Output}]
+Path: 0 -> 2 -> 5
+Total Cost: 4
+\end{lstlisting}
+
+\subsection{Complexity and Practical Limitations}
+\begin{itemize}
+    \item \textbf{Time Complexity:} With a consistent heuristic and binary heap, runs in $O((V + E) \log V)$ time. In general implicit search spaces, worst-case time is exponential $O(b^d)$.
+    \item \textbf{Space Complexity:} Memory is A*'s greatest operational bottleneck: it stores all generated open and closed nodes in RAM ($O(V)$ on explicit graphs, $O(b^d)$ on implicit trees).
+\end{itemize}
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section XVIII: Common Recruitment Examination Questions}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Common Recruitment Examination Questions}
+
+\subsection{Pair-Sum Questions}
+\begin{quote}
+\textbf{Q1: How can pair-sum be solved in $O(n \log n)$ time?}\\
+\textbf{Answer:} Sort the array in $O(n \log n)$ time, then use a two-pointer scan (\texttt{left} from front, \texttt{right} from rear) in $O(n)$ time.
+
+\textbf{Q2: Why does the two-pointer method work on a sorted array?}\\
+\textbf{Answer:} Because elements are monotonic: if the sum is too small, advancing \texttt{left} guarantees an increased candidate sum; if too large, decrementing \texttt{right} guarantees a decreased candidate sum.
+
+\textbf{Q3: What is the complexity if the array is already sorted?}\\
+\textbf{Answer:} Exactly $O(n)$ time and $O(1)$ auxiliary space.
+\end{quote}
+
+\subsection{Binary Search Questions}
+\begin{quote}
+\textbf{Q4: What is the essential prerequisite for binary search?}\\
+\textbf{Answer:} The collection must be sorted according to the search comparison key, and elements must support $O(1)$ random access.
+
+\textbf{Q5: What is the worst-case complexity of binary search?}\\
+\textbf{Answer:} $O(\log n)$ time, performing at most $\lfloor \log_2 n \rfloor + 1$ comparisons.
+
+\textbf{Q6: Why is \texttt{low + (high - low)/2} preferred to \texttt{(low + high)/2}?}\\
+\textbf{Answer:} To prevent integer overflow when $\text{low} + \text{high}$ exceeds the maximum signed 32-bit integer limit ($2^{31}-1$).
+
+\textbf{Q7: Does binary search reliably find the first duplicate?}\\
+\textbf{Answer:} No; standard binary search can stop at any matching midpoint. A lower-bound search ($\texttt{lower\_bound}$) is required to find the first occurrence.
+\end{quote}
+
+\subsection{BFS and DFS Questions}
+\begin{quote}
+\textbf{Q8: Which algorithm finds shortest paths in an unweighted graph?}\\
+\textbf{Answer:} BFS (Breadth-First Search).
+
+\textbf{Q9: What underlying data structures are used by BFS and DFS?}\\
+\textbf{Answer:} BFS uses a FIFO Queue; DFS uses a LIFO Stack (or system call stack).
+
+\textbf{Q10: What are the traversal complexities using an adjacency list?}\\
+\textbf{Answer:} Both BFS and DFS take $O(V + E)$ time and $O(V)$ auxiliary space.
+
+\textbf{Q11: Does DFS always guarantee shortest paths?}\\
+\textbf{Answer:} No; DFS dives deeply along arbitrary branches and can discover a target along a long path before exploring a shorter alternative.
+\end{quote}
+
+\subsection{A* Search Questions}
+\begin{quote}
+\textbf{Q12: What is the A* evaluation formula?}\\
+\textbf{Answer:} $f(n) = g(n) + h(n)$, where $g(n)$ is cost incurred from start, and $h(n)$ is estimated remaining cost to goal.
+
+\textbf{Q13: What is an admissible heuristic?}\\
+\textbf{Answer:} A heuristic that never overestimates the true minimum remaining cost ($0 \leq h(n) \leq h^*(n)$).
+
+\textbf{Q14: When does A* become Dijkstra's algorithm?}\\
+\textbf{Answer:} When $h(n) = 0$ for all nodes, $f(n) = g(n)$, reducing A* to Uniform-Cost Search / Dijkstra's algorithm.
+
+\textbf{Q15: Why can A* outperform BFS on pathfinding?}\\
+\textbf{Answer:} The heuristic directs the search towards the goal, pruning large swaths of the search space that lead away from the objective.
+\end{quote}
+
+\section{Search and Traversal Master Quick-Revision Sheet}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{3.2cm} p{2.2cm} p{2.2cm} p{2.2cm} X}
+\toprule
+\textbf{Algorithm} & \textbf{Data Structure} & \textbf{Time Cost} & \textbf{Aux Space} & \textbf{Core Optimal Use Case} \\
+\midrule
+Pair-Sum & Two Pointers & $O(n \log n)$ & $O(1)$ & Finding pairs with target sum in sorted array \\
+Binary Search & Random Array & $O(\log n)$ & $O(1)$ & Instant logarithmic key lookup in sorted list \\
+BFS & FIFO Queue & $O(V + E)$ & $O(V)$ & Shortest path (edge count) in unweighted graph \\
+DFS & LIFO Stack & $O(V + E)$ & $O(V)$ & Cycle detection, topological sort, backtracking \\
+A* Search & Min-PQ ($g+h$) & $O((V+E)\log V)$ & $O(V)$ & Least-cost pathfinding guided by heuristic \\
+\bottomrule
+\end{tabularx}
+\caption{Master quick-revision comparison of search and traversal algorithms.}
+\end{table}
+
+\begin{quote}
+\textbf{Final Algorithm Revision Axiom:} In the examination, always verify three invariants:
+\begin{enumerate}
+    \item \textbf{Preconditions:} Check if the input is sorted (required for Binary Search and Two Pointers).
+    \item \textbf{Weights:} For shortest paths, verify if the graph is unweighted (use BFS) or weighted non-negative (use Dijkstra or A*).
+    \item \textbf{Heuristics:} For A*, ensure the heuristic is admissible ($h \leq h^*$) to guarantee optimality.
+\end{enumerate}
+\end{quote}

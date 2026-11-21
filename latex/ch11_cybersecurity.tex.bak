@@ -1,0 +1,4379 @@
+\chapter{Cybersecurity and Information Security}
+\label{ch:cybersecurity}
+
+This chapter provides a comprehensive, rigorous treatment of cybersecurity and information assurance engineered specifically for Bangladesh government IT recruitment examinations (including Assistant Programmer, Assistant Director (ICT), Assistant Network Engineer, Assistant Maintenance Engineer, and IT Officer positions).
+
+The coverage encompasses the foundational CIA Triad, authentication paradigms, cryptographic principles, access control architectures (DAC, MAC, RBAC, ABAC), full-lifecycle secure account engineering, detailed attack taxonomy (active versus passive), social engineering and phishing vectors, transport-layer subversion (MITM, ARP/DNS spoofing), web application vulnerabilities (SQL Injection, XSS), ransomware incident response, zero-day threat analysis, malware classifications (viruses, worms, Trojans, rootkits), network-layer denial of service (DoS/DDoS), tri-state data protection (at rest, in transit, in use), and Layer 2 switch security via Dynamic ARP Inspection (DAI) and DHCP Snooping.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section I: The CIA Triad and Core Security Objectives\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{The CIA Triad and Core Security Objectives}
+
+
+The \textbf{CIA Triad} is the foundational model of information security. It consists of three objectives:
+
+\begin{enumerate}
+\item \textbf{Confidentiality} -- Information should only be accessible to authorized individuals.
+\item \textbf{Integrity} -- Information should remain accurate, complete, and protected from unauthorized modification.
+\item \textbf{Availability} -- Information and systems should be accessible to authorized users whenever needed.
+\end{enumerate}
+
+\subsection{Confidentiality}
+
+Confidentiality ensures that sensitive information is not disclosed to unauthorized people.
+
+\textbf{Example:} A bank customer can view their own account balance after logging in, but another customer cannot access that information.
+
+Common mechanisms for ensuring confidentiality include:
+
+\begin{itemize}
+\item Encryption of stored and transmitted data.
+\item Passwords and multi-factor authentication.
+\item Access control and user permissions.
+\item Data classification and secure handling.
+\item Network security mechanisms.
+\end{itemize}
+
+\textbf{Security breach example:} An attacker steals a database containing customer names, addresses, and passwords and makes the information publicly available. This is a breach of confidentiality.
+
+\subsection{Integrity}
+
+Integrity ensures that information remains accurate, consistent, and trustworthy throughout its lifecycle.
+
+\textbf{Example:} A university stores a student's examination result as 85. An unauthorized person changes it to 95. The integrity of the result has been compromised.
+
+Common mechanisms include:
+
+\begin{itemize}
+\item Cryptographic hash functions.
+\item Digital signatures.
+\item Checksums.
+\item Access control and audit logs.
+\item Database transaction controls.
+\item Version control and change management.
+\end{itemize}
+
+\textbf{Security breach example:} Malware modifies financial records in a company's database without authorization. This compromises data integrity.
+
+\subsection{Availability}
+
+Availability ensures that authorized users can access information, applications, and services when required.
+
+\textbf{Example:} An online banking service should remain accessible to customers during its operating hours. If an attack makes the service unavailable, availability is compromised.
+
+Common mechanisms include:
+
+\begin{itemize}
+\item Regular backups.
+\item Redundant servers and network connections.
+\item Load balancing.
+\item Disaster recovery planning.
+\item Fault-tolerant infrastructure.
+\item Protection against Denial-of-Service (DoS) and Distributed Denial-of-Service (DDoS) attacks.
+\end{itemize}
+
+\textbf{Security breach example:} An attacker sends an enormous volume of requests to a public website, overwhelming its resources and preventing legitimate users from accessing it. This is a Denial-of-Service attack.
+
+\subsection{CIA Triad Systematic Comparison}
+
+\begin{table}[htbp]
+\centering
+\caption{The CIA Triad: Core Security Objectives, Operational Scope, and Violation Scenarios}
+\label{tab:cia_triad_comparison}
+\begin{tabularx}{\textwidth}{p{3.2cm} p{5.2cm} X}
+\toprule
+\textbf{Core Objective} & \textbf{Main Security Goal} & \textbf{Practical Example of Violation} \\
+\midrule
+\textbf{Confidentiality} & Prevent unauthorized disclosure and restrict visibility to permitted identities only. & An unauthorized party intercepts, exfiltrates, or reads private banking records. \\
+\textbf{Integrity} & Ensure completeness, accuracy, and prevention of unauthorized or undetected alteration. & Malware or a rogue insider alters financial transaction ledgers or student exam grades. \\
+\textbf{Availability} & Guarantee timely, reliable, and uninterrupted access to authorized entities when needed. & A Distributed Denial-of-Service (DDoS) flood renders a public-facing banking portal unreachable. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\textbf{Exam tip:} Remember the distinction:
+
+\begin{itemize}
+\item Confidentiality: Who can \textbf{see} the information?
+\item Integrity: Who can \textbf{change} the information, and can we trust it?
+\item Availability: Can authorized users \textbf{access} the information when needed?
+\end{itemize}
+
+A single attack can affect multiple elements of the CIA Triad. For example, ransomware may compromise availability by locking files and integrity if files are modified. Data theft associated with the attack may also compromise confidentiality.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section II: Authentication versus Authorization\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Authentication versus Authorization}
+
+
+Authentication and authorization are two fundamental security processes. They work together, but they answer different questions.
+
+\subsection{Authentication}
+
+\textbf{Authentication} is the process of verifying the identity of a user, device, or system.
+
+It answers:
+
+> Who are you?
+
+When a user enters a username and password, the system checks whether the credentials correspond to a valid account. The purpose is to establish the user's identity.
+
+\textbf{Real-life example: Entering a university}
+
+Imagine that you enter a university building using an identity card.
+
+\begin{itemize}
+\item You present your university ID card.
+\item The security system checks whether the card belongs to a registered student.
+\item Your identity is verified.
+\end{itemize}
+
+This is authentication.
+
+Other examples:
+
+\begin{itemize}
+\item Logging into Facebook using an email address and password.
+\item Unlocking a smartphone using a fingerprint.
+\item Accessing an office building using an employee ID and PIN.
+\item Logging into a bank application using credentials and an OTP.
+\end{itemize}
+
+\subsection{Authorization}
+
+\textbf{Authorization} is the process of determining what an authenticated user is permitted to access or perform.
+
+It answers:
+
+> What are you allowed to do?
+
+After a system verifies your identity, it checks your assigned permissions and determines which resources or operations you can use.
+
+\textbf{Real-life example: Entering different university rooms}
+
+Suppose your university ID confirms that you are a student.
+
+You may be allowed to:
+
+\begin{itemize}
+\item Enter the library.
+\item Use the student computer laboratory.
+\item Access your academic records.
+\end{itemize}
+
+However, you may not be allowed to:
+
+\begin{itemize}
+\item Enter the examination controller's office.
+\item Modify other students' results.
+\item Access confidential administrative records.
+\end{itemize}
+
+Your identity has been authenticated, but your access is restricted according to your authorization.
+
+\subsection{Authentication versus Authorization: Comparative Analysis}
+
+\begin{table}[htbp]
+\centering
+\caption{Systematic Comparison: Authentication versus Authorization}
+\label{tab:authn_vs_authz}
+\begin{tabularx}{\textwidth}{p{3.0cm} p{5.5cm} X}
+\toprule
+\textbf{Feature} & \textbf{Authentication (AuthN)} & \textbf{Authorization (AuthZ)} \\
+\midrule
+\textbf{Core Meaning} & Verification of declared identity. & Determination of permitted actions and privileges. \\
+\textbf{Guiding Question} & \textit{Who are you?} & \textit{What are you allowed to do?} \\
+\textbf{Operational Goal} & Confirm and establish identity. & Enforce fine-grained access policies on resources. \\
+\textbf{Execution Sequence} & Executed first prior to access decisions. & Executed subsequent to successful authentication. \\
+\textbf{Validation Basis} & Passwords, digital certs, biometrics, tokens. & Roles, Access Control Lists, claims, security labels. \\
+\textbf{Representative Case} & Logging into a banking portal via password and OTP. & Evaluating whether an account may initiate a wire transfer. \\
+\textbf{Failure Outcome} & Access rejected (Invalid Credentials / 401 Unauthorized). & Operation denied (Forbidden Access / 403 Forbidden). \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\subsection{Practical example: Online banking system}
+
+Suppose a bank has three types of users:
+
+\begin{itemize}
+\item Customer
+\item Bank employee
+\item System administrator
+\end{itemize}
+
+When a customer logs in:
+
+\textbf{Step 1 --- Authentication}
+
+The customer enters a username and password and completes an additional verification step. The system verifies their identity.
+
+\textbf{Step 2 --- Authorization}
+
+The system determines the customer's permissions:
+
+\begin{itemize}
+\item View their account balance: Allowed.
+\item View their own transaction history: Allowed.
+\item Transfer money: Allowed within applicable limits.
+\item Modify another customer's account: Denied.
+\item Change bank-wide system settings: Denied.
+\end{itemize}
+
+The user is authenticated, but their permissions are restricted.
+
+\subsection{Important exam concept}
+
+Authentication does not automatically grant unrestricted access.
+
+A successfully authenticated user may still receive an \textbf{Access Denied} message when attempting to access a resource for which they do not have permission.
+
+\textbf{Remember:}
+
+\begin{itemize}
+\item Authentication = Identity verification.
+\item Authorization = Permission verification.
+\end{itemize}
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section III: Verification versus Validation in Secure Systems\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Verification versus Validation in Secure Systems}
+
+
+Verification and validation are important concepts in software engineering, quality assurance, and information systems.
+
+Although the terms are related, their objectives are different.
+
+\subsection{Verification}
+
+\textbf{Verification} is the process of checking whether a product, system, or software component has been developed according to specified requirements, design documents, and standards.
+
+It answers:
+
+> Are we building the product right?
+
+Verification focuses on whether the implementation correctly follows the given specifications.
+
+\textbf{Example: Software development}
+
+Suppose a university requests a student management system with a login page that must contain:
+
+\begin{itemize}
+\item A username field.
+\item A password field.
+\item A login button.
+\item Password masking.
+\item Input validation.
+\end{itemize}
+
+During verification, developers and testers check whether these specified features have been implemented correctly.
+
+They may inspect the source code, review the design, examine requirements, and perform tests.
+
+\subsection{Validation}
+
+\textbf{Validation} is the process of evaluating whether a finished or developing product satisfies actual user needs and intended purposes.
+
+It answers:
+
+> Are we building the right product?
+
+Validation focuses on whether the system solves the intended problem for its users.
+
+\textbf{Example: Software development}
+
+Suppose the university requested a student management system because students need to register for courses online.
+
+The development team creates a system that satisfies every technical requirement, but students discover that the course-registration process is confusing and does not support their actual registration workflow.
+
+The software may have passed verification, but it has failed validation because it does not adequately meet the users' needs.
+
+\subsection{Verification versus Validation Architectural Comparison}
+
+\begin{table}[htbp]
+\centering
+\caption{Verification versus Validation in Secure Software Engineering}
+\label{tab:verification_vs_validation}
+\begin{tabularx}{\textwidth}{p{3.2cm} p{5.2cm} X}
+\toprule
+\textbf{Dimension} & \textbf{Verification} & \textbf{Validation} \\
+\midrule
+\textbf{Fundamental Query} & \textit{Are we building the product right?} & \textit{Are we building the right product?} \\
+\textbf{Primary Focus} & Conformance to specifications, design docs, and standards. & Satisfaction of actual user requirements, operational workflows. \\
+\textbf{Target of Inspection} & Architecture diagrams, code syntax, schema, logic specifications. & Real-world usability, operational fitness, business utility. \\
+\textbf{Common Methods} & Static code analysis, formal inspections, peer reviews, unit tests. & User Acceptance Testing (UAT), field trials, beta testing. \\
+\textbf{Primary Actors} & Software engineers, QA architects, security auditors. & End users, clients, domain specialists, business stakeholders. \\
+\textbf{Core Objective} & Identify defects and deviations from engineering specifications. & Confirm that the delivered software solves the intended problem. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\subsection{Easy example: A calculator application}
+
+Suppose the requirement states that the calculator must correctly perform addition.
+
+\textbf{Verification:}
+
+A reviewer checks the implementation and tests whether:
+
+
+
+\[
+5+3=8
+\]
+
+
+
+The reviewer also checks whether the addition function follows the specified design.
+
+\textbf{Validation:}
+
+The user tests the application and determines whether it actually meets their needs. For example, does it support the mathematical operations required for their work? Is the interface usable? Does the application behave as expected?
+
+\subsection{Important distinction}
+
+Verification can involve activities that do not execute the software, such as:
+
+\begin{itemize}
+\item Requirement reviews.
+\item Design inspections.
+\item Code reviews.
+\item Static code analysis.
+\end{itemize}
+
+Validation commonly involves executing the software to evaluate its behavior in a realistic environment.
+
+However, both verification and validation can involve testing. They are distinguished by their objectives, not simply by whether code is executed.
+
+\textbf{Exam tip:} The most frequently tested distinction is:
+
+\begin{itemize}
+\item Verification: \textit{Are we building the product right?}
+\item Validation: \textit{Are we building the right product?}
+\end{itemize}
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section IV: Two-Factor and Multi-Factor Authentication (2FA/MFA)\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Two-Factor and Multi-Factor Authentication (2FA/MFA)}
+
+
+Authentication systems use different types of evidence to verify a user's identity.
+
+These types are called \textbf{authentication factors}.
+
+\subsection{Three primary authentication factors}
+
+There are three traditional categories:
+
+\textbf{1. Something you know --- Knowledge factor}
+
+Information that only the user should know.
+
+Examples:
+
+\begin{itemize}
+\item Password.
+\item PIN.
+\item Security question answer.
+\item Passphrase.
+\end{itemize}
+
+\textbf{2. Something you have --- Possession factor}
+
+A physical device or object that the user possesses.
+
+Examples:
+
+\begin{itemize}
+\item Smartphone receiving an OTP.
+\item Hardware security key.
+\item Smart card.
+\item Authenticator application generating verification codes.
+\end{itemize}
+
+\textbf{3. Something you are --- Inherence factor}
+
+A physical or behavioral characteristic of the user.
+
+Examples:
+
+\begin{itemize}
+\item Fingerprint.
+\item Facial recognition.
+\item Iris recognition.
+\item Voice recognition.
+\end{itemize}
+
+Some security systems also use contextual signals, such as location, device reputation, and behavioral patterns. These can support risk-based authentication but are not automatically independent authentication factors.
+
+\subsection{Two-Factor Authentication (2FA)}
+
+\textbf{Two-Factor Authentication} is a security mechanism that requires users to provide two different types of authentication factors to verify their identity.
+
+For example:
+
+A user logs into an email account using:
+
+\begin{enumerate}
+\item A password --- something they know.
+\item A verification code generated by an authenticator application --- something they have.
+\end{enumerate}
+
+The system requires both factors before granting access.
+
+\textbf{Another example: Bank ATM}
+
+A user withdraws money using:
+
+\begin{enumerate}
+\item ATM card --- something they have.
+\item PIN --- something they know.
+\end{enumerate}
+
+Both are required to authenticate the user.
+
+\textbf{Important:} Two passwords do not constitute 2FA because both are knowledge factors. The two methods must belong to different factor categories.
+
+\subsection{Multi-Factor Authentication (MFA)}
+
+\textbf{Multi-Factor Authentication} is an authentication mechanism that requires two or more independent authentication factors.
+
+For example, a highly secured corporate system may require:
+
+\begin{enumerate}
+\item Password --- knowledge.
+\item Hardware security key --- possession.
+\item Fingerprint --- inherence.
+\end{enumerate}
+
+The user must successfully satisfy the required factors.
+
+\subsection{Two-Factor versus Multi-Factor Authentication Analysis}
+
+\begin{table}[htbp]
+\centering
+\caption{Two-Factor Authentication (2FA) versus Multi-Factor Authentication (MFA)}
+\label{tab:2fa_vs_mfa}
+\begin{tabularx}{\textwidth}{p{3.2cm} p{5.2cm} X}
+\toprule
+\textbf{Feature} & \textbf{Two-Factor Authentication (2FA)} & \textbf{Multi-Factor Authentication (MFA)} \\
+\midrule
+\textbf{Full Term} & Two-Factor Authentication & Multi-Factor Authentication \\
+\textbf{Required Factors} & Exactly two distinct factor categories. & Two or more distinct factor categories. \\
+\textbf{Security Strength} & Significantly superior to single-factor password login. & Provides adaptable, highest-assurance cryptographic defense. \\
+\textbf{Representative Setup} & Password (Knowledge) $+$ Fingerprint (Inherence). & Password (Knowledge) $+$ FIDO2 Key (Possession) $+$ Biometric. \\
+\textbf{Architectural Relation} & A constrained, specific implementation subset of MFA. & The overarching architectural category ($N \ge 2$). \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\textbf{Important relationship:} 2FA is a subset of MFA. Every properly implemented 2FA system is an MFA system, but an MFA system may require more than two factors.
+
+\subsection{Authentication Factors and Implementation Safeguards}
+
+\begin{table}[htbp]
+\centering
+\caption{Authentication Factor Classifications and Practical Security Considerations}
+\label{tab:auth_methods_security}
+\begin{tabularx}{\textwidth}{p{3.8cm} p{3.2cm} X}
+\toprule
+\textbf{Authentication Method} & \textbf{Factor Category} & \textbf{Key Security Considerations and Vulnerabilities} \\
+\midrule
+\textbf{Password / Passphrase} & Something You Know (Knowledge) & Susceptible to brute-force, dictionary attacks, credential stuffing, and phishing. \\
+\textbf{SMS-based OTP} & Something You Have (Possession) & Insecure channel; vulnerable to SIM swapping, SS7 interception, and social engineering. \\
+\textbf{Software Authenticator (TOTP)} & Something You Have (Possession) & Significantly stronger than SMS; generates time-based RFC 6238 codes; resistant to SIM swaps. \\
+\textbf{Hardware FIDO2 / U2F Key} & Something You Have (Possession) & Gold standard; cryptographic challenge-response protocol provides hardware phishing resistance. \\
+\textbf{Fingerprint Recognition} & Something You Are (Inherence) & High convenience; non-revocable; requires anti-spoofing liveness detection algorithms. \\
+\textbf{Facial Recognition} & Something You Are (Inherence) & Subject to 2D photograph / 3D mask spoofing unless backed by infrared depth sensors. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\textbf{Exam tip:} A password combined with an OTP is a common example of 2FA. A password, security key, and fingerprint together illustrate three-factor MFA.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section V: Cryptographic Fundamentals: Encryption, Decryption, and Hashing\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Cryptographic Fundamentals: Encryption, Decryption, and Hashing}
+
+
+Encryption, decryption, and hashing are cryptographic concepts used to protect information. They are related, but their purposes and operations differ.
+
+\subsection{Encryption}
+
+\textbf{Encryption} is the process of converting readable information, known as plaintext, into an unreadable form called ciphertext using a cryptographic algorithm and a key.
+
+Its primary purpose is to protect the confidentiality of information.
+
+
+
+\[
+\text{Plaintext}+\text{Encryption Key} \xrightarrow{\text{Encryption}} \text{Ciphertext}
+\]
+
+
+
+\textbf{Example:}
+
+Suppose a user wants to send the message:
+
+\texttt{Transfer 5000 BDT}
+
+Instead of transmitting the readable message, the system encrypts it.
+
+The transmitted data may look like:
+
+\texttt{A8F3X9K2P7...}
+
+An unauthorized person who intercepts the ciphertext should not be able to understand the original message without the appropriate decryption key.
+
+\subsection{Decryption}
+
+\textbf{Decryption} is the process of converting ciphertext back into its original readable plaintext using the appropriate cryptographic key and algorithm.
+
+
+
+\[
+\text{Ciphertext}+\text{Decryption Key} \xrightarrow{\text{Decryption}} \text{Plaintext}
+\]
+
+
+
+For example:
+
+\begin{itemize}
+\item Original message: \texttt{Transfer 5000 BDT}.
+\item Encrypted message: Unreadable ciphertext.
+\item Decryption using the appropriate key: \texttt{Transfer 5000 BDT}.
+\end{itemize}
+
+Encryption and decryption are complementary operations.
+
+\subsection{Types of encryption}
+
+There are two major categories of encryption.
+
+\textbf{A. Symmetric-key encryption}
+
+Symmetric encryption uses the same secret key for encryption and decryption.
+
+
+
+\[
+C=E_K(P)
+\]
+
+
+
+
+
+\[
+P=D_K(C)
+\]
+
+
+
+Where:
+
+\begin{itemize}
+\item $P$ = Plaintext.
+\item $C$ = Ciphertext.
+\item $K$ = Secret key.
+\item $E$ = Encryption operation.
+\item $D$ = Decryption operation.
+\end{itemize}
+
+\textbf{Example:} Alice and Bob share a secret key. Alice encrypts a message using that key, and Bob uses the same key to decrypt it.
+
+\textbf{Common algorithm:} AES (Advanced Encryption Standard).
+
+Advantages:
+
+\begin{itemize}
+\item Fast.
+\item Efficient for large volumes of data.
+\item Suitable for disk encryption and bulk data encryption.
+\end{itemize}
+
+Disadvantage:
+
+\begin{itemize}
+\item The secret key must be shared securely between communicating parties.
+\end{itemize}
+
+\textbf{B. Asymmetric-key encryption}
+
+Asymmetric encryption uses a pair of mathematically related keys:
+
+\begin{itemize}
+\item Public key.
+\item Private key.
+\end{itemize}
+
+Data encrypted with the recipient's public key can be decrypted using the corresponding private key.
+
+
+
+\[
+C=E_{K_{\text{public}}}(P)
+\]
+
+
+
+
+
+\[
+P=D_{K_{\text{private}}}(C)
+\]
+
+
+
+\textbf{Example:}
+
+\begin{enumerate}
+\item Bob shares his public key with Alice.
+\item Alice encrypts a message using Bob's public key.
+\item Alice sends the ciphertext to Bob.
+\item Bob decrypts it using his private key.
+\end{enumerate}
+
+The private key must remain secret.
+
+Common algorithms include:
+
+\begin{itemize}
+\item RSA.
+\item Elliptic Curve Cryptography (ECC), with appropriate encryption or key-agreement schemes.
+\end{itemize}
+
+Asymmetric cryptography is generally computationally more expensive than symmetric encryption. In practical systems such as TLS, asymmetric cryptography or key agreement is commonly used to establish shared secrets, and symmetric authenticated encryption is then used for bulk data transfer.
+
+\subsection{Hashing}
+
+\textbf{Hashing} is the process of converting input data of arbitrary length into a fixed-length output called a hash value, message digest, or hash digest.
+
+A cryptographic hash function is designed to be a one-way function: it should be computationally infeasible to recover the original input from its hash.
+
+
+
+\[
+H=\operatorname{Hash}(M)
+\]
+
+
+
+Where:
+
+\begin{itemize}
+\item $M$ = Original message or data.
+\item $H$ = Hash value.
+\end{itemize}
+
+For example, a hash function can convert a sentence, a file, or a password into a fixed-length digest.
+
+Common cryptographic hash algorithms include:
+
+\begin{itemize}
+\item SHA-256.
+\item SHA-3.
+\item SHA-512.
+\end{itemize}
+
+\textbf{Important:} MD5 and SHA-1 are considered unsuitable for security-critical collision-resistant applications because practical collision attacks exist against them.
+
+\subsection{Core Cryptographic Transformation Comparisons}
+
+\begin{table}[htbp]
+\centering
+\caption{Comparison of Core Cryptographic Operations: Encryption, Decryption, and Hashing}
+\label{tab:enc_dec_hash}
+\begin{tabularx}{\textwidth}{p{2.6cm} p{3.3cm} p{3.3cm} X}
+\toprule
+\textbf{Dimension} & \textbf{Encryption} & \textbf{Decryption} & \textbf{Hashing} \\
+\midrule
+\textbf{Primary Goal} & Preserve data confidentiality. & Restore original information. & Ensure integrity and generate fixed digest. \\
+\textbf{Input Data} & Readable Plaintext. & Enciphered Ciphertext. & Arbitrary-length message or file. \\
+\textbf{Output Data} & Unreadable Ciphertext. & Reconstructed Plaintext. & Fixed-length hash digest (e.g., 256 bits). \\
+\textbf{Cryptographic Key} & Requires secret or public key. & Requires secret or private key. & Standard hashes use no secret key. \\
+\textbf{Reversibility} & Reversible via decryption key. & Reverses encryption operation. & Irreversible one-way mathematical function. \\
+\textbf{Primary Use Cases} & Storage/transit confidentiality. & Authorized payload recovery. & Password storage, file integrity, digital signatures. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\subsection{Hashing versus Decryption: Reversibility Analysis}
+
+\begin{table}[htbp]
+\centering
+\caption{Operational Distinctions Between Encryption, Decryption, and Hashing}
+\label{tab:hashing_vs_decryption}
+\begin{tabularx}{\textwidth}{p{3.5cm} p{4.0cm} X}
+\toprule
+\textbf{Cryptographic Operation} & \textbf{Initial Input} & \textbf{Resulting Transformation} \\
+\midrule
+\textbf{Encryption} & \texttt{HELLO} $+$ Key & Produces unreadable Ciphertext (e.g., \texttt{7B4F92...}) \\
+\textbf{Decryption} & Ciphertext $+$ Key & Reconstitutes original plaintext \texttt{HELLO} \\
+\textbf{Cryptographic Hashing} & \texttt{HELLO} & Yields fixed 256-bit hexadecimal digest; mathematically irreversible \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Hashing and decryption are not opposite operations.
+
+\begin{itemize}
+\item Encryption transforms plaintext into ciphertext.
+\item Decryption reverses encryption to recover plaintext.
+\item Hashing transforms data into a digest, and there is no normal decryption operation that recovers the original data.
+\end{itemize}
+
+Consider this example:
+
+
+You cannot decrypt a SHA-256 hash to obtain the original input. An attacker may make guesses and calculate their hashes, but that is a guessing attack, not decryption.
+
+\subsection{How hashing protects passwords}
+
+A secure application should not store users' passwords as plaintext.
+
+Suppose a user creates an account with the password:
+
+\texttt{MyStrongPassword123!}
+
+The application should process the password through a suitable password-hashing algorithm before storing the result.
+
+During registration:
+
+
+
+\[
+H=\operatorname{PasswordHash}(P,S)
+\]
+
+
+
+Where:
+
+\begin{itemize}
+\item $P$ = Password.
+\item $S$ = Unique salt.
+\item $H$ = Stored password hash.
+\end{itemize}
+
+The database stores the hash and the associated salt, not the original password.
+
+During login:
+
+\begin{enumerate}
+\item The user enters their password.
+\item The application retrieves the stored salt and password-hash parameters.
+\item It calculates a new hash using the entered password and the stored salt.
+\item It compares the calculated result with the stored hash.
+\item If they match, the password is accepted.
+\end{enumerate}
+
+\textbf{Why use a salt?}
+
+A salt is a unique random value added to each password before hashing.
+
+It helps prevent attackers from efficiently using precomputed hash tables and ensures that identical passwords do not normally produce identical stored hashes.
+
+\textbf{Password-hashing algorithms:}
+
+\begin{itemize}
+\item Argon2id.
+\item bcrypt.
+\item scrypt.
+\item PBKDF2.
+\end{itemize}
+
+For password storage, these purpose-built password-hashing algorithms are preferable to fast general-purpose hashes such as plain SHA-256. Password hashing is deliberately designed to make large-scale guessing more expensive.
+
+\subsection{Practical Application Guide: Encryption versus Hashing}
+
+\begin{table}[htbp]
+\centering
+\caption{Practical Cryptographic Mechanism Selection by Application Domain}
+\label{tab:enc_vs_hash_apps}
+\begin{tabularx}{\textwidth}{p{4.2cm} p{4.2cm} X}
+\toprule
+\textbf{Application Scenario} & \textbf{Appropriate Mechanism} & \textbf{Technical Justification} \\
+\midrule
+\textbf{Resting Storage of Local Files} & Symmetric Block Cipher (AES-256) & The authorized owner must recover the original plaintext file intact. \\
+\textbf{Web Communication (HTTPS)} & Hybrid TLS (RSA/ECDH $+$ AES-GCM) & Confidentiality and authentication are required across an untrusted network. \\
+\textbf{User Account Authentication} & Salted Password Hashing (Argon2id/bcrypt) & Applications must authenticate passwords without storing or recovering them. \\
+\textbf{Verifying Software Downloads} & Cryptographic Hash (SHA-256) & Direct hash comparison instantly reveals corruption, tampering, or malware injection. \\
+\textbf{Digital Document Signatures} & Asymmetric Key $+$ Hashing (RSA/ECDSA) & Provides non-repudiation and integrity verification over a fixed digest. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\textbf{Exam tip:} If a question asks how to store user passwords securely, the expected answer is salted password hashing, not reversible encryption.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section VI: Fundamental Information Security Principles and Architecture\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Fundamental Information Security Principles and Architecture}
+
+
+Information security principles are the fundamental rules and practices used to protect information, systems, and organizational resources from unauthorized access, misuse, disclosure, modification, destruction, or disruption.
+
+The CIA Triad provides the foundation, but a complete information security strategy involves additional principles.
+
+\subsection{Confidentiality, Integrity, and Availability}
+
+These are the three core principles:
+
+\begin{itemize}
+\item \textbf{Confidentiality:} Prevent unauthorized disclosure.
+\item \textbf{Integrity:} Prevent unauthorized alteration and preserve accuracy.
+\item \textbf{Availability:} Ensure authorized access when needed.
+\end{itemize}
+
+They form the foundation of most information security policies.
+
+\subsection{Authentication}
+
+Authentication ensures that a user, device, or system is who or what it claims to be.
+
+Examples:
+
+\begin{itemize}
+\item Password-based login.
+\item Fingerprint recognition.
+\item Digital certificates.
+\item Multi-factor authentication.
+\end{itemize}
+
+\subsection{Authorization}
+
+Authorization determines which operations an authenticated entity is permitted to perform.
+
+Examples:
+
+\begin{itemize}
+\item A student can view academic results but cannot modify them.
+\item A bank employee can access assigned customer records but cannot change system-wide security settings.
+\item An administrator can manage user accounts.
+\end{itemize}
+
+\subsection{Accountability}
+
+\textbf{Accountability} ensures that actions performed within a system can be traced to the responsible user, device, or process.
+
+For example, a banking system maintains audit records showing:
+
+\begin{itemize}
+\item Who accessed an account.
+\item When the access occurred.
+\item Which transaction was performed.
+\item Whether the transaction succeeded or failed.
+\end{itemize}
+
+Accountability is supported by:
+
+\begin{itemize}
+\item Audit logs.
+\item User-specific accounts.
+\item Activity monitoring.
+\item Time synchronization.
+\item Access records.
+\end{itemize}
+
+Shared accounts weaken accountability because it becomes difficult to identify the individual who performed an action.
+
+\subsection{Non-repudiation}
+
+\textbf{Non-repudiation} provides evidence that a particular action or transaction occurred and helps prevent a party from credibly denying their participation.
+
+For example, a digital signature can provide evidence that a document was signed using the private key corresponding to a signer's public-key certificate.
+
+Non-repudiation mechanisms include:
+
+\begin{itemize}
+\item Digital signatures.
+\item Trusted timestamps.
+\item Secure audit records.
+\item Transaction records.
+\end{itemize}
+
+\textbf{Difference between accountability and non-repudiation:}
+
+\begin{itemize}
+\item Accountability focuses on tracing actions to responsible entities.
+\item Non-repudiation focuses on providing evidence that prevents a party from denying an action or message.
+\end{itemize}
+
+A log entry alone does not necessarily provide strong non-repudiation. Its reliability depends on how the log is authenticated, protected, and maintained.
+
+\subsection{Authenticity}
+
+\textbf{Authenticity} ensures that an entity, message, or piece of information is genuine and originates from the claimed source.
+
+Examples:
+
+\begin{itemize}
+\item A website uses a valid TLS certificate to establish its authenticated identity.
+\item A digital signature helps verify the origin and integrity of a document.
+\item A system verifies that a user is accessing an authentic service rather than an impersonating website.
+\end{itemize}
+
+Authenticity is closely related to authentication, but it can apply to data and messages as well as users.
+
+\subsection{Privacy}
+
+\textbf{Privacy} concerns the appropriate collection, processing, storage, use, and disclosure of personal information.
+
+Examples:
+
+\begin{itemize}
+\item A university should not expose students' personal records publicly.
+\item A mobile application should collect only the personal information needed for its intended functions.
+\item Access to medical records should be restricted to authorized personnel.
+\end{itemize}
+
+Privacy and confidentiality are related but not identical:
+
+\begin{itemize}
+\item Confidentiality protects information from unauthorized disclosure.
+\item Privacy focuses on how personal information is collected, used, retained, and shared.
+\end{itemize}
+
+\subsection{Least Privilege}
+
+The \textbf{Principle of Least Privilege (PoLP)} states that each user, application, or process should receive only the minimum permissions required to perform its assigned tasks.
+
+\textbf{Example:}
+
+A data-entry employee needs permission to add and update assigned customer records, but does not need permission to:
+
+\begin{itemize}
+\item Delete the entire database.
+\item Create administrator accounts.
+\item Change server configurations.
+\item Access unrelated financial records.
+\end{itemize}
+
+Granting unnecessary privileges increases the potential damage caused by compromised accounts or accidental mistakes.
+
+\subsection{Need-to-Know Principle}
+
+The need-to-know principle means that users should only access information necessary for their specific responsibilities.
+
+\textbf{Example:}
+
+An employee working in the payroll department may need salary information, but does not necessarily need access to employee medical records.
+
+Although related to least privilege, the emphasis differs:
+
+\begin{itemize}
+\item Least privilege focuses on the minimum permissions needed.
+\item Need-to-know focuses on access to particular information.
+\end{itemize}
+
+\subsection{Separation of Duties}
+
+\textbf{Separation of Duties (SoD)} divides sensitive responsibilities among multiple people so that no single person has excessive control over an entire critical process.
+
+\textbf{Example: Bank transaction approval}
+
+\begin{itemize}
+\item Employee A initiates a large financial transaction.
+\item Employee B reviews and approves it.
+\item Employee C may perform reconciliation.
+\end{itemize}
+
+This reduces the risk of fraud, misuse, and undetected errors.
+
+\subsection{Defense in Depth}
+
+\textbf{Defense in Depth} is a security strategy that uses multiple layers of protection rather than relying on a single security mechanism.
+
+\textbf{Example: Protecting a company's internal network}
+
+A company may implement:
+
+\begin{enumerate}
+\item Network firewall.
+\item Intrusion Detection and Prevention Systems.
+\item Strong authentication and MFA.
+\item Access control.
+\item Endpoint protection.
+\item Encryption.
+\item Regular backups.
+\item Security monitoring and incident response.
+\end{enumerate}
+
+If one layer fails, other layers may still protect the system.
+
+\subsection{Secure by Design and Secure by Default}
+
+\textbf{Secure by Design:} Security should be considered throughout the system development lifecycle, rather than added only after a system has been completed.
+
+\textbf{Secure by Default:} Systems should use secure initial configurations and should not automatically grant unnecessary permissions.
+
+Example:
+
+A newly created user account should not have administrator privileges by default.
+
+\subsection{Zero Trust Security}
+
+\textbf{Zero Trust} is a security model based on the principle:
+
+> Never trust implicitly; always verify explicitly.
+
+It assumes that being inside an organization's network does not automatically make a user or device trustworthy.
+
+Typical Zero Trust practices include:
+
+\begin{itemize}
+\item Verify user and device identity.
+\item Apply least-privilege access.
+\item Require MFA where appropriate.
+\item Continuously evaluate access risk.
+\item Segment networks.
+\item Monitor access and activity.
+\end{itemize}
+
+\subsection{Master Summary of Information Security Principles}
+
+\begin{table}[htbp]
+\centering
+\caption{Summary of Fundamental Information Security Principles}
+\label{tab:info_sec_principles}
+\begin{tabularx}{\textwidth}{p{4.5cm} X}
+\toprule
+\textbf{Information Security Principle} & \textbf{Core Architectural Rule and Objective} \\
+\midrule
+\textbf{Confidentiality} & Enforce access boundaries to prevent unauthorized viewing or disclosure of data. \\
+\textbf{Integrity} & Guarantee trustworthiness and prevent unauthorized modification, deletion, or fabrication. \\
+\textbf{Availability} & Maintain operational resilience, ensuring authorized users have timely access to services. \\
+\textbf{Authentication} & Positively verify the asserted identity of users, devices, services, and software processes. \\
+\textbf{Authorization} & Restrict operational permissions exclusively to explicitly permitted resources and tasks. \\
+\textbf{Accountability} & Retain tamper-evident audit trails that trace all actions to distinct responsible entities. \\
+\textbf{Non-Repudiation} & Provide incontrovertible cryptographic proof that prevents denial of an action or message. \\
+\textbf{Authenticity} & Confirm that a message, document, or transaction genuinely originates from its claimed source. \\
+\textbf{Privacy} & Govern lawful collection, processing, retention, and minimization of personal identifiable information. \\
+\textbf{Least Privilege (PoLP)} & Allocate the absolute minimum set of permissions necessary to execute assigned duties. \\
+\textbf{Need-to-Know} & Limit data visibility strictly to records required for active, assigned operational tasks. \\
+\textbf{Separation of Duties (SoD)} & Divide critical multistep processes across different individuals to deter fraud and error. \\
+\textbf{Defense in Depth} & Deploy layered, redundant defensive mechanisms across network, host, and application tiers. \\
+\textbf{Secure by Design / Default} & Architect security into the entire lifecycle and configure conservative default privileges. \\
+\textbf{Zero Trust Architecture} & Enforce continuous verification under the assumption of network perimeter breach. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\textbf{Important exam distinction:} CIA Triad represents the three fundamental security objectives. The other principles extend how organizations achieve and maintain those objectives.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section VII: Access Control Models and Enforcement (DAC, MAC, RBAC, ABAC, ACL)\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Access Control Models and Enforcement (DAC, MAC, RBAC, ABAC, ACL)}
+
+
+\textbf{Access control} is the security mechanism that regulates who or what can access a resource and which operations they are permitted to perform.
+
+Its primary purpose is to prevent unauthorized access to:
+
+\begin{itemize}
+\item Files and folders.
+\item Databases.
+\item Applications.
+\item Networks.
+\item Servers.
+\item Administrative functions.
+\item Confidential organizational information.
+\end{itemize}
+
+\subsection{Fundamental Components of Access Control}
+
+\begin{table}[htbp]
+\centering
+\caption{Fundamental Components of Access Control Models}
+\label{tab:access_control_components}
+\begin{tabularx}{\textwidth}{p{4.2cm} X}
+\toprule
+\textbf{Component Dimension} & \textbf{Illustrative Example in an Academic Information System} \\
+\midrule
+\textbf{Subject (Active Entity)} & Authenticated Student (e.g., \texttt{User ID: 2026-IT-101}). \\
+\textbf{Object (Passive Resource)} & University Registrar Academic Database / Tabulation Ledger. \\
+\textbf{Permitted Action} & Read own individual course marks and download certified grade transcript. \\
+\textbf{Restricted Action} & Altering recorded numerical marks or viewing confidential grade ledgers of peers. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Access control involves three important components:
+
+\textbf{1. Subject}
+
+The entity requesting access to a resource.
+
+Examples:
+
+\begin{itemize}
+\item User.
+\item Administrator.
+\item Application.
+\item Computer process.
+\end{itemize}
+
+\textbf{2. Object}
+
+The resource being accessed.
+
+Examples:
+
+\begin{itemize}
+\item Database.
+\item File.
+\item Folder.
+\item Server.
+\item Network resource.
+\end{itemize}
+
+\textbf{3. Access rights or permissions}
+
+The operations that the subject is allowed to perform on the object.
+
+Examples:
+
+\begin{itemize}
+\item Read.
+\item Write.
+\item Execute.
+\item Create.
+\item Modify.
+\item Delete.
+\end{itemize}
+
+\textbf{Example:}
+
+Suppose a university has a student database.
+
+
+The student is permitted to read their own results but is not authorized to modify them.
+
+\subsection{Access Control Models}
+
+There are four important access control models frequently discussed in information security.
+
+\subsubsection{A. Discretionary Access Control (DAC)}
+
+In \textbf{Discretionary Access Control}, the owner of a resource decides who can access it and what permissions they receive.
+
+\textbf{Example:}
+
+Suppose a user creates a document on a computer.
+
+The document owner can:
+
+\begin{itemize}
+\item Allow another user to read the document.
+\item Allow another user to edit it.
+\item Remove another user's access.
+\end{itemize}
+
+The owner has discretion over the resource's permissions, subject to the system's overall security policies.
+
+\textbf{Characteristics:}
+
+\begin{itemize}
+\item Resource owners control access.
+\item Permissions can be granted or revoked by authorized owners.
+\item Common in personal computers and file-sharing systems.
+\item Flexible but can become difficult to manage in large organizations.
+\end{itemize}
+
+\subsubsection{B. Mandatory Access Control (MAC)}
+
+In \textbf{Mandatory Access Control}, access is determined by centrally enforced security policies and classification levels. Ordinary users and resource owners cannot freely override these policies.
+
+\textbf{Example: Military information system}
+
+Information may be classified as:
+
+\begin{itemize}
+\item Public.
+\item Confidential.
+\item Secret.
+\item Top Secret.
+\end{itemize}
+
+Users receive security clearances.
+
+A user with Confidential clearance cannot automatically access a Top Secret document.
+
+Access depends on the security classification of the information and the user's clearance, together with applicable policy requirements.
+
+\textbf{Characteristics:}
+
+\begin{itemize}
+\item Centralized security policy.
+\item Strict access restrictions.
+\item Based on security labels and clearance levels.
+\item Common in military and highly sensitive government environments.
+\end{itemize}
+
+\subsubsection{C. Role-Based Access Control (RBAC)}
+
+\begin{table}[htbp]
+\centering
+\caption{Role-Based Access Control: Hospital Permissions Matrix}
+\label{tab:rbac_hospital}
+\begin{tabularx}{\textwidth}{p{3.5cm} X}
+\toprule
+\textbf{Organizational Role} & \textbf{Granted Privileges and Operational Boundaries} \\
+\midrule
+\textbf{Attending Doctor} & Read and write authorized electronic patient health records, diagnostic orders, and prescriptions. \\
+\textbf{Clinical Nurse} & Read patient records, log administered vital signs and medications for assigned ward patients. \\
+\textbf{Receptionist} & Schedule clinic appointments, collect demographic insurance intake; zero clinical chart access. \\
+\textbf{System Administrator} & Manage database infrastructure, configure accounts, inspect audit logs; zero direct medical data access. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+In \textbf{Role-Based Access Control}, permissions are assigned to roles, and users receive permissions through their assigned roles.
+
+\textbf{Example: Hospital management system}
+
+A hospital may have these roles:
+
+
+A newly appointed doctor receives the permissions associated with the Doctor role rather than having to receive every permission individually.
+
+\textbf{Characteristics:}
+
+\begin{itemize}
+\item Access is based on job responsibilities.
+\item Permissions are assigned to roles.
+\item Users are assigned one or more roles.
+\item Simplifies permission management in organizations.
+\end{itemize}
+
+\subsubsection{D. Attribute-Based Access Control (ABAC)}
+
+In \textbf{Attribute-Based Access Control}, access decisions are made using attributes associated with the user, resource, requested operation, and sometimes the environment.
+
+\textbf{Example:}
+
+An employee may access a confidential company document only when:
+
+\begin{itemize}
+\item Their department is Finance.
+\item Their employment status is Active.
+\item The requested action is Read.
+\item They are using an approved company device.
+\end{itemize}
+
+The system evaluates the relevant attributes and policy rules before granting access.
+
+\textbf{Characteristics:}
+
+\begin{itemize}
+\item Uses multiple attributes.
+\item Supports fine-grained access decisions.
+\item Suitable for complex organizational environments.
+\item More flexible, but policies can be more complicated to design and manage.
+\end{itemize}
+
+\subsection{Comprehensive Comparison of Access Control Models}
+
+\begin{table}[htbp]
+\centering
+\caption{Comparative Analysis of Access Control Models (DAC, MAC, RBAC, ABAC)}
+\label{tab:access_control_models}
+\begin{tabularx}{\textwidth}{p{1.8cm} p{3.8cm} p{3.8cm} X}
+\toprule
+\textbf{Model} & \textbf{Decision Basis} & \textbf{Authority / Control} & \textbf{Typical Implementation Domain} \\
+\midrule
+\textbf{DAC} & Resource ownership. & Object owner has discretion. & Desktop OS file systems, consumer cloud sharing. \\
+\textbf{MAC} & Security labels and clearances. & Centralized security policy. & Military systems, intelligence agencies, SELinux. \\
+\textbf{RBAC} & Assigned organizational roles. & System / security administrator. & Enterprise ERPs, hospital and banking management. \\
+\textbf{ABAC} & Dynamic attributes and policy rules. & Central policy decision engine. & Modern cloud architectures, context-aware Zero Trust. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\textbf{Exam tip:}
+
+\begin{itemize}
+\item DAC = Owner decides.
+\item MAC = Central security policy decides.
+\item RBAC = Role decides.
+\item ABAC = Attributes and rules decide.
+\end{itemize}
+
+\subsection{Access Control Lists (ACL)}
+
+\begin{table}[htbp]
+\centering
+\caption{Access Control List (ACL) Permissions Representation}
+\label{tab:acl_example}
+\begin{tabularx}{\textwidth}{p{3.2cm} p{4.0cm} X}
+\toprule
+\textbf{Authenticated Subject} & \textbf{Target Object / Resource} & \textbf{Assigned Access Permissions} \\
+\midrule
+\textbf{Student User} & Student Academic Database & Read (own record only) \\
+\textbf{Instructor} & Student Academic Database & Read, Update assigned department course marks \\
+\textbf{DB Administrator} & Student Academic Database & Read, Write, Alter Schema, Delete, Backup \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+An \textbf{Access Control List (ACL)} is a list of permissions associated with a particular resource. It specifies which users or groups can perform which operations on that resource.
+
+For example:
+
+
+An ACL is typically associated with an object and specifies who can access it.
+
+\textbf{Example in Linux:}
+
+A file's ordinary permissions can be inspected using:
+
+\begin{lstlisting}
+ls -l document.txt
+\end{lstlisting}
+
+A possible output is:
+
+\begin{lstlisting}
+-rw-r----- 1 shoaib teachers 2048 document.txt
+\end{lstlisting}
+
+This represents:
+
+\begin{itemize}
+\item Owner: Read and write.
+\item Group: Read.
+\item Others: No permissions.
+\end{itemize}
+
+Linux also supports extended ACLs for more detailed permission assignments.
+
+\subsection{Access Control Matrix Model}
+
+\begin{table}[htbp]
+\centering
+\caption{Access Control Matrix (ACM) Subject-to-Object Mapping}
+\label{tab:access_control_matrix}
+\begin{tabularx}{\textwidth}{p{2.5cm} p{3.2cm} p{3.2cm} X}
+\toprule
+\textbf{Subject} & \textbf{Document A} & \textbf{Document B} & \textbf{Production Database} \\
+\midrule
+\textbf{User 1} & Read & Read, Write & No Access \\
+\textbf{User 2} & Read, Write & No Access & Read \\
+\textbf{Administrator} & Read, Write, Delete & Read, Write, Delete & Read, Write, Execute, Admin \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+An \textbf{Access Control Matrix} is a conceptual representation of permissions between subjects and objects.
+
+For example:
+
+
+It provides a structured way of representing access permissions within a system.
+
+An ACL can be viewed as a representation of an object's access-control information. A capability-based system instead emphasizes the permissions held by a particular subject.
+
+\subsection{Principle of Least Privilege in Access Control}
+
+Access control should grant only the permissions necessary for each user's job.
+
+For example:
+
+A junior programmer may need access to:
+
+\begin{itemize}
+\item Development source code.
+\item Testing environments.
+\item Assigned project resources.
+\end{itemize}
+
+The programmer should not automatically receive:
+
+\begin{itemize}
+\item Production database administrator privileges.
+\item Domain administrator access.
+\item Access to confidential HR records.
+\end{itemize}
+
+This limits the consequences of compromised accounts and reduces accidental misuse.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section VIII: Secure User Account Creation and Lifecycle Management\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Secure User Account Creation and Lifecycle Management}
+
+
+Secure user account creation is the process of registering users while protecting their identity, credentials, personal information, and access privileges.
+
+A poorly designed registration system can expose users to account takeover, credential theft, unauthorized access, and data breaches.
+
+Consider an online banking application that allows users to register accounts.
+
+A secure registration process should address the following areas.
+
+\subsection{Secure Registration Process}
+
+A typical secure account creation process follows these steps:
+
+\textbf{Step 1: Collect necessary information}
+
+The system collects only the information required for account creation.
+
+Examples:
+
+\begin{itemize}
+\item Full name.
+\item Unique username or email address.
+\item Password.
+\item Necessary contact information.
+\end{itemize}
+
+Unnecessary personal information should not be collected.
+
+\textbf{Step 2: Validate the input}
+
+The application validates the submitted information.
+
+Examples:
+
+\begin{itemize}
+\item Check that the email address has a valid format.
+\item Ensure required fields are not empty.
+\item Enforce password requirements.
+\item Apply appropriate input-length limits.
+\item Reject invalid or malformed input.
+\end{itemize}
+
+Input validation should be performed on the server, even when client-side validation is also used.
+
+\textbf{Step 3: Verify account ownership}
+
+The system may send an email verification link or a one-time verification code.
+
+The user completes the verification process to demonstrate control over the registered email address.
+
+For example:
+
+\begin{enumerate}
+\item User registers with \texttt{user@example.com}.
+\item The application sends a verification link.
+\item The user opens the link.
+\item The application validates the verification token.
+\item The email address is marked as verified.
+\end{enumerate}
+
+Verification links and tokens should be unpredictable, time-limited, and usable only as intended.
+
+\textbf{Step 4: Hash the password securely}
+
+The application must not store passwords in plaintext.
+
+Instead, it should use a dedicated password-hashing algorithm such as:
+
+\begin{itemize}
+\item Argon2id.
+\item bcrypt.
+\item scrypt.
+\item PBKDF2.
+\end{itemize}
+
+A unique random salt should be used for each password.
+
+The database should store the password-hashing information required for later verification, not the original password.
+
+\textbf{Step 5: Assign appropriate permissions}
+
+The account should receive the minimum permissions necessary.
+
+For example:
+
+\begin{itemize}
+\item A newly registered customer gets the Customer role.
+\item A newly registered student gets the Student role.
+\item Administrative privileges should not be granted through ordinary public registration.
+\end{itemize}
+
+Administrative role assignment should require a separate privileged process.
+
+\textbf{Step 6: Enable additional authentication}
+
+The application should support or require additional authentication methods when appropriate.
+
+Examples:
+
+\begin{itemize}
+\item Authenticator applications.
+\item Hardware security keys.
+\item Passkeys.
+\item Other suitable MFA mechanisms.
+\end{itemize}
+
+For sensitive services, MFA significantly strengthens protection against stolen passwords.
+
+\textbf{Step 7: Create a secure session}
+
+After successful registration and any required verification, the system establishes an authenticated session.
+
+Session identifiers must be protected. For web applications, this commonly involves:
+
+\begin{itemize}
+\item HTTPS.
+\item Secure cookies.
+\item HttpOnly cookies.
+\item Appropriate SameSite cookie settings.
+\item Session expiration.
+\item Session renewal and invalidation.
+\end{itemize}
+
+\subsection{Secure Password Policy}
+
+A secure password policy should make passwords difficult to guess and reduce the impact of credential theft.
+
+Important practices include:
+
+\textbf{1. Encourage long passwords or passphrases}
+
+Long passwords are generally harder to guess than short passwords.
+
+For example:
+
+\texttt{RiverCloud!BlueMountain2026}
+
+is a passphrase-style example, illustrating the use of multiple words and additional characters.
+
+\textbf{2. Prevent commonly used passwords}
+
+Applications should reject passwords that are widely used, predictable, or known to have appeared in breaches.
+
+\textbf{3. Prevent unnecessary password reuse}
+
+Users should use unique passwords for different accounts. A password manager can help manage them.
+
+\textbf{4. Store passwords using secure password hashing}
+
+Never store plaintext passwords or use ordinary fast hashes as a substitute for password hashing.
+
+\textbf{5. Support multi-factor authentication}
+
+MFA adds protection when a password is compromised.
+
+\textbf{6. Protect password-reset procedures}
+
+A password-reset process should use:
+
+\begin{itemize}
+\item Cryptographically random tokens.
+\item Short expiration periods.
+\item Single-use tokens.
+\item Secure verification of the reset request.
+\end{itemize}
+
+A system should never send a user's existing plaintext password by email.
+
+\subsection{Account Security Threats and Defensive Safeguards}
+
+\begin{table}[htbp]
+\centering
+\caption{Account Security Threats, Exploitation Vectors, and Protective Countermeasures}
+\label{tab:account_security_threats}
+\begin{tabularx}{\textwidth}{p{3.5cm} p{4.5cm} X}
+\toprule
+\textbf{Attack Classification} & \textbf{Mechanism of Exploitation} & \textbf{Primary Defense Controls} \\
+\midrule
+\textbf{Brute-Force Attack} & Exhaustive systematic guessing of all permutation keys. & Exponential backoff rate limiting, CAPTCHAs, MFA enforcement. \\
+\textbf{Dictionary Attack} & Automated testing of precompiled dictionaries of common passwords. & Screening against breach dictionaries, minimum entropy enforcement. \\
+\textbf{Credential Stuffing} & Replaying compromised username-password dumps from third parties. & Enforcing unique credentials, MFA, breached credential monitoring. \\
+\textbf{Phishing} & Deceptive communication spoofing legitimate organizational portals. & Phishing-resistant FIDO2 hardware keys, employee training, SPF/DKIM. \\
+\textbf{Account Enumeration} & Probing response variations to identify valid registered usernames. & Uniform generic responses (e.g., ``If account exists, email sent''). \\
+\textbf{Session Hijacking} & Intercepting or stealing valid authenticated session tokens. & \texttt{HttpOnly}, \texttt{Secure}, \texttt{SameSite} cookies, TLS, brief token expiry. \\
+\textbf{Privilege Escalation} & Exploiting software flaws to gain unauthorized elevated rights. & Strict server-side authorization checks, Least Privilege architecture. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\textbf{Important distinction:}
+
+\begin{itemize}
+\item Brute-force attack: Repeatedly attempts possible passwords.
+\item Dictionary attack: Uses likely or commonly used password candidates.
+\item Credential stuffing: Reuses previously stolen credentials from another service.
+\end{itemize}
+
+\subsection{Secure Account Management After Registration}
+
+Security does not end when an account is created. Accounts must be managed throughout their lifecycle.
+
+Important practices include:
+
+\textbf{Account monitoring}
+
+\begin{itemize}
+\item Monitor unusual login attempts.
+\item Record important security events.
+\item Detect suspicious account activity.
+\end{itemize}
+
+\textbf{Account lockout and rate limiting}
+
+\begin{itemize}
+\item Limit repeated failed authentication attempts.
+\item Introduce temporary delays or other protective controls.
+\item Avoid permanent lockout mechanisms that could be abused to deny service to legitimate users.
+\end{itemize}
+
+\textbf{Password recovery}
+
+\begin{itemize}
+\item Verify the user's identity before allowing password changes.
+\item Use short-lived, single-use reset tokens.
+\item Notify users about important account-security changes.
+\end{itemize}
+
+\textbf{Session management}
+
+\begin{itemize}
+\item Expire inactive sessions according to risk.
+\item Invalidate sessions after sensitive account changes when appropriate.
+\item Protect session identifiers.
+\item Offer users a way to revoke active sessions.
+\end{itemize}
+
+\textbf{Account deactivation}
+
+\begin{itemize}
+\item Disable accounts when employees leave an organization.
+\item Remove unnecessary permissions.
+\item Revoke associated credentials and sessions.
+\item Preserve audit records according to organizational policy.
+\end{itemize}
+
+\subsection{Engineering Checklist for Secure Registration}
+
+\begin{table}[htbp]
+\centering
+\caption{Secure Account Creation and Lifecycle Management Engineering Checklist}
+\label{tab:account_creation_checklist}
+\begin{tabularx}{\textwidth}{p{4.5cm} X}
+\toprule
+\textbf{Engineering Security Requirement} & \textbf{Implementation Objective and Threat Mitigation} \\
+\midrule
+\textbf{Unique Identity Constraint} & Prevents account collision, impersonation, and ambiguous audit trail attribution. \\
+\textbf{Strict Server-Side Input Validation} & Thwarts SQL injection, cross-site scripting (XSS), and buffer manipulation. \\
+\textbf{Out-of-Band Email / Phone Verification} & Confirms verified ownership of registration contact channel via cryptographic token. \\
+\textbf{Resilient Password Policy} & Mandates high-entropy passphrases while barring predictable and compromised strings. \\
+\textbf{Salted Modern Password Hashing} & Employs memory-hard algorithms (Argon2id, bcrypt) with cryptographically random salts. \\
+\textbf{Integrated Multi-Factor Authentication} & Ensures account integrity even in the event of primary password compromise. \\
+\textbf{Least-Privilege Role Assignment} & Initial accounts assigned baseline non-privileged status; privileged rights require elevation. \\
+\textbf{Cryptographic Password Recovery} & Employs short-lived, single-use, cryptographically unpredictable reset tokens. \\
+\textbf{Adaptive Rate Limiting and Throttling} & Blocks brute-force credential stuffing and denial-of-service abuse on registration endpoints. \\
+\textbf{Defensive Session Management} & Generates high-entropy session IDs stored exclusively in hardened cookies over HTTPS. \\
+\textbf{Comprehensive Security Auditing} & Records authentication timestamps, source IP addresses, and state changes to secure logs. \\
+\textbf{Prompt Account Deactivation} & Revokes sessions, credentials, and permissions immediately upon employee separation. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\subsection{Example: Secure Registration Architecture}
+
+A simplified registration workflow can be represented as follows:
+
+\begin{lstlisting}
+User submits registration information
+              |
+              v
+       Validate input
+              |
+              v
+     Check account uniqueness
+              |
+              v
+     Hash password with salt
+              |
+              v
+       Create pending account
+              |
+              v
+     Send email verification
+              |
+              v
+     User verifies email
+              |
+              v
+    Activate account with
+    minimum required role
+              |
+              v
+       Configure MFA
+              |
+              v
+       Secure login session
+              |
+              v
+      Account is ready to use
+\end{lstlisting}
+
+In a real implementation, the application should also protect registration endpoints against automated abuse, handle database errors safely, and ensure that verification and account-activation operations cannot be bypassed.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section IX: Taxonomy of Cybersecurity Attacks: Passive versus Active\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Taxonomy of Cybersecurity Attacks: Passive versus Active}
+
+
+A \textbf{cyberattack} is an intentional attempt to gain unauthorized access to computer systems, steal or modify information, disrupt services, or compromise the confidentiality, integrity, or availability of digital resources.
+
+Cyberattacks can be classified in several ways. The most useful classification for examinations is based on the attacker's objective and the method used.
+
+\subsection{1 Passive vs Active Attacks}
+
+One fundamental classification divides attacks into passive and active attacks.
+
+\subsection{A. Passive attacks}
+
+A \textbf{passive attack} occurs when an attacker observes, monitors, or collects information without directly modifying the target system or data.
+
+The main objective is usually to obtain confidential information without being detected.
+
+Examples:
+
+\begin{itemize}
+\item Eavesdropping on unencrypted network communication.
+\item Capturing network traffic to study communication patterns.
+\item Observing sensitive information displayed on a screen.
+\item Monitoring communication metadata.
+\end{itemize}
+
+\textbf{Example:}
+
+An employee uses an unsecured public Wi-Fi network to access a website that does not encrypt its traffic. Someone on the network may be able to observe transmitted information.
+
+The attacker is monitoring communication rather than modifying it.
+
+\textbf{Impact:} Primarily affects confidentiality.
+
+\textbf{Prevention:}
+
+\begin{itemize}
+\item Use HTTPS and TLS.
+\item Encrypt sensitive network communication.
+\item Use appropriately configured VPNs on untrusted networks.
+\item Avoid transmitting sensitive information over unencrypted channels.
+\item Apply secure wireless network configurations.
+\end{itemize}
+
+\subsection{B. Active attacks}
+
+An \textbf{active attack} involves modifying, injecting, deleting, disrupting, or otherwise interfering with information or system operations.
+
+Examples:
+
+\begin{itemize}
+\item Denial-of-Service attacks.
+\item SQL injection.
+\item Data modification.
+\item Session hijacking.
+\item Malware infection.
+\item Message replay or impersonation.
+\end{itemize}
+
+\textbf{Example:}
+
+An attacker compromises an application and modifies a customer's stored account information without authorization.
+
+This is an active attack because the attacker has altered data.
+
+\textbf{Impact:} May affect confidentiality, integrity, and availability.
+
+\textbf{Prevention:}
+
+\begin{itemize}
+\item Strong authentication and authorization.
+\item Firewalls and intrusion prevention systems.
+\item Secure application development.
+\item Input validation and parameterized queries.
+\item System updates and security monitoring.
+\end{itemize}
+
+\subsection{Systematic Comparison: Passive vs. Active Attacks}
+
+\begin{table}[htbp]
+\centering
+\caption{Systematic Comparison: Passive Attacks versus Active Attacks}
+\label{tab:passive_vs_active}
+\begin{tabularx}{\textwidth}{p{3.2cm} p{5.5cm} X}
+\toprule
+\textbf{Dimension} & \textbf{Passive Attacks} & \textbf{Active Attacks} \\
+\midrule
+\textbf{Core Activity} & Secret observation, eavesdropping, and traffic monitoring. & Unauthorized data modification, injection, deletion, or disruption. \\
+\textbf{Payload Alteration} & Strictly absent; data transmitted across the wire is unaltered. & Present; packet headers, data payloads, or system state are altered. \\
+\textbf{Attacker Objective} & Covert reconnaissance, espionage, credential theft, and metadata analysis. & Direct system subversion, service denial, extortion, or integrity destruction. \\
+\textbf{Primary CIA Impact} & \textbf{Confidentiality} (data exposure without system damage). & \textbf{Integrity and Availability} (also frequently compromises confidentiality). \\
+\textbf{Representative Forms} & Network packet sniffing, wiretapping, radio eavesdropping, traffic flow analysis. & SQL injection, session hijacking, DDoS attacks, ransomware, and replay attacks. \\
+\textbf{Detection Strategy} & Extremely difficult to detect in real time; requires proactive prevention. & Readily detectable via IDS/IPS alerts, application crash logs, and integrity checks. \\
+\textbf{Primary Countermeasure} & End-to-end payload encryption (TLS 1.3, IPsec), VPNs, physical link security. & Strong authentication, input sanitization, WAFs, IPS, and least privilege. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\textbf{Exam tip:} Eavesdropping is a passive attack, whereas message modification and denial of service are active attacks.
+
+\subsection{2 Classification Based on Attack Method}
+
+
+\subsection{3 Common Attacks You Should Know}
+
+Before studying the major attacks in detail, remember these frequently tested terms.
+
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section X: Social Engineering and Phishing Attack Vectors\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Social Engineering and Phishing Attack Vectors}
+
+
+\subsection{1 Definition}
+
+\textbf{Phishing} is a social engineering attack in which an attacker impersonates a trusted person or organization to trick victims into revealing sensitive information, clicking malicious links, opening harmful attachments, or performing unauthorized actions.
+
+Phishing commonly targets:
+
+\begin{itemize}
+\item Usernames and passwords.
+\item Banking credentials.
+\item One-time verification codes.
+\item Credit or debit card information.
+\item Personal information.
+\item Corporate account credentials.
+\end{itemize}
+
+\subsection{2 How a phishing attack works}
+
+Consider a user who receives an email that appears to come from their bank.
+
+The email claims that the user's account requires immediate verification.
+
+A typical phishing incident follows this pattern:
+
+\begin{enumerate}
+\item The attacker creates a deceptive message impersonating a trusted organization.
+\item The message creates urgency or fear.
+\item The victim is encouraged to follow a link or open an attachment.
+\item The link leads to a fraudulent website or the attachment contains malicious content.
+\item The victim may disclose credentials or unintentionally expose their device to malware.
+\item The attacker may misuse the stolen information.
+\end{enumerate}
+
+\textbf{Important:} A phishing attack does not necessarily require malware. Simply tricking someone into voluntarily disclosing their password can be enough.
+
+\subsection{3 Types of phishing attacks}
+
+\subsection{A. Email phishing}
+
+Fraudulent emails are sent to many potential victims.
+
+Example: An email claims to be from an online payment service and asks the recipient to verify their account.
+
+\subsection{B. Spear phishing}
+
+A targeted phishing attack directed at a particular individual or organization.
+
+The attacker may use information about the target's job, colleagues, projects, or organization to make the message more believable.
+
+Example: A finance employee receives a message appearing to come from their manager requesting a change to a payment procedure.
+
+\subsection{C. Whaling}
+
+A phishing attack targeting senior or high-value individuals, such as:
+
+\begin{itemize}
+\item Chief Executive Officers.
+\item Chief Financial Officers.
+\item Senior government officials.
+\item Company directors.
+\end{itemize}
+
+The attacker may attempt to obtain confidential information or induce an unauthorized financial action.
+
+\subsection{D. Smishing}
+
+\textbf{Smishing} is phishing conducted through SMS or text messages.
+
+Example: A recipient receives a fraudulent message claiming that a parcel delivery failed and that personal information needs to be updated.
+
+\subsection{E. Vishing}
+
+\textbf{Vishing} means voice phishing.
+
+The attacker uses phone calls or voice communication to impersonate a trusted organization or employee.
+
+Example: Someone impersonates a bank representative and asks a customer to disclose confidential account information.
+
+\subsection{F. Clone phishing}
+
+An attacker creates a fraudulent copy of a legitimate message, often replacing its original attachment or link with a malicious one.
+
+\subsection{G. Business Email Compromise (BEC)}
+
+BEC is a targeted email-based fraud in which an attacker impersonates or compromises a trusted business identity to deceive employees into transferring money or disclosing confidential information.
+
+Example: A finance department receives an email that appears to come from a senior executive requesting an urgent payment.
+
+\subsection{4 Signs of a phishing attack}
+
+Common warning signs include:
+
+\begin{itemize}
+\item Unexpected requests for passwords or OTPs.
+\item Unusual sender addresses.
+\item Suspicious links or attachments.
+\item Urgent threats or pressure.
+\item Unexpected financial requests.
+\item Messages containing inconsistent branding or spelling errors.
+\item Requests to bypass normal organizational procedures.
+\end{itemize}
+
+However, modern phishing messages can be grammatically correct and visually convincing. Spelling mistakes are not a reliable way to identify every phishing attempt.
+
+\subsection{5 Prevention of phishing attacks}
+
+\textbf{For individuals:}
+
+\begin{itemize}
+\item Check the sender's actual email address.
+\item Verify unexpected requests through a separate trusted communication channel.
+\item Avoid entering credentials after following unsolicited links.
+\item Never disclose passwords or authentication codes to callers or message senders.
+\item Use password managers and MFA.
+\item Keep browsers and operating systems updated.
+\end{itemize}
+
+\textbf{For organizations:}
+
+\begin{itemize}
+\item Deploy email filtering and anti-phishing controls.
+\item Configure SPF, DKIM, and DMARC for organizational email domains.
+\item Provide security awareness training.
+\item Implement MFA, preferably phishing-resistant methods for high-risk accounts.
+\item Monitor suspicious authentication activity.
+\item Establish procedures for verifying financial transactions.
+\end{itemize}
+
+\subsection{Cryptographic Email Authentication Protocols}
+
+\begin{table}[htbp]
+\centering
+\caption{Cryptographic and Domain Verification Protocols for Email Anti-Spoofing}
+\label{tab:email_security_protocols}
+\begin{tabularx}{\textwidth}{p{2.2cm} p{4.8cm} X}
+\toprule
+\textbf{Protocol} & \textbf{Full Architectural Designation} & \textbf{Core Security Mechanism and Verification Function} \\
+\midrule
+\textbf{SPF} & Sender Policy Framework (RFC 7208) & Publishes a DNS TXT record listing authorized sending mail server IP addresses; receiving MTAs check connecting IP against SPF record. \\
+\textbf{DKIM} & DomainKeys Identified Mail (RFC 6376) & Affixes an asymmetric cryptographic digital signature to email headers; receiving MTAs verify signature against the sender's public key published in DNS. \\
+\textbf{DMARC} & Domain-based Message Authentication, Reporting, and Conformance (RFC 7489) & Synthesizes SPF and DKIM domain alignment; dictates enforcement policies (\texttt{none}, \texttt{quarantine}, \texttt{reject}) and provides automated XML reporting. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\textbf{Exam tip:} Phishing is a social engineering attack. Spear phishing targets specific individuals, whaling targets senior executives, smishing uses SMS, and vishing uses voice communication.
+
+
+\subsection{1 Definition}
+
+\textbf{Social engineering} is the psychological manipulation of individuals into revealing confidential information, providing unauthorized access, or performing actions that weaken security.
+
+Instead of exploiting only technical weaknesses, social engineering exploits human behavior such as:
+
+\begin{itemize}
+\item Trust.
+\item Fear.
+\item Curiosity.
+\item Urgency.
+\item Authority.
+\item Sympathy.
+\item Desire to help.
+\end{itemize}
+
+A social engineering attack may occur through email, telephone, messaging applications, websites, or face-to-face interaction.
+
+\subsection{2 Common social engineering techniques}
+
+\subsection{A. Phishing}
+
+Uses deceptive electronic messages to obtain sensitive information or persuade users to take unsafe actions.
+
+\subsection{B. Pretexting}
+
+The attacker creates a fabricated identity or scenario to obtain information.
+
+Example: Someone impersonates a technical-support employee and claims they need account information to resolve a system problem.
+
+\subsection{C. Baiting}
+
+The attacker offers something attractive to persuade the victim to perform an unsafe action.
+
+Example: A person finds a USB drive labelled "Employee Salary Information." Curiosity may lead them to connect an unknown device to a computer.
+
+\subsection{D. Quid Pro Quo}
+
+The attacker offers a service or benefit in exchange for information or access.
+
+Example: Someone pretending to be technical support offers to fix a computer problem in exchange for login credentials.
+
+\subsection{E. Tailgating}
+
+An unauthorized person follows an authorized employee into a restricted physical area without independently authenticating.
+
+Example: Someone enters an office security-controlled area by following an employee who has opened the door with an access card.
+
+\subsection{F. Shoulder Surfing}
+
+An attacker observes someone entering confidential information by looking over their shoulder.
+
+Example: A person observes a user entering a PIN at an ATM.
+
+\subsection{G. Dumpster Diving}
+
+An attacker searches discarded documents or equipment for sensitive information.
+
+Examples:
+
+\begin{itemize}
+\item Printed employee records.
+\item Discarded account statements.
+\item Old storage devices.
+\item Documents containing confidential business information.
+\end{itemize}
+
+\subsection{H. Impersonation}
+
+An attacker pretends to be a legitimate individual, employee, official, or service provider to gain trust.
+
+\subsection{3 Phishing vs Social Engineering}
+
+These concepts are related, but they are not identical.
+
+
+\textbf{Important:} All phishing is a form of social engineering, but not all social engineering is phishing.
+
+\subsection{4 Prevention}
+
+\begin{itemize}
+\item Verify identities before sharing confidential information.
+\item Follow formal approval procedures.
+\item Never share passwords or OTPs.
+\item Do not connect unknown USB devices.
+\item Use physical access controls.
+\item Train employees to recognize suspicious requests.
+\item Report unexpected requests for money, credentials, or access.
+\item Verify sensitive transactions through an independent channel.
+\end{itemize}
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section XI: Man-in-the-Middle (MITM) Attacks and Transport Security\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Man-in-the-Middle (MITM) Attacks and Transport Security}
+
+
+\subsection{1 Definition}
+
+A \textbf{Man-in-the-Middle (MITM) attack} occurs when an attacker secretly positions themselves between two communicating parties and intercepts, monitors, or potentially modifies their communication.
+
+The two parties may believe that they are communicating directly with each other, while the attacker is able to interfere with the communication path.
+
+MITM attacks primarily threaten:
+
+\begin{itemize}
+\item Confidentiality, by exposing communication.
+\item Integrity, by modifying communication.
+\item Authentication, by impersonating one of the communicating parties.
+\end{itemize}
+
+\subsection{2 How a MITM attack works}
+
+Consider a user communicating with an online banking service.
+
+Normally:
+
+\begin{lstlisting}
+User  <-------------------->  Bank Server
+             Communication
+\end{lstlisting}
+
+In a MITM scenario:
+
+\begin{lstlisting}
+User  <----->  Attacker  <----->  Bank Server
+\end{lstlisting}
+
+Conceptually, the attack may involve these stages:
+
+\begin{enumerate}
+\item The attacker gains a position where communication can be intercepted.
+\item The user's communication passes through the attacker-controlled position.
+\item The attacker observes or collects information.
+\item Depending on the attack, the attacker may modify or relay communication.
+\item The user and server may not realize that their communication has been intercepted.
+\end{enumerate}
+
+An attacker may attempt to expose sensitive information such as login credentials or financial information.
+
+\subsection{3 Common MITM attack techniques}
+
+\subsection{A. ARP Spoofing (ARP Poisoning)}
+
+ARP spoofing is an attack against local IPv4 networks.
+
+The attacker sends forged ARP information to associate their MAC address with the IP address of another network device, such as the default gateway.
+
+As a result, devices may send their traffic to the attacker's machine instead of the intended destination.
+
+\textbf{Impact:}
+
+\begin{itemize}
+\item Traffic interception.
+\item Traffic redirection.
+\item Communication disruption.
+\item Potential data modification.
+\end{itemize}
+
+\textbf{Prevention:}
+
+\begin{itemize}
+\item Dynamic ARP Inspection (DAI).
+\item DHCP Snooping.
+\item Static ARP entries for carefully selected critical systems.
+\item Network segmentation.
+\item Encryption of network communication.
+\end{itemize}
+
+DAI is explained in detail in Section 12.
+
+\subsection{B. DNS Spoofing}
+
+DNS spoofing involves providing false DNS information so that a user is directed to an unintended IP address.
+
+Example:
+
+A user enters the address of a legitimate banking website, but manipulated DNS information may direct them to an attacker-controlled website that imitates the original.
+
+\textbf{Prevention:}
+
+\begin{itemize}
+\item Secure DNS configuration.
+\item DNSSEC validation where supported.
+\item Secure network infrastructure.
+\item HTTPS certificate validation.
+\item Monitoring DNS anomalies.
+\end{itemize}
+
+\subsection{C. Rogue Wi-Fi Access Point}
+
+An attacker establishes an unauthorized wireless access point that appears legitimate.
+
+A user may mistakenly connect to it, potentially exposing their network traffic or authentication information.
+
+Organizations can reduce this risk through:
+
+\begin{itemize}
+\item Wireless access-point monitoring.
+\item WPA2/WPA3 security.
+\item Proper certificate validation.
+\item Enterprise Wi-Fi authentication.
+\item Network access controls.
+\end{itemize}
+
+\subsection{D. HTTPS/TLS Downgrade or Stripping Attacks}
+
+TLS protects communication between a client and a server.
+
+An attacker may attempt to weaken communication security or interfere with the establishment of an encrypted connection.
+
+Defenses include:
+
+\begin{itemize}
+\item Enforcing HTTPS.
+\item Correct TLS configuration.
+\item HTTP Strict Transport Security (HSTS).
+\item Proper certificate validation.
+\item Disabling obsolete TLS versions and insecure cipher configurations.
+\end{itemize}
+
+\subsection{4 What is HTTPS and how does it help?}
+
+\textbf{HTTPS} stands for Hypertext Transfer Protocol Secure.
+
+It uses HTTP over TLS (Transport Layer Security) to protect communication between a client and a server.
+
+TLS provides:
+
+\begin{enumerate}
+\item \textbf{Confidentiality:} Encryption prevents unauthorized parties from reading protected communication.
+\item \textbf{Integrity:} Authentication and integrity protection help detect unauthorized modification.
+\item \textbf{Authentication:} Certificates help a client verify the identity of the server.
+\end{enumerate}
+
+For example, when accessing a properly configured banking website over HTTPS, TLS helps prevent network attackers from reading or secretly modifying the protected application traffic.
+
+However, HTTPS does not guarantee that:
+
+\begin{itemize}
+\item The website itself is trustworthy.
+\item The server has no vulnerabilities.
+\item The user's device is free from malware.
+\item A user cannot be deceived into visiting a fraudulent domain with its own valid certificate.
+\end{itemize}
+
+\subsection{5 MITM Prevention Summary}
+
+
+\textbf{Exam tip:} A MITM attack involves an attacker intercepting communication between two parties. ARP spoofing and DNS spoofing can be used to facilitate traffic redirection, while TLS helps protect communication against interception and modification.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section XII: Web Application Vulnerabilities: SQL Injection (SQLi)\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Web Application Vulnerabilities: SQL Injection (SQLi)}
+
+
+\subsection{1 Definition}
+
+\textbf{SQL Injection (SQLi)} is a web application security vulnerability in which untrusted input is improperly incorporated into an SQL query, allowing an attacker to interfere with the application's intended database operations.
+
+SQL stands for \textbf{Structured Query Language}.
+
+It is used to communicate with relational database management systems such as:
+
+\begin{itemize}
+\item MySQL.
+\item PostgreSQL.
+\item Microsoft SQL Server.
+\item Oracle Database.
+\item SQLite.
+\end{itemize}
+
+SQL injection occurs when an application constructs database queries unsafely, especially through direct concatenation of user-controlled input.
+
+\subsection{2 How SQL injection works conceptually}
+
+Consider a login system that receives:
+
+\begin{itemize}
+\item Username.
+\item Password.
+\end{itemize}
+
+The application needs to check whether a matching account exists in the database.
+
+The intended query is conceptually:
+
+\begin{lstlisting}
+SELECT *
+FROM users
+WHERE username = ?
+AND password_hash = ?;
+\end{lstlisting}
+
+The question marks represent parameters supplied separately from the SQL statement.
+
+A vulnerable application might instead build an SQL statement by directly concatenating user input into the query string.
+
+The problem is that the database may interpret part of the supplied input as SQL syntax instead of treating it purely as data.
+
+Consequently, an attacker may interfere with the intended query logic.
+
+This is the core cause of SQL injection.
+
+\subsection{3 Effects of SQL injection}
+
+Depending on the application's database permissions and the vulnerability, SQL injection may allow:
+
+\begin{itemize}
+\item Unauthorized access to records.
+\item Authentication bypass.
+\item Disclosure of confidential information.
+\item Modification of database records.
+\item Deletion of data.
+\item Unauthorized execution of certain database operations.
+\end{itemize}
+
+The severity depends on the application's design, database permissions, and available database features.
+
+\subsection{4 Types of SQL Injection}
+
+\subsection{A. In-band SQL Injection}
+
+The attacker receives information through the same communication channel used to submit the input.
+
+Two common forms are:
+
+\textbf{Error-based SQL Injection}
+
+The application reveals database error messages that disclose information about its internal database structure or query processing.
+
+\textbf{Union-based SQL Injection}
+
+The attack attempts to combine results from different database queries into a single result set.
+
+\subsection{B. Blind SQL Injection}
+
+The application does not directly reveal the desired database information.
+
+Instead, the attacker attempts to infer information from how the application behaves.
+
+Two conceptual forms are:
+
+\begin{itemize}
+\item \textbf{Boolean-based:} The application's response differs depending on whether a condition is true or false.
+\item \textbf{Time-based:} The application's response time varies depending on a database condition.
+\end{itemize}
+
+\subsection{C. Out-of-band SQL Injection}
+
+Information is communicated through a separate channel rather than the application's normal response channel.
+
+Whether this type is possible depends on database capabilities and network configuration.
+
+\subsection{5 Prevention of SQL Injection}
+
+The most important defense is \textbf{parameterized queries}, also known as prepared statements.
+
+Instead of combining user input directly with SQL syntax, the application sends the SQL statement and its parameter values separately.
+
+Example using Python and a database cursor:
+
+\begin{lstlisting}
+username = input("Username: ")
+email = input("Email: ")
+query = """
+    SELECT id, username
+    FROM users
+    WHERE username = %s
+      AND email = %s
+"""
+cursor.execute(query, (username, email))
+\end{lstlisting}
+
+The database driver treats the values as parameters, rather than interpreting them as part of the SQL statement.
+
+The placeholder syntax depends on the database driver; not every driver uses \texttt{\%s}.
+
+Other security measures include:
+
+\begin{enumerate}
+\item Use prepared statements and parameterized queries.
+\item Apply input validation.
+\item Use stored procedures safely, without unsafe dynamic SQL.
+\item Apply least privilege to database accounts.
+\item Avoid exposing detailed database errors to users.
+\item Keep database software and application frameworks updated.
+\item Use Web Application Firewalls (WAFs) as an additional security layer.
+\item Perform security testing and code reviews.
+\end{enumerate}
+
+\textbf{Important:} Input validation and WAFs are supplementary controls. They do not replace parameterized queries.
+
+\subsection{6 SQL Injection Example in a Real Application}
+
+Imagine an online job portal.
+
+Its database contains:
+
+\begin{itemize}
+\item Users.
+\item Employers.
+\item Job postings.
+\item Applications.
+\item Messages.
+\end{itemize}
+
+Suppose the application uses an unsafe database query to retrieve user information.
+
+An SQL injection vulnerability could allow an attacker to interfere with the database query and potentially access information outside the intended permissions.
+
+Possible consequences include exposure of applicant information, employer records, or private messages.
+
+The correct design uses:
+
+\begin{itemize}
+\item Parameterized database operations.
+\item Separate database accounts with limited privileges.
+\item Server-side authorization checks.
+\item Secure error handling.
+\item Database access monitoring.
+\end{itemize}
+
+\subsection{Master Vulnerability Comparison: SQL Injection versus XSS}
+
+\begin{table}[htbp]
+\centering
+\caption{Master Web Vulnerability Comparison: SQL Injection (SQLi) versus Cross-Site Scripting (XSS)}
+\label{tab:sqli_vs_xss}
+\begin{tabularx}{\textwidth}{p{3.2cm} p{5.5cm} X}
+\toprule
+\textbf{Dimension} & \textbf{SQL Injection (SQLi)} & \textbf{Cross-Site Scripting (XSS)} \\
+\midrule
+\textbf{Full Designation} & Structured Query Language Injection & Cross-Site Scripting \\
+\textbf{Primary Target} & Back-end relational database management system. & Client-side web browser execution environment. \\
+\textbf{Root Vulnerability} & Unsafe string concatenation into dynamic SQL queries. & Unsafe rendering or evaluation of unescaped user content. \\
+\textbf{Execution Layer} & Database engine (Server side). & Browser JavaScript engine (Client side). \\
+\textbf{Typical Consequences} & Complete database leakage, authentication bypass, data loss. & Session cookie theft, account hijacking, portal defacement, phishing. \\
+\textbf{Gold Standard Defense} & Parameterized queries (prepared statements), stored procedures. & Context-aware output encoding, Content Security Policy (CSP). \\
+\textbf{Complementary Controls} & Least-privilege DB roles, WAF, schema hardening. & \texttt{HttpOnly} cookies, input sanitization, safe DOM APIs. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\textbf{Exam tip:} SQL injection primarily targets database operations. It is prevented most effectively through parameterized queries and least-privilege database access.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section XIII: Web Application Vulnerabilities: Cross-Site Scripting (XSS)\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Web Application Vulnerabilities: Cross-Site Scripting (XSS)}
+
+
+\subsection{1 Definition}
+
+\textbf{Cross-Site Scripting (XSS)} is a web application security vulnerability in which untrusted content is improperly handled, allowing malicious script content to execute in a user's browser within the security context of a website.
+
+XSS is generally associated with JavaScript, although other browser-executable content and contexts can also be involved.
+
+It targets users who visit the affected web application.
+
+Possible consequences include:
+
+\begin{itemize}
+\item Unauthorized actions performed through a victim's browser.
+\item Exposure of information accessible to the affected page.
+\item Manipulation of webpage content.
+\item Phishing through the legitimate website's interface.
+\item Theft of accessible session information when protections are inadequate.
+\end{itemize}
+
+\subsection{2 How XSS works conceptually}
+
+Suppose a website allows users to submit comments.
+
+A legitimate comment might be:
+
+\texttt{This job opportunity looks interesting.}
+
+The application stores the comment in its database and displays it to other visitors.
+
+If the application fails to handle untrusted content safely, a malicious user may submit content that the browser interprets as executable script rather than ordinary text.
+
+When another user visits the affected page, the browser may execute that content in the website's security context.
+
+This creates an XSS vulnerability.
+
+\subsection{3 Types of XSS attacks}
+
+There are three principal types.
+
+\subsection{A. Stored XSS (Persistent XSS)}
+
+Stored XSS occurs when malicious content is saved by the application and later displayed to other users.
+
+\textbf{Example:}
+
+A discussion forum allows users to post comments.
+
+A malicious comment is stored in the database. When other users open the discussion page, the vulnerable application renders the submitted content unsafely.
+
+\textbf{Characteristics:}
+
+\begin{itemize}
+\item Malicious content is stored persistently.
+\item Multiple users may be affected.
+\item The vulnerability may remain until the stored content or application behavior is corrected.
+\end{itemize}
+
+\subsection{B. Reflected XSS (Non-persistent XSS)}
+
+Reflected XSS occurs when untrusted input is immediately included in a webpage response without appropriate handling.
+
+\textbf{Example:}
+
+A website displays a search term in its results page.
+
+If the application inserts the search term into the page unsafely, specially crafted input may be interpreted by the browser as executable content.
+
+The malicious content is typically delivered through a request rather than being permanently stored by the application.
+
+\subsection{C. DOM-Based XSS}
+
+DOM stands for \textbf{Document Object Model}.
+
+DOM-based XSS occurs when client-side JavaScript processes untrusted data unsafely and modifies the webpage in a way that causes the browser to interpret that data as executable content.
+
+This can occur even when the server returns an otherwise safe page.
+
+\subsection{4 Comparison of XSS types}
+
+
+\subsection{5 Prevention of XSS}
+
+Important security measures include:
+
+\textbf{1. Context-aware output encoding}
+
+Encode untrusted data appropriately before rendering it into HTML, attributes, JavaScript, CSS, or URLs.
+
+Different contexts require different encoding methods.
+
+\textbf{2. Input validation}
+
+Validate user-submitted information according to the application's expected format.
+
+\textbf{3. HTML sanitization}
+
+When an application intentionally allows a limited amount of HTML, use a trusted HTML sanitization library and an appropriate allowlist.
+
+\textbf{4. Use safe DOM APIs}
+
+Prefer APIs that treat data as text instead of interpreting it as HTML.
+
+For example, in JavaScript:
+
+\begin{lstlisting}
+const element = document.getElementById("message");
+element.textContent = userInput;
+\end{lstlisting}
+
+\texttt{textContent} treats the supplied content as text rather than parsing it as HTML.
+
+By contrast, APIs that insert arbitrary strings as HTML require careful sanitization and should not be used with untrusted content.
+
+\textbf{5. Content Security Policy (CSP)}
+
+A Content Security Policy restricts which resources and scripts a browser is allowed to load or execute.
+
+It is an additional layer of protection, not a substitute for safe output handling.
+
+\textbf{6. Secure cookie configuration}
+
+Cookies containing session identifiers should use appropriate protections such as:
+
+\begin{itemize}
+\item HttpOnly.
+\item Secure.
+\item SameSite.
+\end{itemize}
+
+HttpOnly helps prevent JavaScript from directly reading a cookie, but it does not eliminate XSS or prevent every action that malicious script content could perform.
+
+\subsection{XSS vs SQL Injection: Remember the difference}
+
+\begin{itemize}
+\item SQL injection attacks the application's database query processing.
+\item XSS attacks the browser by exploiting unsafe handling of web content.
+\end{itemize}
+
+A job-board application might suffer both:
+
+\begin{itemize}
+\item SQL injection could expose applicant records from the database.
+\item Stored XSS could affect employers and job seekers viewing an unsafe user-generated profile or comment.
+\end{itemize}
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section XIV: Ransomware Epidemics and Six-Phase Incident Response Architecture\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Ransomware Epidemics and Six-Phase Incident Response Architecture}
+
+
+\subsection{1 Definition of Ransomware}
+
+\textbf{Ransomware} is a type of malicious software that prevents users or organizations from accessing their data or systems, usually by encrypting files or otherwise locking access, and demands a ransom to restore access.
+
+It is a serious cybersecurity threat because it can disrupt business operations, damage information systems, and cause financial losses.
+
+Ransomware commonly targets:
+
+\begin{itemize}
+\item Personal computers.
+\item Corporate networks.
+\item Servers.
+\item Databases.
+\item Government systems.
+\item Hospitals and educational institutions.
+\end{itemize}
+
+\subsection{2 How a ransomware incident occurs}
+
+A ransomware incident may develop through several stages:
+
+\textbf{Stage 1: Initial access}
+
+The attacker gains access through a security weakness.
+
+Possible entry points include:
+
+\begin{itemize}
+\item Phishing emails.
+\item Compromised credentials.
+\item Unpatched software.
+\item Exposed remote access services.
+\item Malware infections.
+\end{itemize}
+
+\textbf{Stage 2: Establishing access}
+
+The attacker may attempt to maintain access to compromised systems and identify additional resources.
+
+\textbf{Stage 3: Privilege escalation and lateral movement}
+
+The attacker may attempt to obtain greater privileges and move from one compromised computer to other systems on the network.
+
+\textbf{Stage 4: Data discovery and possible exfiltration}
+
+The attacker may identify valuable data and copy it outside the organization.
+
+Some ransomware incidents involve data theft in addition to file encryption. This is commonly called \textbf{double extortion}.
+
+\textbf{Stage 5: Encryption or disruption}
+
+The ransomware encrypts files or otherwise prevents access to systems.
+
+\textbf{Stage 6: Ransom demand}
+
+The attacker demands payment, often in cryptocurrency, in exchange for a promised recovery mechanism or to avoid publishing stolen data.
+
+Payment does not guarantee that the attacker will provide a working recovery method or delete stolen information.
+
+\subsection{3 Types of ransomware}
+
+\subsection{A. Crypto ransomware}
+
+Encrypts files and demands payment for a decryption key or recovery mechanism.
+
+\subsection{B. Locker ransomware}
+
+Locks users out of their devices or operating systems without necessarily encrypting every individual file.
+
+\subsection{C. Double-extortion ransomware}
+
+Combines data theft with encryption or disruption. The attacker threatens to publish or disclose stolen information if the ransom is not paid.
+
+\subsection{D. Ransomware-as-a-Service (RaaS)}
+
+A business-like criminal arrangement in which ransomware developers provide tools or services to other attackers, who then conduct attacks.
+
+\subsection{4 Indicators of a ransomware incident}
+
+Possible warning signs include:
+
+\begin{itemize}
+\item Files becoming inaccessible.
+\item Unexpected file extensions or file changes.
+\item Unusual ransom messages.
+\item Sudden spikes in file modification activity.
+\item Unusual network traffic.
+\item Unexpected administrative account activity.
+\item Security tools being disabled.
+\item Multiple computers experiencing similar failures.
+\item Unusual access to shared folders or servers.
+\end{itemize}
+
+These symptoms can have other causes as well, so incident responders must investigate rather than assume that every unusual file change is ransomware.
+
+\subsection{5 Ransomware Incident Response}
+
+\textbf{Incident Response} is the organized process of detecting, containing, investigating, eliminating, and recovering from cybersecurity incidents.
+
+The objective is to limit damage, prevent further compromise, restore normal operations, and reduce the chance of recurrence.
+
+A practical ransomware response can be organized into the following stages.
+
+\subsection{Phase 1: Preparation}
+
+Organizations should prepare for ransomware incidents before they occur.
+
+Important activities include:
+
+\begin{itemize}
+\item Maintain regular backups.
+\item Keep at least one backup copy offline or otherwise isolated from ordinary network access.
+\item Use immutable backups where possible.
+\item Test backup restoration procedures.
+\item Maintain an incident response plan.
+\item Keep systems and security tools updated.
+\item Apply least privilege.
+\item Implement network segmentation.
+\item Provide security awareness training.
+\item Maintain current asset and contact inventories.
+\end{itemize}
+
+\textbf{Important:} A backup is useful only when it is recoverable. Organizations should regularly test restoration rather than merely checking whether backup jobs completed.
+
+\subsection{Phase 2: Detection and Analysis}
+
+The security team identifies and assesses a suspected ransomware incident.
+
+Activities include:
+
+\begin{enumerate}
+\item Identify affected computers, servers, and network segments.
+\item Determine when the incident began.
+\item Identify suspicious accounts and processes.
+\item Examine relevant security alerts and logs.
+\item Determine whether the incident is still spreading.
+\item Assess whether confidential information may have been exposed.
+\item Determine the scope and severity of the incident.
+\end{enumerate}
+
+Useful evidence may include:
+
+\begin{itemize}
+\item Endpoint detection alerts.
+\item Firewall logs.
+\item Authentication logs.
+\item Network monitoring records.
+\item Server logs.
+\item Backup system logs.
+\end{itemize}
+
+\subsection{Phase 3: Containment}
+
+Containment aims to stop further damage and prevent ransomware from spreading.
+
+Important actions include:
+
+\textbf{Isolate affected systems}
+
+\begin{itemize}
+\item Disconnect affected computers from network connections when feasible.
+\item Isolate affected network segments.
+\item Restrict access to compromised file servers and shared storage.
+\end{itemize}
+
+\textbf{Protect unaffected systems}
+
+\begin{itemize}
+\item Prevent potentially compromised systems from accessing backup infrastructure.
+\item Restrict suspicious connections.
+\item Protect unaffected administrative systems.
+\item Suspend compromised accounts or revoke compromised credentials.
+\end{itemize}
+
+\textbf{Preserve evidence}
+
+\begin{itemize}
+\item Preserve relevant security logs.
+\item Record timestamps and actions taken.
+\item Document affected systems.
+\item Follow established forensic evidence-handling procedures.
+\end{itemize}
+
+Containment decisions should take into account the operational importance of the affected systems and the need to preserve evidence. Incident responders should not casually delete suspicious files or rebuild machines before evidence collection and containment decisions are made.
+
+\subsection{Phase 4: Eradication}
+
+Eradication removes the cause of the compromise and prevents the attacker from regaining access.
+
+Activities include:
+
+\begin{itemize}
+\item Remove identified malicious software.
+\item Identify and close the exploited vulnerability.
+\item Patch vulnerable systems.
+\item Remove unauthorized accounts.
+\item Revoke compromised credentials and sessions.
+\item Correct insecure configurations.
+\item Investigate possible persistence mechanisms.
+\item Verify that attacker access has been removed.
+\end{itemize}
+
+Simply deleting the visible ransomware program may not be sufficient if the attacker still has access through compromised accounts or other persistence mechanisms.
+
+\subsection{Phase 5: Recovery}
+
+Recovery restores affected systems and normal operations safely.
+
+Activities include:
+
+\begin{enumerate}
+\item Restore clean systems using verified backups.
+\item Reinstall or rebuild compromised systems where necessary.
+\item Apply security patches and secure configurations.
+\item Reset compromised credentials.
+\item Validate system and application functionality.
+\item Monitor restored systems for suspicious activity.
+\item Gradually reconnect systems to the production network.
+\item Confirm that business operations are functioning normally.
+\end{enumerate}
+
+Restoration should not occur until the organization has sufficient confidence that the initial compromise and attacker access have been addressed.
+
+\subsection{Phase 6: Post-Incident Review}
+
+After recovery, the organization evaluates the incident.
+
+Important questions include:
+
+\begin{itemize}
+\item How did the attacker gain initial access?
+\item Which security control failed?
+\item How quickly was the incident detected?
+\item Which systems were affected?
+\item Were backups sufficient?
+\item Was sensitive data exposed?
+\item Were containment actions effective?
+\item What improvements are necessary?
+\end{itemize}
+
+The organization should update its policies, monitoring, backup strategies, and incident response procedures.
+
+\subsection{6 Ransomware Incident Response Flow}
+
+\begin{lstlisting}
+Preparation
+    |
+    v
+Detection and Analysis
+    |
+    v
+Containment
+    |
+    v
+Eradication
+    |
+    v
+Recovery
+    |
+    v
+Post-Incident Review
+    |
+    v
+Improved Security Controls
+\end{lstlisting}
+
+\subsection{Important ransomware precautions}
+
+\begin{itemize}
+\item Do not assume that paying the ransom will recover the data.
+\item Do not connect potentially compromised systems to backup infrastructure.
+\item Do not immediately delete evidence.
+\item Do not restore systems before identifying and addressing the compromise.
+\item Do not rely exclusively on antivirus software.
+\item Maintain offline or immutable backups.
+\item Test disaster recovery and restoration procedures.
+\end{itemize}
+
+\subsection{Ransomware vs Virus vs Worm}
+
+Ransomware describes malicious software based on its extortion objective. Viruses and worms describe malware according to how they propagate. These categories are not mutually exclusive: ransomware can use worm-like propagation, for example.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section XV: Zero-Day Vulnerabilities, Exploits, and Defense Strategies\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Zero-Day Vulnerabilities, Exploits, and Defense Strategies}
+
+
+\subsection{1 What is a Vulnerability?}
+
+A \textbf{security vulnerability} is a weakness in software, hardware, system configuration, or operational procedures that may be exploited to compromise security.
+
+Examples:
+
+\begin{itemize}
+\item A software component fails to validate user input.
+\item An operating system contains an unpatched security flaw.
+\item A server allows unnecessary services to remain exposed.
+\item An application uses weak authentication.
+\item A system grants excessive permissions.
+\end{itemize}
+
+A vulnerability does not necessarily mean that an attack has already occurred. It represents a weakness that could be exploited.
+
+\subsection{2 What is a Zero-Day Vulnerability?}
+
+A \textbf{Zero-Day Vulnerability} is a software or hardware security weakness for which the affected vendor or responsible party has had no effective opportunity to provide a security fix before exploitation becomes possible.
+
+The term "zero-day" refers to the lack of available remediation time before the weakness is exploited.
+
+In many cases, the vulnerability is unknown to the vendor when an attacker first exploits it.
+
+\subsection{3 What is a Zero-Day Exploit?}
+
+A \textbf{Zero-Day Exploit} is a method or code that takes advantage of a zero-day vulnerability.
+
+The distinction is:
+
+\begin{itemize}
+\item Vulnerability = Security weakness.
+\item Exploit = Method that takes advantage of the weakness.
+\item Attack = Actual malicious activity using the exploit.
+\end{itemize}
+
+\subsection{4 What is a Zero-Day Attack?}
+
+A \textbf{Zero-Day Attack} is a cyberattack that exploits a vulnerability before an effective patch or other complete vendor remediation is available.
+
+For example:
+
+Suppose a widely used operating system has an unknown security weakness.
+
+\begin{enumerate}
+\item An attacker discovers the weakness.
+\item The software vendor has not yet released a fix.
+\item The attacker exploits the weakness against vulnerable systems.
+\item Security researchers and the vendor investigate the problem.
+\item The vendor develops and distributes a security update.
+\item Organizations apply the update and other mitigations.
+\end{enumerate}
+
+This is an example of a zero-day attack.
+
+\subsection{5 Why are zero-day attacks dangerous?}
+
+They are particularly challenging because:
+
+\begin{itemize}
+\item A security patch may not exist at the time of exploitation.
+\item Traditional signature-based antivirus tools may not recognize the attack.
+\item Organizations may not know that their systems are vulnerable.
+\item The vulnerability may affect widely deployed software.
+\item Attackers may exploit the weakness before defenders understand its full impact.
+\end{itemize}
+
+However, zero-day attacks are not necessarily undetectable. Behavioral monitoring, application isolation, network controls, and other security mechanisms may detect suspicious activity.
+
+\subsection{6 Zero-Day vs N-Day Vulnerability}
+
+An \textbf{N-day vulnerability} is a known vulnerability for which a patch or public security information may already exist, but some systems have not yet been updated.
+
+
+\subsection{7 Protection Against Zero-Day Attacks}
+
+No single security mechanism guarantees protection against zero-day vulnerabilities.
+
+Organizations should use multiple preventive and detective controls:
+
+\begin{enumerate}
+\item \textbf{Patch management:} Apply vendor security updates as soon as practical.
+\item \textbf{Application allowlisting:} Restrict execution to approved software where suitable.
+\item \textbf{Endpoint Detection and Response (EDR):} Detect and investigate suspicious endpoint activity.
+\item \textbf{Network segmentation:} Limit the spread of compromise.
+\item \textbf{Least privilege:} Reduce the privileges available to exploited processes.
+\item \textbf{Intrusion Detection and Prevention Systems:} Detect or block suspicious network activity.
+\item \textbf{Secure configuration:} Disable unnecessary services and features.
+\item \textbf{Behavioral monitoring:} Identify unusual processes and system activity.
+\item \textbf{Backups:} Maintain recoverable copies of important data.
+\item \textbf{Incident response planning:} Prepare for vulnerabilities that cannot immediately be patched.
+\end{enumerate}
+
+\textbf{Exam tip:} A zero-day attack exploits a previously unpatched or unremediated vulnerability before an effective fix is available. A vulnerability is the weakness; an exploit is the method that uses it.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section XVI: Malware Classification and Dynamics: Viruses, Worms, Trojans, and Rootkits\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Malware Classification and Dynamics: Viruses, Worms, Trojans, and Rootkits}
+
+
+A \textbf{computer virus} and a \textbf{computer worm} are both types of malware. Their major difference is how they spread from one system to another.
+
+\subsection{1 Computer Virus}
+
+A \textbf{computer virus} is malicious software that attaches itself to a legitimate file, program, or other host and spreads when the infected host is executed or otherwise activated.
+
+A virus generally requires some form of host interaction or execution to propagate.
+
+\textbf{Example:}
+
+A user receives an infected document or executable file. When the user opens or runs it, the malicious code executes and may infect other files on the computer.
+
+Possible effects include:
+
+\begin{itemize}
+\item Corrupting files.
+\item Modifying system settings.
+\item Stealing information.
+\item Disrupting normal operations.
+\item Deleting data.
+\item Installing additional malware.
+\end{itemize}
+
+\subsection{Characteristics of a virus}
+
+\begin{itemize}
+\item Attaches itself to a host file or program.
+\item Commonly spreads through file sharing, removable media, and infected downloads.
+\item Often requires execution of the infected host.
+\item May modify or damage files.
+\item Can remain inactive until triggered.
+\end{itemize}
+
+\subsection{2 Computer Worm}
+
+A \textbf{computer worm} is standalone malicious software that can replicate and spread from one computer to another, commonly by exploiting network or software vulnerabilities.
+
+Unlike a traditional virus, a worm does not need to attach itself to a host program to propagate.
+
+\textbf{Example:}
+
+A worm exploits a vulnerability in network-connected computers and spreads between vulnerable machines without requiring users to manually copy and execute an infected file on each computer.
+
+Possible effects include:
+
+\begin{itemize}
+\item Consuming network bandwidth.
+\item Increasing system resource usage.
+\item Slowing down network communication.
+\item Disrupting services.
+\item Installing additional malicious software.
+\item Creating a large network of compromised devices.
+\end{itemize}
+
+\subsection{Characteristics of a worm}
+
+\begin{itemize}
+\item Standalone malware.
+\item Can self-replicate.
+\item Often spreads automatically over networks.
+\item May exploit vulnerabilities in operating systems or network services.
+\item Can spread rapidly across connected systems.
+\end{itemize}
+
+\subsection{3 Virus vs Worm: Comparison}
+
+
+\textbf{Exam tip:} A virus attaches itself to a host, whereas a worm is standalone and can self-propagate.
+
+\subsection{4 Other Types of Malware}
+
+Malware means \textbf{Malicious Software}. It is a general term for software intentionally designed to damage, disrupt, spy on, or gain unauthorized access to systems.
+
+
+\subsection{Tripartite Comparison: Trojan Horse vs. Virus vs. Worm}
+
+\begin{table}[htbp]
+\centering
+\caption{Tripartite Malware Comparison: Trojan Horse vs. Computer Virus vs. Computer Worm}
+\label{tab:trojan_vs_virus_vs_worm}
+\begin{tabularx}{\textwidth}{p{3.0cm} p{3.8cm} p{3.8cm} X}
+\toprule
+\textbf{Dimension} & \textbf{Trojan Horse} & \textbf{Computer Virus} & \textbf{Computer Worm} \\
+\midrule
+\textbf{Primary Tactic} & Deceptive masquerade. & Parasitic host infection. & Autonomous network scanning. \\
+\textbf{Host Requirement} & Standalone or bundled. & Requires host program/file. & Completely standalone. \\
+\textbf{Self-Replication} & Does not replicate on its own. & Replicates via host execution. & Replicates independently. \\
+\textbf{Spread Vector} & Social engineering downloads. & File exchange, USBs, emails. & Network socket exploits. \\
+\textbf{Defining Trait} & Masquerade and deception. & Host dependency. & Autonomous self-propagation. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section XVII: Advanced Network Attacks: DoS/DDoS, Spoofing, Replay, and Privilege Escalation\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Advanced Network Attacks: DoS/DDoS, Spoofing, Replay, and Privilege Escalation}
+
+
+The following attack categories are especially important for network security and government IT recruitment examinations.
+
+\subsection{1 Denial-of-Service (DoS) Attack}
+
+A \textbf{Denial-of-Service attack} is an attack intended to make a computer, network, or online service unavailable to legitimate users.
+
+The attacker overwhelms the target or exploits a weakness so that the system cannot provide its normal service.
+
+\textbf{Example:}
+
+An online examination portal experiences an unusually large number of requests, consuming its server resources and preventing students from accessing the portal.
+
+\subsection{Common forms}
+
+\begin{itemize}
+\item \textbf{Volumetric attacks:} Consume network bandwidth with excessive traffic.
+\item \textbf{Protocol attacks:} Exhaust resources involved in handling network protocols or connections.
+\item \textbf{Application-layer attacks:} Exhaust application resources by making excessive or costly application requests.
+\end{itemize}
+
+\subsection{Prevention}
+
+\begin{itemize}
+\item Traffic filtering.
+\item Rate limiting.
+\item Firewalls.
+\item Intrusion Prevention Systems.
+\item Load balancing.
+\item DDoS protection services.
+\item Redundant infrastructure.
+\item Traffic monitoring.
+\end{itemize}
+
+\subsection{2 Distributed Denial-of-Service (DDoS) Attack}
+
+A \textbf{Distributed Denial-of-Service attack} is a DoS attack launched from multiple distributed sources.
+
+These sources are often compromised computers or Internet-connected devices forming a \textbf{botnet}.
+
+A botnet is a collection of compromised devices that can be remotely controlled by an attacker.
+
+\subsection{Architectural Comparison: DoS versus DDoS}
+
+\begin{table}[htbp]
+\centering
+\caption{Denial of Service (DoS) versus Distributed Denial of Service (DDoS)}
+\label{tab:dos_vs_ddos}
+\begin{tabularx}{\textwidth}{p{3.2cm} p{5.5cm} X}
+\toprule
+\textbf{Dimension} & \textbf{Denial of Service (DoS)} & \textbf{Distributed Denial of Service (DDoS)} \\
+\midrule
+\textbf{Attack Source} & Single localized system or distinct IP address. & Tens of thousands of geographically dispersed compromised bot devices. \\
+\textbf{Traffic Volume} & Limited by the bandwidth capacity of one internet link. & Massive volumetric saturation (hundreds of Gigabits/Terabits per second). \\
+\textbf{Detection \& Mitigation} & Readily blocked via upstream firewall rules filtering the source IP. & Impossible to filter via single IP blocks; requires scrubbing centers and Anycast. \\
+\textbf{Operational Impact} & Localized resource starvation or single service disruption. & Total network pipe saturation, infrastructure collapse, global service outage. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\textbf{Exam tip:} DDoS uses multiple sources, often a botnet, to overwhelm a target service.
+
+\subsection{3 Spoofing Attack}
+
+\textbf{Spoofing} is an attack in which an attacker impersonates a trusted identity, device, address, or communication source.
+
+The purpose is to deceive users or systems into trusting fraudulent communication.
+
+Common types include:
+
+\begin{itemize}
+\item \textbf{IP spoofing:} Falsifying the source IP address in IP packets.
+\item \textbf{ARP spoofing:} Providing false IP-to-MAC address mappings.
+\item \textbf{DNS spoofing:} Supplying false DNS information.
+\item \textbf{Email spoofing:} Forging email sender information.
+\item \textbf{MAC spoofing:} Changing or impersonating a device's MAC address.
+\end{itemize}
+
+\subsection{Prevention}
+
+\begin{itemize}
+\item Authentication and cryptographic verification.
+\item Ingress and egress traffic filtering.
+\item Secure DNS practices.
+\item DHCP Snooping and DAI.
+\item SPF, DKIM, and DMARC for email-domain protection.
+\item Network monitoring.
+\end{itemize}
+
+\textbf{Important:} An IP address appearing in a packet does not necessarily prove that the packet originated from that address. Source IP addresses can be spoofed.
+
+\subsection{4 Replay Attack}
+
+A \textbf{Replay Attack} occurs when an attacker captures previously transmitted valid communication and retransmits it to deceive a system or repeat an operation.
+
+\textbf{Example:}
+
+A system receives an authenticated transaction request. An attacker captures the communication and attempts to reuse it later.
+
+If the application does not verify that the request is fresh and has not already been processed, the transaction may be repeated.
+
+\subsection{Prevention}
+
+\begin{itemize}
+\item Nonces.
+\item Timestamps.
+\item Sequence numbers.
+\item Expiring authentication tokens.
+\item One-time transaction identifiers.
+\item Cryptographic authentication.
+\end{itemize}
+
+A nonce is a value used only once within a particular protocol or transaction context. It helps a system distinguish fresh communication from previously captured communication.
+
+\subsection{5 Session Hijacking}
+
+A \textbf{Session Hijacking Attack} occurs when an attacker obtains control of a user's authenticated session.
+
+Web applications commonly use session identifiers to remember that a user has already authenticated.
+
+If an attacker obtains a valid session identifier, they may be able to impersonate the user without knowing the original password.
+
+\subsection{Possible causes}
+
+\begin{itemize}
+\item Insecure session management.
+\item Exposure of session tokens.
+\item Cross-site scripting.
+\item Unencrypted communication.
+\item Compromised user devices.
+\end{itemize}
+
+\subsection{Prevention}
+
+\begin{itemize}
+\item Use HTTPS everywhere.
+\item Protect cookies with Secure and HttpOnly attributes.
+\item Apply suitable SameSite cookie settings.
+\item Generate unpredictable session identifiers.
+\item Regenerate session identifiers after authentication or privilege changes.
+\item Expire sessions appropriately.
+\item Revoke sessions after password changes or suspected account compromise.
+\end{itemize}
+
+\subsection{6 Password Attacks}
+
+Password attacks attempt to obtain, guess, reuse, or misuse authentication credentials.
+
+
+\subsection{Protection}
+
+\begin{itemize}
+\item Use long, unique passwords.
+\item Store passwords using salted password-hashing algorithms.
+\item Enable MFA.
+\item Limit repeated login attempts.
+\item Screen against commonly compromised passwords.
+\item Monitor suspicious authentication behavior.
+\item Use password managers.
+\end{itemize}
+
+\subsection{7 Privilege Escalation}
+
+\textbf{Privilege Escalation} occurs when an attacker gains higher permissions than originally assigned.
+
+There are two main types.
+
+\textbf{A. Vertical Privilege Escalation}
+
+A user gains permissions associated with a higher-level role.
+
+Example: An ordinary user obtains administrator privileges.
+
+\textbf{B. Horizontal Privilege Escalation}
+
+A user gains access to resources belonging to another user at the same permission level.
+
+Example: A customer accesses another customer's private account records despite having only ordinary customer privileges.
+
+\subsection{Prevention}
+
+\begin{itemize}
+\item Apply least privilege.
+\item Enforce server-side authorization.
+\item Fix software vulnerabilities.
+\item Apply secure role and permission management.
+\item Monitor privileged account activity.
+\item Use MFA for privileged accounts.
+\end{itemize}
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section XVIII: Data Protection Lifecycle: Data at Rest, Data in Transit, and Data in Use\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Data Protection Lifecycle: Data at Rest, Data in Transit, and Data in Use}
+
+
+Data has different security requirements depending on whether it is being transmitted across a network or stored on a device.
+
+Two important information security concepts are:
+
+\begin{enumerate}
+\item Data at Rest.
+\item Data in Transit.
+\end{enumerate}
+
+A third related concept, Data in Use, is also useful to understand.
+
+\subsection{1 Data at Rest}
+
+\textbf{Data at Rest} refers to information that is stored on a physical or digital storage medium and is not currently moving across a communication network.
+
+Examples:
+
+\begin{itemize}
+\item Files stored on a computer's hard drive.
+\item Customer records stored in a database.
+\item Documents saved on a USB drive.
+\item Data stored in cloud storage.
+\item Database backups.
+\item Archived emails.
+\end{itemize}
+
+\subsection{Security risks}
+
+Data at rest may be exposed through:
+
+\begin{itemize}
+\item Theft of storage devices.
+\item Unauthorized access to databases.
+\item Malware infections.
+\item Improper file permissions.
+\item Lost or stolen laptops.
+\item Insecure backups.
+\item Physical access to servers.
+\end{itemize}
+
+\subsection{Protection of Data at Rest}
+
+\textbf{A. Encryption}
+
+Encrypting stored data makes it unreadable without the appropriate decryption key.
+
+Common examples:
+
+\begin{itemize}
+\item Full-disk encryption.
+\item File-level encryption.
+\item Database encryption.
+\item Encrypted backups.
+\item Cloud storage encryption.
+\end{itemize}
+
+AES is a widely used symmetric encryption standard.
+
+\textbf{B. Access Control}
+
+Restrict access to stored data based on user roles and permissions.
+
+\textbf{C. Authentication}
+
+Require appropriate authentication before allowing access to stored information.
+
+\textbf{D. Secure Backups}
+
+Protect backup copies against theft, unauthorized modification, ransomware, and accidental deletion.
+
+\textbf{E. Physical Security}
+
+Use restricted server rooms, secure storage facilities, and appropriate device-handling procedures.
+
+\subsection{2 Data in Transit}
+
+\textbf{Data in Transit} refers to information that is being transmitted from one location, system, or device to another through a communication channel.
+
+Examples:
+
+\begin{itemize}
+\item Sending an email.
+\item Accessing a website.
+\item Transferring files over a network.
+\item Communicating with an API.
+\item Sending banking transaction information.
+\item Synchronizing data between servers.
+\end{itemize}
+
+\subsection{Security risks}
+
+Data in transit may be exposed through:
+
+\begin{itemize}
+\item Eavesdropping.
+\item Man-in-the-Middle attacks.
+\item Packet interception.
+\item Unauthorized network monitoring.
+\item Traffic manipulation.
+\item Insecure wireless networks.
+\end{itemize}
+
+\subsection{Protection of Data in Transit}
+
+\textbf{A. Transport Layer Security (TLS)}
+
+TLS provides confidentiality, integrity protection, and authentication for communication.
+
+It is widely used in HTTPS connections.
+
+\textbf{B. IPsec}
+
+Internet Protocol Security (IPsec) is a suite of protocols used to secure IP communication.
+
+It is commonly used in VPNs and network-layer protection.
+
+\textbf{C. Secure Shell (SSH)}
+
+SSH provides secure remote access and supports encrypted communication between systems.
+
+It is commonly used by system administrators to manage remote servers.
+
+\textbf{D. Secure File Transfer}
+
+Protocols such as SFTP provide secure file transfer over SSH.
+
+\textbf{E. Virtual Private Network (VPN)}
+
+A VPN can establish an encrypted communication tunnel across an untrusted network, depending on its configuration and security protocol.
+
+\subsection{3 Data in Use}
+
+\textbf{Data in Use} refers to information that is actively being processed by a computer system.
+
+Examples:
+
+\begin{itemize}
+\item A database query processing customer records.
+\item A program accessing information in RAM.
+\item An employee editing a document.
+\item A server calculating a financial transaction.
+\end{itemize}
+
+Data in use may be exposed through:
+
+\begin{itemize}
+\item Malware.
+\item Unauthorized process access.
+\item Memory vulnerabilities.
+\item Compromised endpoints.
+\item Excessive application privileges.
+\end{itemize}
+
+Protection methods include:
+
+\begin{itemize}
+\item Process isolation.
+\item Access controls.
+\item Secure operating-system configurations.
+\item Memory protection.
+\item Trusted execution environments where appropriate.
+\item Data minimization.
+\end{itemize}
+
+\subsection{4 Comparison: Data at Rest vs Data in Transit vs Data in Use}
+
+
+\subsection{5 Practical Example: Online Banking}
+
+Consider a customer transferring money through an online banking application.
+
+\textbf{Step 1 --- Data at Rest}
+
+Customer account information is stored in the bank's database.
+
+Protection:
+
+\begin{itemize}
+\item Database encryption.
+\item Access control.
+\item Secure backups.
+\item Database auditing.
+\end{itemize}
+
+\textbf{Step 2 --- Data in Transit}
+
+The customer submits a transaction through an HTTPS connection.
+
+Protection:
+
+\begin{itemize}
+\item TLS encryption.
+\item Server certificate validation.
+\item Secure authentication.
+\item Network monitoring.
+\end{itemize}
+
+\textbf{Step 3 --- Data in Use}
+
+The banking application receives and processes the transaction.
+
+Protection:
+
+\begin{itemize}
+\item Application authorization.
+\item Secure processing.
+\item Validation of transaction details.
+\item Restricted database permissions.
+\end{itemize}
+
+\textbf{Exam tip:} Data at rest is stored information, data in transit is information being communicated, and data in use is information being actively processed.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section XIX: Layer 2 Switch Security: Address Resolution Protocol and Dynamic ARP Inspection (DAI)\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Layer 2 Switch Security: Address Resolution Protocol and Dynamic ARP Inspection (DAI)}
+
+
+Dynamic ARP Inspection is an important Layer 2 network security mechanism. It is particularly relevant to network engineering examinations because it helps prevent ARP spoofing and ARP poisoning attacks.
+
+To understand DAI, first understand ARP.
+
+\subsection{1 What is ARP?}
+
+\textbf{ARP stands for Address Resolution Protocol.}
+
+It is used in IPv4 local area networks to discover the MAC address associated with a known IPv4 address on the local network.
+
+A device uses an IP address to identify the destination at the network layer, but Ethernet communication on a local network requires a destination MAC address.
+
+ARP helps the device obtain that MAC address.
+
+\subsection{Example}
+
+Suppose a computer has:
+
+\begin{itemize}
+\item IP address: \texttt{192.168.1.10}
+\item Destination IP address: \texttt{192.168.1.20}
+\end{itemize}
+
+The computer needs to know the MAC address corresponding to \texttt{192.168.1.20}.
+
+It sends an ARP Request asking:
+
+> Who has 192.168.1.20?
+
+The device owning that IP address responds with its MAC address.
+
+The requesting computer can then update its ARP cache and send Ethernet frames to the destination.
+
+\subsection{ARP Request and ARP Reply}
+
+\textbf{ARP Request:}
+
+\begin{itemize}
+\item Usually broadcast within the local Layer 2 network.
+\item Asks which device owns a particular IPv4 address.
+\end{itemize}
+
+\textbf{ARP Reply:}
+
+\begin{itemize}
+\item Typically sent as a unicast response.
+\item Provides the requested IP-to-MAC mapping.
+\end{itemize}
+
+\subsection{What is an ARP Cache?}
+\begin{center}
+\begin{tabular}{cc}
+\toprule
+\textbf{IPv4 Address} & \textbf{Hardware MAC Address} \\
+\midrule
+\texttt{192.168.1.1} & \texttt{AA:AA:AA:AA:AA:AA} \\
+\texttt{192.168.1.20} & \texttt{BB:BB:BB:BB:BB:BB} \\
+\texttt{192.168.1.30} & \texttt{CC:CC:CC:CC:CC:CC} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+An \textbf{ARP Cache} is a table maintained by a device that stores recently learned IP-to-MAC address mappings.
+
+A simplified example:
+
+
+This helps the device avoid sending an ARP request every time it communicates with the same local destination.
+
+\subsection{2 What is ARP Spoofing or ARP Poisoning?}
+
+\textbf{ARP Spoofing}, also called \textbf{ARP Poisoning}, is an attack in which an attacker sends forged ARP messages to associate an incorrect MAC address with an IP address.
+
+The objective is to manipulate the ARP caches of other devices.
+
+\subsection{Example}
+
+Consider this legitimate network:
+
+
+Normally, Computer A's ARP cache should contain:
+
+\begin{lstlisting}
+192.168.1.1 -> AA:AA:AA:AA:AA:AA
+\end{lstlisting}
+
+However, a successful ARP spoofing attack may cause Computer A to store an incorrect mapping:
+
+\begin{lstlisting}
+192.168.1.1 -> CC:CC:CC:CC:CC:CC
+\end{lstlisting}
+
+Computer A now associates the router's IP address with the attacker's MAC address.
+
+This can redirect network traffic to the attacker.
+
+\subsection{Consequences of ARP Spoofing}
+
+\begin{itemize}
+\item Traffic interception.
+\item Man-in-the-Middle attacks.
+\item Unauthorized traffic redirection.
+\item Communication disruption.
+\item Potential information disclosure.
+\end{itemize}
+
+\textbf{Important:} ARP itself does not provide cryptographic authentication of IP-to-MAC mappings. Consequently, systems on a local network may accept forged ARP information unless additional controls are used.
+
+\subsection{3 What is Dynamic ARP Inspection (DAI)?}
+
+\textbf{Dynamic ARP Inspection (DAI)} is a Layer 2 security mechanism implemented on managed network switches to protect IPv4 networks against ARP spoofing and ARP poisoning attacks.
+
+It inspects ARP packets received on designated interfaces and checks whether their IP-to-MAC address information is valid according to trusted binding information or configured ARP access-control policies.
+
+Its primary purpose is to prevent invalid ARP information from entering a protected network.
+
+\subsection{Main objectives}
+
+\begin{itemize}
+\item Prevent ARP spoofing.
+\item Prevent ARP poisoning.
+\item Reduce the risk of Layer 2 Man-in-the-Middle attacks.
+\item Validate IP-to-MAC address mappings.
+\item Protect hosts within a VLAN.
+\end{itemize}
+
+\subsection{4 How Dynamic ARP Inspection Works}
+
+DAI commonly works together with \textbf{DHCP Snooping}.
+
+To understand their relationship, first understand DHCP Snooping.
+
+\subsection{What is DHCP Snooping?}
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+\textbf{Bound IPv4 Address} & \textbf{Hardware MAC Address} & \textbf{VLAN ID} & \textbf{Switch Interface} \\
+\midrule
+\texttt{192.168.1.10} & \texttt{BB:BB:BB:BB:BB:BB} & 10 & \texttt{Gi0/2} \\
+\texttt{192.168.1.20} & \texttt{CC:CC:CC:CC:CC:CC} & 10 & \texttt{Gi0/3} \\
+\texttt{192.168.1.30} & \texttt{DD:DD:DD:DD:DD:DD} & 20 & \texttt{Gi0/4} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+DHCP Snooping is a Layer 2 security feature on managed switches that helps protect a network against rogue DHCP servers and certain DHCP-related attacks.
+
+It classifies switch interfaces into:
+
+\begin{itemize}
+\item \textbf{Trusted interfaces:} Interfaces permitted to receive legitimate DHCP server messages.
+\item \textbf{Untrusted interfaces:} Interfaces that should not originate DHCP server messages.
+\end{itemize}
+
+The switch can also maintain a DHCP Snooping Binding Database.
+
+A typical binding entry contains:
+
+\begin{itemize}
+\item IP address.
+\item MAC address.
+\item VLAN ID.
+\item Switch interface.
+\item Lease information.
+\end{itemize}
+
+Example:
+
+
+These entries represent IP-to-MAC bindings learned through DHCP Snooping.
+
+\subsection{DAI Operation}
+
+A simplified DAI process works as follows:
+
+\textbf{Step 1: An ARP packet arrives at a switch interface.}
+
+The switch receives an ARP Request or ARP Reply.
+
+\textbf{Step 2: The switch determines whether the interface is trusted or untrusted.}
+
+\begin{itemize}
+\item A trusted interface generally bypasses normal DAI validation.
+\item An untrusted interface is subject to ARP inspection.
+\end{itemize}
+
+\textbf{Step 3: DAI examines the ARP information.}
+
+It checks relevant fields such as:
+
+\begin{itemize}
+\item Sender IP address.
+\item Sender MAC address.
+\item VLAN information.
+\item Interface information.
+\end{itemize}
+
+\textbf{Step 4: The switch checks the DHCP Snooping Binding Database.}
+
+For DHCP-assigned devices, the switch compares the packet's ARP information with the corresponding binding entry.
+
+\textbf{Step 5: The switch makes a decision.}
+
+\begin{itemize}
+\item Valid ARP packet: Forward it.
+\item Invalid or inconsistent ARP packet: Drop it.
+\item Suspicious packets may also be logged or counted, depending on configuration.
+\end{itemize}
+
+\begin{lstlisting}
+ARP packet arrives at switch
+             |
+             v
+   Is the interface trusted?
+         /       \
+       Yes        No
+        |          |
+        v          v
+    Forward     Inspect ARP
+                  packet
+                    |
+                    v
+        Compare with trusted
+        binding information
+                    |
+             +------+------+
+             |             |
+           Valid         Invalid
+             |             |
+             v             v
+          Forward         Drop
+\end{lstlisting}
+
+\subsection{5 Example: How DAI Prevents ARP Spoofing}
+
+Consider this network:
+
+\begin{itemize}
+\item Router: \texttt{192.168.1.1}
+\item Legitimate computer: \texttt{192.168.1.10}
+\item Attacker: \texttt{192.168.1.50}
+\end{itemize}
+
+The DHCP Snooping database contains:
+
+
+Suppose the attacker sends an ARP message claiming:
+
+\begin{lstlisting}
+192.168.1.1 -> CC:CC:CC:CC:CC:CC
+\end{lstlisting}
+
+However, the claimed mapping is inconsistent with the trusted information available to the switch.
+
+DAI can identify and drop the invalid ARP packet on an untrusted interface.
+
+As a result, the forged mapping is prevented from being propagated through that protected switch path.
+
+This reduces the possibility of ARP poisoning and related MITM attacks.
+
+\subsection{6 Trusted vs Untrusted Ports in DAI}
+
+Switch interfaces are configured according to the expected trust level of the connected network devices.
+
+
+\textbf{Important:} Trusted interfaces must be configured carefully. Making an attacker-accessible port trusted can create a security weakness.
+
+Also, trust configuration is separate from DHCP Snooping trust configuration. The two features often work together, but their trusted-port settings should not be assumed to be automatically identical.
+
+\subsection{7 Relationship Between DHCP Snooping and DAI}
+
+This is a particularly important examination topic.
+
+
+\textbf{Remember:}
+
+\begin{itemize}
+\item DHCP Snooping protects DHCP.
+\item DAI protects ARP.
+\item DAI commonly uses information collected by DHCP Snooping.
+\end{itemize}
+
+\subsection{8 What if a Device Uses a Static IP Address?}
+
+An important limitation arises when a host uses a manually configured static IP address.
+
+DHCP Snooping does not normally create a dynamic binding entry for a host that does not obtain its address through DHCP.
+
+DAI may therefore lack the binding information needed to validate that host's ARP messages.
+
+A common solution is to configure an \textbf{ARP ACL (Access Control List)} containing authorized IP-to-MAC mappings for those statically addressed devices.
+
+The switch can then use this explicitly configured information during ARP inspection.
+
+This is important in networks containing:
+
+\begin{itemize}
+\item Servers with static IP addresses.
+\item Network printers.
+\item Routers.
+\item Infrastructure devices.
+\item Other manually configured systems.
+\end{itemize}
+
+\subsection{9 Additional DAI Security Features}
+
+Depending on the switch platform and configuration, DAI can provide additional checks, such as:
+
+\begin{itemize}
+\item Sender MAC address validation.
+\item Destination MAC address validation.
+\item IP address consistency checks.
+\item ARP rate limiting.
+\item Logging of invalid ARP packets.
+\end{itemize}
+
+Rate limiting can help protect switches against excessive ARP traffic.
+
+Invalid packets can be dropped and recorded for investigation.
+
+\subsection{10 Limitations of DAI}
+
+DAI is useful, but it does not solve every network security problem.
+
+\begin{enumerate}
+\item It is primarily an IPv4 ARP protection mechanism.
+\item It depends on accurate DHCP Snooping information or appropriate static ARP policies.
+\item Incorrect trusted-port configuration can weaken protection.
+\item It does not replace encryption, firewalls, or endpoint security.
+\item It does not protect against every possible MITM technique.
+\item Its availability and exact behavior depend on switch capabilities and configuration.
+\end{enumerate}
+
+\textbf{IPv6 note:} IPv6 does not use ARP. It uses Neighbor Discovery Protocol (NDP). DAI therefore does not directly protect IPv6 Neighbor Discovery traffic. IPv6 security features such as RA Guard and appropriate Neighbor Discovery protections address related IPv6 threats.
+
+\subsection{11 Useful Network Switch Commands}
+
+On Cisco IOS switches, the following commands are commonly used to inspect DAI and DHCP Snooping.
+
+\begin{lstlisting}
+show ip dhcp snooping
+\end{lstlisting}
+
+Displays DHCP Snooping configuration and status.
+
+\begin{lstlisting}
+show ip dhcp snooping binding
+\end{lstlisting}
+
+Displays the DHCP Snooping Binding Database.
+
+\begin{lstlisting}
+show ip arp inspection
+\end{lstlisting}
+
+Displays ARP inspection configuration and status.
+
+\begin{lstlisting}
+show ip arp inspection vlan 10
+\end{lstlisting}
+
+Displays ARP inspection information for VLAN 10.
+
+\begin{lstlisting}
+show ip arp inspection interfaces
+\end{lstlisting}
+
+Displays ARP inspection interface information.
+
+Exact command availability and output can differ between switch models and software versions.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section XX: Master Examination Comparative Analysis and Security Mechanisms Directory\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Master Examination Comparative Analysis and Security Mechanisms Directory}
+
+This section synthesizes the most crucial architectural distinctions, protocol comparisons, and defensive mechanism directories required for competitive examination mastery.
+
+\subsection{Core Cybersecurity Conceptual Invariants}
+
+\begin{table}[htbp]
+\centering
+\caption{Master Examination Comparative Reference Table: High-Frequency Distinctions}
+\label{tab:cybersecurity_differences}
+\begin{tabularx}{\textwidth}{p{4.5cm} X}
+\toprule
+\textbf{Conceptual Contrast} & \textbf{Crucial Distinguishing Architectural Rule} \\
+\midrule
+\textbf{Confidentiality vs. Integrity} & Preventing unauthorized viewing versus preventing unauthorized modification. \\
+\textbf{Integrity vs. Availability} & Ensuring data accuracy and trust versus ensuring timely access to operational services. \\
+\textbf{Authentication vs. Authorization} & Verifying asserted identity (\textit{Who are you?}) vs. checking permissions (\textit{What can you do?}). \\
+\textbf{Verification vs. Validation} & Conformance to specifications (\textit{Building right?}) vs. meeting user needs (\textit{Right product?}). \\
+\textbf{2FA vs. MFA} & Authentication using exactly two factors versus using two or more distinct factor categories. \\
+\textbf{Encryption vs. Decryption} & Plaintext to ciphertext transformation versus ciphertext restoration to plaintext. \\
+\textbf{Encryption vs. Hashing} & Two-way reversible transformation using a key versus one-way irreversible digest generation. \\
+\textbf{Accountability vs. Non-Repudiation} & Tracing events to specific entities vs. cryptographic evidence preventing denial of participation. \\
+\textbf{DAC vs. MAC} & Resource owner controls access rights vs. centralized mandatory security classification labels. \\
+\textbf{RBAC vs. ABAC} & Permissions assigned to roles vs. permissions evaluated dynamically via attributes and policies. \\
+\textbf{Least Privilege vs. Need-to-Know} & Restricting operational actions to minimum permissions vs. restricting data visibility to relevant scope. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Major Cyberattack Comparative Distinctions}
+
+\begin{table}[htbp]
+\centering
+\caption{Master Technical Examination Comparison Matrix: Critical Attack Distinctions}
+\label{tab:major_attack_comparisons}
+\begin{tabularx}{\textwidth}{p{4.5cm} X}
+\toprule
+\textbf{Attack Pair Comparison} & \textbf{Key Technical Distinguishing Invariant} \\
+\midrule
+\textbf{Passive vs. Active Attacks} & Passive monitors data without altering traffic; active modifies, injects, or disrupts system operations. \\
+\textbf{Phishing vs. Social Engineering} & Phishing is deceptive digital messaging; social engineering is the broad umbrella of human manipulation. \\
+\textbf{MITM vs. Replay Attacks} & MITM intercepts/modifies active live communication; replay captures and re-transmits valid past sessions. \\
+\textbf{DoS vs. DDoS Attacks} & DoS originates from a single localized host; DDoS leverages coordinated distributed botnet systems. \\
+\textbf{SQL Injection vs. XSS} & SQLi targets server-side database queries; XSS targets client-side browser content execution. \\
+\textbf{Computer Virus vs. Worm} & Viruses attach to a host file and need human execution; worms are standalone and self-propagate autonomously. \\
+\textbf{Zero-Day vs. N-Day} & Zero-day has no vendor patch available; N-day has a known patch that has not yet been applied. \\
+\textbf{Brute Force vs. Dictionary} & Brute force tests every theoretical permutation; dictionary tests precompiled lists of likely words. \\
+\textbf{Credential Stuffing vs. Spraying} & Stuffing dumps stolen credential pairs; spraying tests a few passwords across many accounts. \\
+\textbf{Vertical vs. Horizontal Escalation} & Vertical gains higher administrative privileges; horizontal accesses peer records at the same privilege tier. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Enterprise Security Mechanisms and Implementation Scope}
+
+\begin{table}[htbp]
+\centering
+\caption{Enterprise Security Mechanisms, Protocols, and Architectural Functions}
+\label{tab:security_mechanisms_directory}
+\begin{tabularx}{\textwidth}{p{4.2cm} X}
+\toprule
+\textbf{Security Mechanism / Protocol} & \textbf{Primary Defensive Purpose and Implementation Scope} \\
+\midrule
+\textbf{HTTPS / TLS 1.3} & Encrypts, authenticates, and protects web application communications from network tampering. \\
+\textbf{IPsec (ESP / AH)} & Cryptographically secures IP network datagrams across site-to-site and remote-access VPN tunnels. \\
+\textbf{Secure Shell (SSHv2)} & Provides authenticated, encrypted command-line shell administration for remote servers. \\
+\textbf{Parameterized SQL Queries} & Decouples SQL code syntax from untrusted data parameters, neutralizing SQL injection vulnerabilities. \\
+\textbf{Context-Aware Output Encoding} & Converts script meta-characters to benign escape entities before browser rendering, stopping XSS. \\
+\textbf{Multi-Factor Authentication (MFA)} & Mandates multiple independent factor categories, preventing compromise from leaked passwords. \\
+\textbf{SPF (Sender Policy Framework)} & Lists authorized sending MTAs in DNS, enabling receiving servers to reject spoofed email domains. \\
+\textbf{DKIM (DomainKeys Identified Mail)} & Signs outgoing email cryptographically, guaranteeing message integrity and domain attribution. \\
+\textbf{DMARC Policy Enforcement} & Directs receiver disposition (\texttt{reject}/\texttt{quarantine}) and generates reports for SPF/DKIM alignment failures. \\
+\textbf{DHCP Snooping} & Blocks rogue DHCP offers on untrusted switch ports and builds the IP-MAC binding database. \\
+\textbf{Dynamic ARP Inspection (DAI)} & Drops fraudulent ARP packets on untrusted switch interfaces, preventing ARP cache poisoning. \\
+\textbf{Web Application Firewall (WAF)} & Inspects Layer 7 HTTP/HTTPS traffic to block SQLi, XSS, CSRF, and application protocol exploits. \\
+\textbf{Intrusion Detection System (IDS)} & Monitors network traffic out-of-band to detect signatures and anomalies, generating security alerts. \\
+\textbf{Intrusion Prevention System (IPS)} & Deployed inline in network traffic to actively detect and drop malicious packets in real time. \\
+\textbf{Endpoint Detection \& Response (EDR)} & Continuously records host endpoint telemetry, enabling behavioral anomaly detection and threat isolation. \\
+\textbf{Security Information \& Event Mgmt (SIEM)} & Ingests, normalizes, and correlates log data across the enterprise for centralized threat hunting. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section XXI: High-Yield Examination Questions and Realistic Technical Scenarios\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{High-Yield Examination Questions and Realistic Technical Scenarios}
+
+\subsection{High-Yield Conceptual Short-Answer Written Questions}
+
+\begin{enumerate}
+    \item What is the CIA Triad? Explain its three components with examples.
+    \item Define authentication and authorization. How are they different?
+    \item What is the difference between verification and validation in software engineering?
+    \item What are the three primary authentication factors?
+    \item Define 2FA and MFA. Explain their relationship.
+    \item What are encryption and decryption?
+    \item What is cryptographic hashing? Why is it considered a one-way operation?
+    \item Why should passwords be hashed instead of stored using reversible encryption?
+    \item What is the purpose of a salt in password hashing?
+    \item Define accountability and non-repudiation.
+    \item What is the Principle of Least Privilege?
+    \item Explain the Defense in Depth security strategy.
+    \item What is Zero Trust Security?
+    \item Define Access Control List (ACL).
+    \item What is the difference between DAC and MAC?
+    \item Explain Role-Based Access Control with an example.
+    \item What is Attribute-Based Access Control?
+    \item Why should an organization maintain separate accounts for ordinary users and administrators?
+    \item What is credential stuffing?
+    \item Why is secure password recovery important?
+    \item What is a cyberattack? Classify cyberattacks into passive and active attacks.
+    \item What is phishing? Explain its major types.
+    \item Differentiate phishing and social engineering.
+    \item Explain spear phishing, whaling, smishing, and vishing.
+    \item What is a Man-in-the-Middle attack? Explain its impact and prevention.
+    \item What is SQL injection? Why are parameterized queries important?
+    \item Explain stored, reflected, and DOM-based XSS.
+    \item What is ransomware? Explain the stages of a ransomware incident response.
+    \item What is a zero-day vulnerability? Differentiate vulnerability, exploit, and attack.
+    \item Differentiate a computer virus and a computer worm.
+    \item What is a Trojan Horse? How is it different from a virus?
+    \item Explain DoS and DDoS attacks.
+    \item What is spoofing? Explain IP spoofing and ARP spoofing.
+    \item What is a replay attack? How can it be prevented?
+    \item What is session hijacking? Explain its preventive measures.
+    \item What is privilege escalation? Differentiate vertical and horizontal privilege escalation.
+    \item Explain data at rest, data in transit, and data in use.
+    \item Why is encryption important for protecting data at rest and data in transit?
+    \item What is ARP? Explain the ARP request and reply process.
+    \item What is ARP poisoning? How does it facilitate a MITM attack?
+    \item Define Dynamic ARP Inspection.
+    \item Explain how DAI works with DHCP Snooping.
+    \item Differentiate trusted and untrusted interfaces in DAI.
+    \item How does DAI handle devices with static IP addresses?
+    \item What is the difference between DHCP Snooping and Dynamic ARP Inspection?
+\end{enumerate}
+
+\subsection{Practical Scenario-Based Security Engineering Questions}
+
+\begin{quote}
+\textbf{Scenario 1: A user successfully logs into a university system but cannot modify examination results. Which security concept is responsible?}\\[4pt]
+\textbf{Answer:} Authorization. The system has authenticated the user but does not grant permission to modify examination results.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 2: A bank encrypts customer information, but an attacker obtains unauthorized access and changes account balances. Which CIA property has been violated?}\\[4pt]
+\textbf{Answer:} Integrity.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 3: A website requires a password and a fingerprint. Which authentication mechanism does it use?}\\[4pt]
+\textbf{Answer:} Two-Factor Authentication, assuming the fingerprint is a separate inherence factor and the password is a knowledge factor.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 4: A university stores users' passwords in plaintext. What is the security problem, and what should it use instead?}\\[4pt]
+\textbf{Answer:} Plaintext storage exposes the original passwords if the database is compromised. The university should use salted password hashing with a suitable password-hashing algorithm such as Argon2id or bcrypt.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 5: An employee can access confidential financial information only when assigned to the Finance department and using an approved company device. Which access control model is illustrated?}\\[4pt]
+\textbf{Answer:} Attribute-Based Access Control (ABAC).
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 6: A military system restricts access to classified documents based on security clearance and document classification. Which access control model is used?}\\[4pt]
+\textbf{Answer:} Mandatory Access Control (MAC).
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 7: A company divides transaction initiation and transaction approval between two employees. Which principle is being applied?}\\[4pt]
+\textbf{Answer:} Separation of Duties.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 8: An organization uses firewalls, MFA, encryption, access controls, and intrusion detection together. Which security strategy does this demonstrate?}\\[4pt]
+\textbf{Answer:} Defense in Depth.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 9: A user reuses a password stolen from an unrelated website, and an attacker uses it to access their account on another service. What kind of attack is this?}\\[4pt]
+\textbf{Answer:} Credential stuffing.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 10: A digital signature is used to provide evidence that a document was signed using a particular signer's private key. Which security property is particularly relevant?}\\[4pt]
+\textbf{Answer:} Non-repudiation, supported by digital-signature mechanisms.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 11: A university receives fraudulent emails requesting students' account passwords through a fake university login page. Identify the attack.}\\[4pt]
+\textbf{Answer:} Phishing.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 12: An attacker intercepts communication between a user and an online banking server. Identify the attack.}\\[4pt]
+\textbf{Answer:} Man-in-the-Middle attack.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 13: A vulnerable web application constructs SQL queries by directly concatenating user input. What security vulnerability may occur?}\\[4pt]
+\textbf{Answer:} SQL Injection.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 14: A discussion forum stores user-submitted comments and displays them without safely handling their content. A visitor's browser executes unintended scripts. Identify the attack.}\\[4pt]
+\textbf{Answer:} Stored Cross-Site Scripting (Stored XSS).
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 15: A company discovers that important files are encrypted and an attacker demands payment for their recovery. What type of malware is involved, and what should be the immediate response priority?}\\[4pt]
+\textbf{Answer:} Ransomware. The immediate priority is to contain the incident by isolating affected systems and protecting unaffected systems and backups, while preserving evidence.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 16: A software vendor discovers that attackers are exploiting a security flaw for which no effective patch is yet available. Identify the vulnerability category.}\\[4pt]
+\textbf{Answer:} Zero-day vulnerability.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 17: Malware automatically spreads between vulnerable computers without needing to attach itself to another program. Identify the malware.}\\[4pt]
+\textbf{Answer:} Computer worm.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 18: An attacker uses multiple compromised devices to overwhelm an organization's website. Identify the attack.}\\[4pt]
+\textbf{Answer:} Distributed Denial-of-Service (DDoS).
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 19: A switch receives an ARP message containing an IP-to-MAC mapping that conflicts with the trusted DHCP Snooping Binding Database. Which mechanism can reject the packet?}\\[4pt]
+\textbf{Answer:} Dynamic ARP Inspection.
+\end{quote}
+
+\begin{quote}
+\textbf{Scenario 20: A server uses a manually configured static IP address and does not have an entry in the DHCP Snooping Binding Database. What additional mechanism can be used to support DAI validation?}\\[4pt]
+\textbf{Answer:} A suitable ARP ACL containing the authorized IP-to-MAC mapping.
+\end{quote}
+
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}\\[4pt]}
+{\Large\bfseries\color{primary} Section XXII: Comprehensive Cybersecurity and Information Security Master Revision Sheet\\[2pt]}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Comprehensive Cybersecurity and Information Security Master Revision Sheet}
+
+\subsection{Core Terms and Operational Definitions}
+
+\begin{table}[htbp]
+\centering
+\caption{Cybersecurity and Information Security Quick Revision Sheet: Core Terms and Definitions}
+\label{tab:cybersecurity_quick_revision}
+\begin{tabularx}{\textwidth}{p{3.8cm} X}
+\toprule
+\textbf{Core Security Term} & \textbf{Concise Examination Definition} \\
+\midrule
+\textbf{CIA Triad} & Foundational information security model comprising Confidentiality, Integrity, and Availability. \\
+\textbf{Confidentiality} & Preservation of authorized restrictions on information access and disclosure. \\
+\textbf{Integrity} & Guarding against improper information modification or destruction; ensuring authenticity. \\
+\textbf{Availability} & Ensuring timely and reliable access to and use of information and computing resources. \\
+\textbf{Authentication} & Process of verifying the identity claimed by or for a system entity. \\
+\textbf{Authorization} & Granting or denying access rights to a user, program, or process based on policy. \\
+\textbf{Verification} & Confirmation that software requirements and design specifications are satisfied. \\
+\textbf{Validation} & Confirmation that requirements for a specific intended use or application have been fulfilled. \\
+\textbf{2FA} & Authentication requiring evidence from two distinct categories (Knowledge, Possession, Inherence). \\
+\textbf{MFA} & Authentication requiring evidence from two or more independent authentication factor categories. \\
+\textbf{Encryption} & Mathematical conversion of plaintext into ciphertext using a cipher and cryptographic key. \\
+\textbf{Decryption} & Reverse transformation of ciphertext back into original plaintext using the authorized key. \\
+\textbf{Cryptographic Hash} & Irreversible mathematical algorithm mapping arbitrary data to a unique fixed-size bit string. \\
+\textbf{Cryptographic Salt} & Unique random data string concatenated with passwords prior to hashing to defeat precomputed attacks. \\
+\textbf{Principle of Least Privilege} & Granting only the bare minimum privileges necessary to execute assigned functional responsibilities. \\
+\textbf{Non-Repudiation} & Assurance that the sender or performer of an action cannot credibly deny having sent or performed it. \\
+\textbf{DAC} & Access control where individual resource owners dictate permissions to other subjects at their discretion. \\
+\textbf{MAC} & Access control enforced strictly by system security policies matching subject clearances to object labels. \\
+\textbf{RBAC} & Access control based on user membership in defined enterprise organizational roles. \\
+\textbf{ABAC} & Access control based on dynamic evaluation of subject, object, action, and environmental attributes. \\
+\textbf{Access Control List (ACL)} & Table associating resource objects with authorized subjects and their permitted access rights. \\
+\textbf{Defense in Depth} & Layered defense strategy providing multiple redundant security controls across architecture tiers. \\
+\textbf{Zero Trust Architecture} & Security paradigm requiring continuous strict authentication and authorization regardless of network location. \\
+\textbf{Separation of Duties (SoD)} & Dispersing critical operational steps among multiple actors to prevent fraud and catastrophic errors. \\
+\textbf{Credential Stuffing} & Automated attack injecting stolen username-password pairs into web login forms at scale. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Master Directory of Cyberattack Vectors}
+
+\begin{table}[htbp]
+\centering
+\caption{Master Quick-Revision Summary: Core Cybersecurity Attack Vectors}
+\label{tab:part2_attack_definitions}
+\begin{tabularx}{\textwidth}{p{3.8cm} X}
+\toprule
+\textbf{Cybersecurity Vector} & \textbf{Essential Examination Rule and Architectural Definition} \\
+\midrule
+\textbf{Phishing} & Deceptive communication spoofing trusted organizations to steal credentials or implant malware. \\
+\textbf{Social Engineering} & Psychological manipulation exploiting human cognitive trust, urgency, and fear to bypass controls. \\
+\textbf{Man-in-the-Middle (MITM)} & Secret interception and potential alteration of communication between two mutually trusting endpoints. \\
+\textbf{SQL Injection (SQLi)} & Subverting back-end database queries by incorporating unsanitized user input into dynamic queries. \\
+\textbf{Cross-Site Scripting (XSS)} & Injecting malicious script into legitimate websites to execute in the security context of client browsers. \\
+\textbf{Ransomware} & Extortion malware encrypting storage assets or locking operating systems to extort cryptocurrency ransoms. \\
+\textbf{Zero-Day Attack} & Weaponizing a software vulnerability before the vendor has developed or released an effective security patch. \\
+\textbf{Computer Virus} & Parasitic code that binds to host files and requires human execution to infect other system files. \\
+\textbf{Computer Worm} & Standalone, self-replicating malware propagating autonomously across networks without human intervention. \\
+\textbf{Trojan Horse} & Malicious payload masquerading as legitimate, benign software to deceive users into installation. \\
+\textbf{Denial of Service (DoS)} & Intentionally exhausting computing, network, or application resources to deny access to authorized users. \\
+\textbf{Distributed DoS (DDoS)} & Overwhelming a target with synchronized volumetric or protocol floods launched from botnets. \\
+\textbf{Address Spoofing} & Forging network layer headers (IP, ARP, DNS, MAC) to falsify origin identity and redirect traffic. \\
+\textbf{Replay Attack} & Capturing valid cryptographic tokens or network transmissions and fraudulently replaying them. \\
+\textbf{Session Hijacking} & Taking unauthorized control of an authenticated web session by acquiring its session identifier. \\
+\textbf{Privilege Escalation} & Subverting access boundaries to acquire unauthorized higher administrative or horizontal peer rights. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Architectural Invariant Rules for Final Revision}
+
+\subsubsection{Data Lifecycle Protection Invariants}
+\begin{itemize}
+    \item \textbf{Data at Rest:} Stationary information stored on non-volatile media (SSDs, databases, SANs, backups). Protected primarily via symmetric block ciphers (AES-256), cryptographic key rotation, and strict file/database access controls.
+    \item \textbf{Data in Transit:} Dynamic data traversing network media (LAN, WAN, Internet). Protected primarily via TLS 1.3, IPsec (ESP), SSHv2, and cryptographic certificate validation to guarantee confidentiality, integrity, and non-repudiation.
+    \item \textbf{Data in Use:} Active data undergoing evaluation within system RAM, CPU caches, and execution registers. Protected via memory address space layout randomization (ASLR), process sandboxing, hardware enclaves (Intel SGX), and Least Privilege execution.
+\end{itemize}
+
+\subsubsection{Layer 2 Dynamic ARP Inspection (DAI) Invariants}
+\begin{itemize}
+    \item \textbf{ARP Fundamentals:} Resolves 32-bit IPv4 addresses to 48-bit MAC addresses on local broadcast domains; lacks built-in authentication.
+    \item \textbf{ARP Poisoning Mitigation:} DAI validates ARP request and reply frames on untrusted switch interfaces against the trusted DHCP Snooping Binding Database.
+    \item \textbf{Interface Trust Policy:} Trunk links and gateway uplinks are marked \textbf{trusted} (DAI inspection bypassed); access ports are marked \textbf{untrusted} (inspected).
+    \item \textbf{Static IP Accommodation:} Statically addressed infrastructure devices (servers, routers, printers) bypass dynamic DHCP snooping via explicitly configured \textbf{ARP ACLs}.
+\end{itemize}
+
+\subsection{High-Priority Examination Preparation Strategy}
+
+\begin{enumerate}
+    \item \textbf{Master the CIA Triad Invariants:} Rapidly diagnose CIA violations: unauthorized viewing is Confidentiality; unauthorized modification is Integrity; service disruption is Availability.
+    \item \textbf{Contrast Core Pairs:} Memorize exact definitions: Authentication (identity verification) vs. Authorization (permission check); Verification (conformance to specs) vs. Validation (fitness for purpose); Encryption (reversible) vs. Hashing (one-way).
+    \item \textbf{Articulate Web Vulnerabilities:} Detail SQL Injection (neutralized via parameterized queries / prepared statements) versus XSS (neutralized via context-aware output encoding, CSP, and \texttt{HttpOnly} cookies).
+    \item \textbf{Navigate Layer 2 Switch Defenses:} Explain the collaborative relationship between DHCP Snooping (which builds the binding database) and DAI (which queries it to drop forged ARP frames).
+    \item \textbf{Execute Incident Response Workflows:} Detail the 6-phase ransomware incident response lifecycle (Preparation $\to$ Detection/Analysis $\to$ Containment $\to$ Eradication $\to$ Recovery $\to$ Post-Incident Review), prioritizing offline immutable backups and immediate host isolation.
+\end{enumerate}
+

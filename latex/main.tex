@@ -1,0 +1,271 @@
+\documentclass[12pt,a4paper]{book}
+
+% ── Packages ──────────────────────────────────────────────────────────────────
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper, top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{sectsty}        % For section/subsection color styling
+\usepackage{titlesec}       % Used for \part and \chapter formatting
+\usepackage{fancyhdr}
+\usepackage[table]{xcolor}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage[breakable]{tcolorbox}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{etoolbox}
+
+% ── Colors ────────────────────────────────────────────────────────────────────
+\definecolor{primary}{RGB}{26,86,145}
+\definecolor{accent}{RGB}{0,128,128}
+\definecolor{blockbg}{RGB}{240,248,255}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{coderule}{RGB}{200,200,200}
+\definecolor{quotetext}{RGB}{50,50,60}
+\definecolor{navyblue}{RGB}{0, 32, 96}
+\definecolor{titleblue}{RGB}{26, 86, 145}
+\definecolor{tableheadercolor}{RGB}{240, 248, 255}
+\definecolor{tablelight}{RGB}{250, 252, 255}
+\definecolor{tablelinecolor}{RGB}{200, 215, 235}
+
+\newtcolorbox{keyconcept}[1][]{colback=blockbg,colframe=primary,fonttitle=\bfseries,title={Key Concept\ifstrempty{#1}{}{: #1}}}
+\newtcolorbox{notebox}[1][]{colback=codebg,colframe=quotetext,fonttitle=\bfseries,title={Important Note\ifstrempty{#1}{}{: #1}}}
+\newtcolorbox{examtip}[1][]{colback=blockbg,colframe=accent,fonttitle=\bfseries,title={Exam Tip\ifstrempty{#1}{}{: #1}}}
+
+% ── Hyperref ──────────────────────────────────────────────────────────────────
+\hypersetup{
+    colorlinks   = true,
+    linkcolor    = primary,
+    urlcolor     = accent,
+    citecolor    = accent,
+    pdfauthor    = {Shoaib Uddin},
+    pdftitle     = {Government IT Recruitment Preparation Guide: Theory and Viva},
+    pdfsubject   = {Government IT Recruitment Preparation},
+    pdfkeywords  = {IT, Bangladesh, programming, CSE, Data Structures, Viva},
+    plainpages   = false,
+    pdfpagelabels= true,
+}
+
+% ── Typography ────────────────────────────────────────────────────────────────
+\setstretch{1.25}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+% ── Part Style (titlesec) ─────────────────────────────────────────────────────
+\titleformat{\part}[display]
+    {\centering\normalfont\Huge\bfseries\color{primary}}
+    {\LARGE\bfseries\color{accent}\partname\ \thepart}
+    {20pt}
+    {\Huge\bfseries\color{primary}}
+    [\vspace{16pt}{\color{primary}\rule{0.6\textwidth}{2pt}}]
+
+\titlespacing*{\part}{0pt}{80pt}{40pt}
+
+% ── Chapter style (titlesec) ──────────────────────────────────────────────────
+\titleformat{\chapter}[display]
+    {\normalfont\Huge\bfseries\color{primary}}
+    {\chaptertitlename\ \thechapter}
+    {16pt}
+    {\Huge}
+    [\vspace{6pt}\rule{\textwidth}{1.2pt}]
+
+\titlespacing{\chapter}{0pt}{20pt}{30pt}
+
+% ── Section/subsection styling (sectsty) ──────────────────────────────────────
+\sectionfont{\color{primary}\Large\bfseries}
+\subsectionfont{\color{accent}\large\bfseries}
+\subsubsectionfont{\normalsize\bfseries}
+
+% ── Header / Footer ───────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\small\thepage}
+\fancyhead[LO]{\small\slshape\nouppercase{\rightmark}}
+\fancyhead[RE]{\small\slshape\nouppercase{\leftmark}}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14pt}
+
+% ── Listings (code blocks) ────────────────────────────────────────────────────
+\lstset{
+    basicstyle       = \ttfamily\small,
+    backgroundcolor  = \color{codebg},
+    frame            = single,
+    framesep         = 3pt,
+    rulecolor        = \color{coderule},
+    breaklines       = true,
+    breakatwhitespace= false,
+    keepspaces       = true,
+    columns          = fullflexible,
+    showstringspaces = false,
+    tabsize          = 4,
+    xleftmargin      = 4pt,
+    xrightmargin     = 4pt,
+    aboveskip        = 6pt,
+    belowskip        = 6pt,
+}
+
+\lstdefinestyle{cppstyle}{
+    language         = C++,
+    basicstyle       = \ttfamily\footnotesize,
+    keywordstyle     = \color{primary}\bfseries,
+    stringstyle      = \color{accent},
+    commentstyle     = \color{gray}\itshape,
+    backgroundcolor  = \color{codebg},
+    frame            = single,
+    rulecolor        = \color{coderule},
+    breaklines       = true,
+    tabsize          = 4,
+    showstringspaces = false,
+    xleftmargin      = 4pt,
+    xrightmargin     = 4pt,
+}
+
+\lstdefinestyle{pseudocode}{
+    basicstyle       = \ttfamily\footnotesize,
+    backgroundcolor  = \color{codebg},
+    frame            = leftline,
+    framerule        = 2pt,
+    rulecolor        = \color{primary},
+    breaklines       = true,
+    tabsize          = 4,
+    xleftmargin      = 8pt,
+    xrightmargin     = 4pt,
+}
+
+% ── Quote / Answer highlight box ──────────────────────────────────────────────
+\renewenvironment{quote}{%
+    \begin{tcolorbox}[
+        colback=blockbg,
+        colframe=primary!50,
+        arc=4pt,
+        boxrule=0.7pt,
+        left=8pt, right=8pt, top=5pt, bottom=5pt,
+        breakable,
+        before skip=6pt,
+        after skip=6pt,
+    ]%
+    \color{quotetext}\itshape\small
+}{%
+    \end{tcolorbox}%
+}
+
+% ── List spacing ──────────────────────────────────────────────────────────────
+\setlist[itemize]{noitemsep, topsep=3pt, partopsep=0pt, leftmargin=1.5em}
+\setlist[enumerate]{noitemsep, topsep=3pt, partopsep=0pt, leftmargin=1.8em}
+
+% ── TOC depth ─────────────────────────────────────────────────────────────────
+% Only show Parts, Chapters, and Sections (No Subsections or below)
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{3}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\begin{document}
+
+% ── Title Page ────────────────────────────────────────────────────────────────
+\begin{titlepage}
+\centering
+\vspace*{2.5cm}
+{\Huge\bfseries\color{primary} Government IT Recruitment Preparation Guide\par}
+\vspace{0.8cm}
+{\Large\bfseries\color{accent} Comprehensive Handbook: Theoretical Foundations \& Viva Voce\par}
+\vspace{0.5cm}
+{\large AP, AME, ANE, ANSE, ADBA, SOIT, AD (ICT), AM (MIS), AGM (MIS) \& Related Positions\par}
+\vspace{0.6cm}
+{\color{primary}\rule{\textwidth}{1.5pt}\par}
+\vspace{1.0cm}
+\begin{minipage}{0.88\textwidth}
+\begin{center}
+{\Large\bfseries\color{primary} Part I: Theoretical Foundations \& Core Computer Science}\\[8pt]
+{\large Comprehensive coverage of Data Structures, Algorithms, Complexity Analysis, Formal Models, and Implementation Architectures.}\\[22pt]
+{\Large\bfseries\color{primary} Part II: Comprehensive Viva \& Recruitment Question Bank}\\[8pt]
+{\large Rapid-fire technical question bank (300+ questions), banking and financial institution profiles, ministry guidelines, and regional knowledge.}
+\end{center}
+\end{minipage}
+\vfill
+{\normalsize Prepared by \textbf{Shoaib Uddin}\par}
+\vspace{0.3cm}
+{\normalsize\itshape B.Sc. (Engg.) in Computer Science \& Engineering, University of Chittagong\par}
+\vspace{0.8cm}
+{\color{primary}\rule{\textwidth}{0.5pt}\par}
+\vspace{0.3cm}
+{\small\itshape Last Compiled: \today}
+\end{titlepage}
+
+% ── Front Matter ──────────────────────────────────────────────────────────────
+\frontmatter
+\pagestyle{plain}
+\tableofcontents
+\clearpage
+
+% ── Main Matter ───────────────────────────────────────────────────────────────
+\mainmatter
+\pagestyle{fancy}
+
+% =============================================================================
+% PART I: THEORETICAL FOUNDATIONS
+% =============================================================================
+\part{Theoretical Foundations \& Core Computer Science}
+\label{part:theory}
+
+\include{ch01_stack_queue}
+
+\include{ch02_linked_lists_heaps}
+
+\include{ch03_circular_priority_queue}
+
+\include{ch04_trees_btree}
+
+\include{ch05_graphs_hashing}
+
+\include{ch06_data_structures_problems}
+
+\include{ch07_algorithms}
+
+\include{ch08_greedy_recursion_dp}
+
+\include{ch09_algorithms_problems}
+
+\include{ch10_networking_subnetting}
+
+\include{ch11_cybersecurity}
+
+\include{ch12_dbms_sql}
+
+\include{ch13_operating_system}
+
+\include{ch14_software_engineering}
+
+\include{ch15_cloud_ml}
+
+\include{ch16_computer_architecture}
+
+\include{ch17_electronics_hardware}
+
+\include{ch18_programming}
+
+% =============================================================================
+% PART II: VIVA & RECRUITMENT PREPARATION
+% =============================================================================
+\part{Comprehensive Viva \& Recruitment Question Bank}
+\label{part:viva}
+
+\include{chapter1_location}
+
+\include{chapter2_technical}
+
+\include{chapter3_banking}
+
+% ── Back Matter ───────────────────────────────────────────────────────────────
+\backmatter
+
+\end{document}

@@ -1,0 +1,1727 @@
+\chapter{Programming: Problem Solving, Code Tracing, OOP, and Practical IT Skills}
+\label{ch:programming_oop_skills}
+
+This chapter focuses on \textbf{program analysis, mental code tracing, output prediction, algorithmic problem solving, object-oriented design, and practical developer tools} essential for Assistant Programmer, Assistant Network Engineer, Database Administrator, and IT Specialist recruitment examinations under the Bangladesh Public Service Commission (BPSC), state-owned banks (Bankers Selection Committee), and government ministries. Rather than basic syntax, this material targets recurring examination traps: operator precedence, integer truncation, side-effect sequencing, call stack unwinding in recursion, dynamic method dispatch, pointer arithmetic, object lifecycles, Git branching workflows, and Linux system management.
+
+\begin{enumerate}[label=\bfseries\arabic*.]
+    \item \textbf{Code-Snippet Output Analysis:} Operator precedence, associativity, integer division, truncation toward zero, short-circuit evaluation, the comma operator, conditional expressions, and C/C++ undefined behavior.
+    \item \textbf{Increment and Decrement Operators:} Prefix versus postfix evaluation, side effects within expressions, loop boundary mutations, and pointer increment expressions (\texttt{*p++} vs. \texttt{(*p)++}).
+    \item \textbf{Recursion and Call Stack Tracing:} Activation records, winding vs. unwinding execution, static variables in recursive scopes, Fibonacci exponential trees, and recursion-to-iteration transformations.
+    \item \textbf{Prime Numbers, Series, and Floyd's Triangle:} Prime checks in $O(\sqrt{n})$, Sieve of Eratosthenes, Floyd's triangle generation, geometric and star pattern printing, and arithmetic/geometric summations.
+    \item \textbf{Factorial and Digit Manipulation:} Iterative and recursive factorials, integer overflow mitigation, digit extraction/summation, number reversal, palindrome validation, Armstrong numbers, and harmonic/alternating series.
+    \item \textbf{Matrix Operations and Dimensional Rules:} Two-dimensional array representations, matrix addition conformability, matrix multiplication algorithms ($O(mnp)$), and algebraic properties.
+    \item \textbf{Object-Oriented Programming (OOP) Fundamentals:} The four pillars (Encapsulation, Abstraction, Inheritance, Polymorphism), class vs. object, inheritance models, the diamond problem, and C++ virtual inheritance.
+    \item \textbf{Polymorphism and Method Dispatch:} Compile-time vs. runtime polymorphism, function and operator overloading, virtual functions, vtables, vptrs, and static vs. dynamic binding in C++ and Java.
+    \item \textbf{Advanced Class Mechanisms:} Free functions vs. methods, friend functions, friend classes, encapsulation boundaries, and Java architectural contrasts.
+    \item \textbf{Method Overloading vs. Overriding:} Signature rules, return-type constraints, name hiding, covariant return types, and virtual function dispatch.
+    \item \textbf{Constructors, Destructors, and Object Lifecycles:} Default, parameterized, copy, and move constructors, member initializer lists, execution order in inheritance hierarchies, virtual destructors, and Java garbage collection semantics.
+    \item \textbf{Control-Flow Tracing:} Dangling else ambiguities, switch fall-through mechanics, entry-controlled (\texttt{while}) vs. exit-controlled (\texttt{do-while}) loops, and \texttt{break} vs. \texttt{continue} traps.
+    \item \textbf{Parameter Passing, Pointers, and Memory Allocation:} Pass-by-value, pass-by-reference, pointer simulation in C, Java reference semantics, pointer arithmetic, array decay, null/wild/dangling pointers, and dynamic memory management (\texttt{malloc}, \texttt{calloc}, \texttt{free}).
+    \item \textbf{Data Types, Type Conversion, and Storage Classes:} Primitive type sizing, signed vs. unsigned modular arithmetic, integer promotion rules, floating-point IEEE-754 precision traps, and storage durations (\texttt{auto}, \texttt{static}, \texttt{extern}, \texttt{volatile}).
+    \item \textbf{Version Control with Git:} Distributed VCS architecture, working directory, staging index, commit DAGs, branching, merging vs. rebasing, conflict resolution, \texttt{.gitignore}, and remote collaboration.
+    \item \textbf{Essential Bash Commands for IT Engineers:} Filesystem navigation, text filtering (\texttt{grep}, \texttt{find}), octal file permissions (\texttt{chmod}, \texttt{chown}), process management, signaling (\texttt{SIGTERM}, \texttt{SIGKILL}), and pipeline redirection.
+    \item \textbf{High-Probability Algorithmic Problems:} Linear and binary search, sorting algorithms (Bubble, Selection, Insertion, Merge, Quick), array rotation, string palindromes, Euclidean GCD/LCM, and leap-year logic.
+    \item \textbf{Comparative Language Architectures:} C vs. C++ vs. Java feature matrix, Big-O complexity classifications, and memory models.
+    \item \textbf{Model Examination Questions \& Detailed Solutions:} 20 multi-part code-tracing and analytical problems with complete step-by-step solutions.
+    \item \textbf{Analytical Viva Voce Question Bank:} 30 foundational oral examination questions covering programming, OOP, and data structure internals.
+    \item \textbf{Practice Problem Set \& Self-Test:} Structured multiple-choice questions with verified answer keys.
+    \item \textbf{Examination Traps \& Revision Sheet:} Concise reference matrix highlighting high-frequency candidate pitfalls.
+    \item \textbf{Mathematical Formula and Complexity Cheat Sheet:} Quick-reference summary of mathematical series formulas and algorithmic asymptotic runtimes.
+    \item \textbf{Recommended Preparation Priorities:} Strategic topic weighting for government IT written and oral examinations.
+\end{enumerate}
+
+\section{C/C++/Java Code Snippet Output Analysis}
+\label{sec:code_snippet_output_analysis}
+
+Output-tracing questions assess a candidate's ability to mentally simulate the target language's abstract state machine, adhering strictly to language standards rather than casual assumptions.
+
+\subsection{Operator Precedence and Associativity}
+\textbf{Precedence} establishes the relative priority of distinct operators when competing for operands in an unparenthesized expression. \textbf{Associativity} dictates the evaluation grouping (left-to-right or right-to-left) of adjacent operators sharing identical precedence.
+
+\begin{lstlisting}[language=C]
+int x = 10 + 5 * 2;
+printf("%d", x);
+\end{lstlisting}
+
+Because multiplication (\texttt{*}) has higher precedence than addition (\texttt{+}), the multiplication executes first:
+\[
+x = 10 + (5 \times 2) = 10 + 10 = 20
+\]
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X l}
+\toprule
+\textbf{Operators} & \textbf{Description / Operation} & \textbf{Associativity} \\
+\midrule
+\texttt{()}, \texttt{[]}, \texttt{->}, \texttt{.} & Scope resolution, function call, array subscript, member access & Left-to-right \\
+\texttt{++}, \texttt{--}, \texttt{!}, \texttt{\~{}}, \texttt{+}, \texttt{-}, \texttt{*}, \texttt{\&}, \texttt{sizeof} & Unary prefix operators, logical/bitwise NOT, address-of, dereference & Right-to-left \\
+\texttt{*}, \texttt{/}, \texttt{\%} & Multiplicative arithmetic operators (multiplication, division, modulus) & Left-to-right \\
+\texttt{+}, \texttt{-} & Additive arithmetic operators (addition, subtraction) & Left-to-right \\
+\texttt{<<}, \texttt{>>} & Bitwise bit-shift operators (left shift, right shift) & Left-to-right \\
+\texttt{<}, \texttt{<=}, \texttt{>}, \texttt{>=} & Relational relational comparison operators & Left-to-right \\
+\texttt{==}, \texttt{!=} & Equality comparison operators & Left-to-right \\
+\texttt{\&} & Bitwise AND operator & Left-to-right \\
+\texttt{\^{}} & Bitwise XOR (exclusive OR) operator & Left-to-right \\
+\texttt{|} & Bitwise OR (inclusive OR) operator & Left-to-right \\
+\texttt{\&\&} & Logical short-circuit AND operator & Left-to-right \\
+\texttt{||} & Logical short-circuit OR operator & Left-to-right \\
+\texttt{?:} & Ternary conditional operator & Right-to-left \\
+\texttt{=}, \texttt{+=}, \texttt{-=}, \texttt{*=}, \texttt{/=} & Compound assignment operators & Right-to-left \\
+\texttt{,} & Comma operator (sequencing expression) & Left-to-right \\
+\bottomrule
+\end{tabularx}
+\caption{C and C++ Operator Precedence and Associativity Hierarchy}
+\label{tab:c_operator_precedence}
+\end{table}
+
+\begin{tcolorbox}[colback=blockbg,colframe=primary,title=\textbf{Important Distinction: Precedence vs. Evaluation Order}]
+Operator precedence and associativity determine \textbf{grammatical grouping} (syntax tree structure), \textit{not} the physical temporal order of operand evaluation. In C and C++, the order in which subexpressions (operands) are evaluated is generally \textbf{unspecified}. In the expression $f(a) + g(b) \times h(c)$, multiplication groups $g(b)$ with $h(c)$, but the compiler is entirely free to invoke function $h()$ before $f()$ or $g()$.
+\end{tcolorbox}
+
+\subsubsection{Right-to-Left Assignment Associativity}
+\begin{lstlisting}[language=C]
+int a, b, c;
+a = b = c = 5;
+printf("%d %d %d", a, b, c);
+\end{lstlisting}
+Because assignment (\texttt{=}) is right-associative, the expression parses as:
+\[
+a = (b = (c = 5))
+\]
+The inner assignment sets $c = 5$ and yields the value $5$, which is assigned to $b$, and subsequently to $a$. The program prints:
+\begin{lstlisting}
+5 5 5
+\end{lstlisting}
+
+\subsubsection{Multiplicative and Additive Precedence Tracing}
+\begin{lstlisting}[language=C]
+int x = 20, y = 5, z = 2;
+printf("%d", x / y * z + 3);
+\end{lstlisting}
+Division (\texttt{/}) and multiplication (\texttt{*}) share equal precedence and associate left-to-right:
+\[
+(x / y) \times z + 3 = (20 / 5) \times 2 + 3 = 4 \times 2 + 3 = 8 + 3 = 11
+\]
+The program outputs \texttt{11}.
+
+\subsection{Integer Division, Modulus, and Truncation Toward Zero}
+When both operands of the division operator (\texttt{/}) are integers, the language standard mandates \textbf{integer division}: any fractional remainder is discarded (truncated).
+
+\begin{lstlisting}[language=C]
+int a = 17, b = 5;
+printf("%d\n", a / b);
+printf("%d\n", a % b);
+\end{lstlisting}
+The output is:
+\begin{lstlisting}
+3
+2
+\end{lstlisting}
+This satisfies the algebraic identity:
+\[
+a = (a / b) \times b + (a \pmod b) \implies 17 = (3 \times 5) + 2
+\]
+
+\begin{tcolorbox}[colback=codebg,colframe=quotetext,title=\textbf{Exam Trap: Integer Division Before Floating-Point Assignment}]
+\begin{lstlisting}[language=C]
+float x = 5 / 2;
+printf("%.1f", x);
+\end{lstlisting}
+Because both $5$ and $2$ are integer literals, integer division executes first, yielding the integer $2$. This integer is only then implicitly promoted to a float ($2.0$). To retain the fractional component, at least one operand must be of floating-point type:
+\begin{lstlisting}[language=C]
+float x = 5.0 / 2;       // Evaluates to 2.5
+float y = (float)5 / 2;   // Evaluates to 2.5
+\end{lstlisting}
+\end{tcolorbox}
+
+\subsubsection{Negative Integer Truncation (C99, C++11, and Java Standards)}
+Prior to C99, integer division with negative operands was implementation-defined. Modern C, C++, and Java standards strictly mandate \textbf{truncation toward zero}:
+\begin{lstlisting}[language=C]
+printf("%d %d\n", -7 / 2, -7 % 2);
+printf("%d %d\n", 7 / -2, 7 % -2);
+\end{lstlisting}
+Output:
+\begin{lstlisting}
+-3 -1
+-3 1
+\end{lstlisting}
+In all cases, $(-3) \times (\pm 2) + (\text{remainder}) = \pm 7$. The sign of the modulus result always matches the sign of the numerator (dividend).
+
+\subsection{Short-Circuit Evaluation of Logical Operators}
+The logical AND (\texttt{\&\&}) and logical OR (\texttt{||}) operators exhibit guaranteed short-circuit evaluation:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{\texttt{A \&\& B}:} If expression $A$ evaluates to false ($0$), expression $B$ is \textbf{guaranteed not to be evaluated}.
+    \item \textbf{\texttt{A || B}:} If expression $A$ evaluates to true ($\ne 0$), expression $B$ is \textbf{guaranteed not to be evaluated}.
+\end{itemize}
+
+\begin{lstlisting}[language=C]
+int x = 5;
+if (x > 10 && ++x > 5)
+    printf("Branch A\n");
+printf("%d\n", x);
+\end{lstlisting}
+Because $x > 10$ ($5 > 10$) is false, the right-hand operand (\texttt{++x > 5}) is never evaluated. The variable $x$ remains unchanged at $5$.
+
+\begin{lstlisting}[language=C]
+int x = 5;
+if (x == 5 || ++x > 5)
+    printf("Branch B\n");
+printf("%d\n", x);
+\end{lstlisting}
+Because $x == 5$ is true, the \texttt{||} operator short-circuits immediately. The second operand is skipped, and $x$ remains $5$. The code prints \texttt{Branch B} followed by \texttt{5}.
+
+\subsection{The Comma Operator as an Expression Sequencer}
+In C and C++, the comma operator (\texttt{,}) has the lowest precedence of all operators. It evaluates its left operand, completely discards the resulting value, introduces a sequence point, evaluates its right operand, and yields the right operand's value and type.
+
+\begin{lstlisting}[language=C]
+int x;
+x = (10, 20, 30);
+printf("%d\n", x);
+\end{lstlisting}
+Parentheses bind the comma operators together. The expressions $10$ and $20$ are evaluated and discarded; $30$ is returned and assigned to $x$. Output: \texttt{30}.
+
+\begin{lstlisting}[language=C]
+int a = 1, b = 2, c;
+c = (a++, b++, a + b);
+printf("%d %d %d\n", a, b, c);
+\end{lstlisting}
+Tracing step-by-step:
+\begin{enumerate}[leftmargin=*]
+    \item \texttt{a++} increments $a$ from $1$ to $2$; value discarded.
+    \item \texttt{b++} increments $b$ from $2$ to $3$; value discarded.
+    \item \texttt{a + b} computes $2 + 3 = 5$, which is assigned to $c$.
+\end{enumerate}
+Output: \texttt{2 3 5}.
+
+\subsection{Undefined Behavior in C and C++ Expressions}
+An expression exhibits \textbf{Undefined Behavior (UB)} when the language standard imposes no requirements on the compiler. The executable may crash, generate garbage results, or produce erratic output that varies across compiler optimization levels (-O0 vs. -O3).
+
+\begin{tcolorbox}[colback=codebg,colframe=quotetext,title=\textbf{Critical Examination Warning: Modification Without Sequencing}]
+Consider the notorious snippet:
+\begin{lstlisting}[language=C]
+int i = 5;
+printf("%d %d\n", i++, ++i); // UNDEFINED BEHAVIOR!
+i = i++;                     // UNDEFINED BEHAVIOR!
+int x = i++ + ++i;           // UNDEFINED BEHAVIOR!
+\end{lstlisting}
+Prior to C++17, modifying a scalar object more than once between two consecutive sequence points without an intervening read yields \textbf{strictly undefined behavior}. Even under modern C++17 sequencing rules, writing $i = i++$ or combining multiple unsequenced mutations within arithmetic operands is illegal. In written recruitment examinations, candidates should explicitly write: \textit{``The expression exhibits Undefined Behavior under standard C/C++ due to unsequenced side-effects.''}
+\end{tcolorbox}
+
+\section{Increment and Decrement Operators}
+\label{sec:increment_decrement_operators}
+
+\subsection{Prefix vs. Postfix Semantics}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Prefix Increment (\texttt{++i}):} Increments the operand by $1$ as a side-effect, and produces the \textbf{new, updated value} as the result of the expression.
+    \item \textbf{Postfix Increment (\texttt{i++}):} Increments the operand by $1$ as a side-effect, but produces the \textbf{original, un-incremented value} as the result of the expression.
+\end{itemize}
+
+\begin{lstlisting}[language=C]
+int a = 5;
+int b = ++a; // a becomes 6, b is assigned 6
+int c = a++; // c is assigned 6, a becomes 7
+printf("%d %d %d", a, b, c);
+\end{lstlisting}
+Output: \texttt{7 6 6}.
+
+\subsection{Postfix and Prefix Operators Combined with Pointers}
+Pointer arithmetic combined with dereferencing represents one of the most common examination hurdles:
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Expression} & \textbf{Equivalent Grouping} & \textbf{Operational Behavior} \\
+\midrule
+\texttt{*p++} & \texttt{*(p++)} & Dereferences current pointer $p$, yields the value at that address, then increments the pointer address by \texttt{sizeof(*p)}. \\
+\texttt{*++p} & \texttt{*(++p)} & Increments pointer address $p$ first, then dereferences and yields the value at the new address. \\
+\texttt{++*p} & \texttt{++(*p)} & Dereferences pointer $p$, then increments the stored value at that address (prefix). \\
+\texttt{(*p)++} & \texttt{(*p)++} & Dereferences pointer $p$, yields current stored value, then increments the value at that address (postfix). \\
+\bottomrule
+\end{tabularx}
+\caption{Pointer Dereference and Increment Precedence Matrix}
+\label{tab:pointer_increment_matrix}
+\end{table}
+
+\begin{lstlisting}[language=C]
+int a[] = {10, 20, 30};
+int *p = a;
+printf("%d ", *p++); // Prints 10; p now points to a[1] (20)
+printf("%d\n", *p);  // Prints 20
+
+int b[] = {10, 20, 30};
+int *q = b;
+printf("%d ", (*q)++); // Prints 10; b[0] is incremented to 11
+printf("%d\n", *q);    // Prints 11; q still points to b[0]
+\end{lstlisting}
+
+\section{Recursion and Recursive Function Output Tracing}
+\label{sec:recursion_output_tracing}
+
+Recursion occurs when a computational procedure is partitioned such that a function directly or indirectly invokes itself. Every robust recursive function requires two invariant properties:
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Base Case (Anchor):} A non-recursive terminal branch that halts the descent.
+    \item \textbf{Recursive Step (Inductive Step):} A self-invocation that strictly reduces the problem domain toward the base case.
+\end{enumerate}
+
+\subsection{Activation Records and the Runtime Call Stack}
+Each function invocation instantiates an \textbf{Activation Record} (stack frame) on the program's runtime call stack. The activation record encapsulates:
+\begin{itemize}[leftmargin=*]
+    \item Formal parameter values passed to the function.
+    \item Local (automatic) variables scoped within the function.
+    \item The caller's Return Address (instruction pointer).
+    \item Saved frame pointers and processor register contexts.
+\end{itemize}
+
+\subsection{Execution Phases: Winding (Descent) vs. Unwinding (Ascent)}
+A critical examination concept is that statements placed \textbf{before} the recursive call execute in forward sequence during stack frame allocation (winding phase), whereas statements placed \textbf{after} the recursive call execute in reverse sequence during frame deallocation (unwinding phase).
+
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+void trace(int n) {
+    if (n == 0)
+        return;
+    printf("%d ", n);   // Executes during WINDING (descent)
+    trace(n - 1);       // Recursive invocation
+    printf("%d ", n);   // Executes during UNWINDING (ascent)
+}
+
+int main() {
+    trace(3);
+    return 0;
+}
+\end{lstlisting}
+
+\begin{figure}[htbp]
+\centering
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Call Stack Trace for \texttt{trace(3)}}]
+\begin{enumerate}[leftmargin=*]
+    \item \texttt{trace(3)} prints \textbf{3}, pushes frame to stack, invokes \texttt{trace(2)}.
+    \item \texttt{trace(2)} prints \textbf{2}, pushes frame to stack, invokes \texttt{trace(1)}.
+    \item \texttt{trace(1)} prints \textbf{1}, pushes frame to stack, invokes \texttt{trace(0)}.
+    \item \texttt{trace(0)} matches base case ($n == 0$) and returns immediately.
+    \item Execution resumes in \texttt{trace(1)} at line 8: prints \textbf{1}, pops frame.
+    \item Execution resumes in \texttt{trace(2)} at line 8: prints \textbf{2}, pops frame.
+    \item Execution resumes in \texttt{trace(3)} at line 8: prints \textbf{3}, pops frame.
+\end{enumerate}
+\textbf{Final Program Output:} \texttt{3 2 1 1 2 3}
+\end{tcolorbox}
+\end{figure}
+
+\subsection{Static Variables Within Recursive Scopes}
+A local variable marked \texttt{static} resides in the program's data segment rather than on the stack. It is initialized exactly once at program launch and retains its updated value across all recursive activations.
+
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+void static_recurse(int n) {
+    static int x = 0;
+    if (n == 0)
+        return;
+    x++;
+    printf("%d ", x);
+    static_recurse(n - 1);
+}
+
+int main() {
+    static_recurse(3);
+    return 0;
+}
+\end{lstlisting}
+Because variable $x$ is shared across all activations:
+\begin{itemize}[leftmargin=*]
+    \item Call 1 ($n=3$): $x$ increments from $0$ to $1$; prints \textbf{1}.
+    \item Call 2 ($n=2$): $x$ increments from $1$ to $2$; prints \textbf{2}.
+    \item Call 3 ($n=1$): $x$ increments from $2$ to $3$; prints \textbf{3}.
+\end{itemize}
+Output: \texttt{1 2 3}. In contrast, without the \texttt{static} keyword, each stack frame possesses an independent local variable $x$, yielding \texttt{1 1 1}.
+
+\subsection{Tree Recursion and Exponential Growth: Fibonacci}
+When a function issues multiple recursive calls per activation, it produces tree recursion. The naïve recursive Fibonacci implementation represents the classical benchmark:
+\[
+F(n) = \begin{cases} 0 & n = 0 \\ 1 & n = 1 \\ F(n-1) + F(n-2) & n \ge 2 \end{cases}
+\]
+
+\begin{lstlisting}[language=C]
+int fib(int n) {
+    if (n <= 0) return 0;
+    if (n == 1) return 1;
+    return fib(n - 1) + fib(n - 2);
+}
+\end{lstlisting}
+Because each call forks into two child calls, identical subproblems (e.g., $F(n-3)$) are evaluated repeatedly across different branches of the call tree. The number of leaf nodes scales as $\approx \phi^n$ where $\phi = \frac{1+\sqrt{5}}{2} \approx 1.618$, resulting in an exponential time complexity of $O(2^n)$ and maximum stack depth (space complexity) of $O(n)$.
+
+\section{Prime Numbers, Floyd's Triangle, and Numerical Series}
+\label{sec:prime_numbers_series}
+
+\subsection{Prime Number Verification in $O(\sqrt{n})$}
+A prime number is an integer $n > 1$ divisible solely by $1$ and itself. The number $1$ is neither prime nor composite; $2$ is the unique even prime.
+
+\begin{keyconcept}[Mathematical Justification for the $\sqrt{n}$ Boundary]
+If an integer $n$ is composite, it can be factored as $n = a \times b$. If both factors $a$ and $b$ were strictly greater than $\sqrt{n}$, their product would exceed $n$:
+\[
+a > \sqrt{n} \quad \text{and} \quad b > \sqrt{n} \implies a \times b > \sqrt{n} \times \sqrt{n} = n
+\]
+This contradiction proves that at least one factor must satisfy $a \le \sqrt{n}$. Therefore, trial division up to $\lfloor\sqrt{n}\rfloor$ is mathematically sufficient to establish primality, collapsing the runtime from $O(n)$ to $O(\sqrt{n})$.
+\end{keyconcept}
+
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+int is_prime(int n) {
+    if (n <= 1) return 0;
+    if (n <= 3) return 1;
+    if (n % 2 == 0 || n % 3 == 0) return 0;
+    for (int i = 5; i * i <= n; i += 6) {
+        if (n % i == 0 || n % (i + 2) == 0)
+            return 0;
+    }
+    return 1;
+}
+\end{lstlisting}
+
+\subsection{The Sieve of Eratosthenes ($O(N \log \log N)$)}
+To generate all primes up to a large threshold $N$, independent trial division requires $O(N \sqrt{N})$ time. The \textbf{Sieve of Eratosthenes} achieves $O(N \log \log N)$ by iteratively marking multiples of confirmed primes as composite.
+
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+void sieve(int n) {
+    bool prime[n + 1];
+    memset(prime, true, sizeof(prime));
+    prime[0] = prime[1] = false;
+
+    for (int p = 2; p * p <= n; p++) {
+        if (prime[p]) {
+            // Mark multiples starting from p^2
+            for (int i = p * p; i <= n; i += p)
+                prime[i] = false;
+        }
+    }
+    for (int p = 2; p <= n; p++) {
+        if (prime[p])
+            printf("%d ", p);
+    }
+    printf("\n");
+}
+\end{lstlisting}
+
+\subsection{Floyd's Triangle and Pattern Synthesis}
+Floyd's triangle arranges consecutive positive integers into a right-angled triangle. Row $i$ contains exactly $i$ elements.
+
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+int main() {
+    int rows = 5, num = 1;
+    for (int i = 1; i <= rows; i++) {
+        for (int j = 1; j <= i; j++) {
+            printf("%-3d ", num++);
+        }
+        printf("\n");
+    }
+    return 0;
+}
+\end{lstlisting}
+Output for 5 rows:
+\begin{lstlisting}
+1   
+2   3   
+4   5   6   
+7   8   9   10  
+11  12  13  14  15  
+\end{lstlisting}
+The cumulative count of integers displayed across $n$ rows corresponds to the $n$-th triangular number:
+\[
+S_n = \sum_{k=1}^{n} k = \frac{n(n+1)}{2} \implies S_5 = \frac{5 \times 6}{2} = 15
+\]
+
+\section{Factorial and Summation of Series}
+\label{sec:factorial_summation_series}
+
+\subsection{Factorial Calculation and 64-Bit Integer Capacity Limits}
+The mathematical factorial $n! = \prod_{k=1}^{n} k$ exhibits rapid combinatorial growth. In computer systems, primitive integer registers impose definitive ceilings:
+\begin{itemize}[leftmargin=*]
+    \item Standard 32-bit signed \texttt{int}: Overflow occurs at $13!$ ($12! = 479,001,600$; $13! = 6,227,020,800 > 2^{31}-1$).
+    \item 64-bit unsigned \texttt{unsigned long long}: Maximum capacity is $20! \approx 2.43 \times 10^{18} < 2^{64}-1 \approx 1.84 \times 10^{19}$. At $21!$, arithmetic modulo $2^{64}$ causes silent data corruption.
+\end{itemize}
+
+\subsection{Fundamental Digit Extraction and Manipulation}
+Algorithmic manipulation of decimal digits relies on the two complementary base-10 arithmetic operations:
+\begin{itemize}[leftmargin=*]
+    \item \texttt{n \% 10}: Extracts the least significant decimal digit.
+    \item \texttt{n / 10}: Truncates the least significant decimal digit, shifting the number rightward.
+\end{itemize}
+
+\subsubsection{Integer Reversal and Palindrome Validation}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+int is_palindrome(int n) {
+    if (n < 0) return 0; // Negative integers are not palindromes
+    int temp = n, reversed = 0;
+    while (temp > 0) {
+        int digit = temp % 10;
+        reversed = reversed * 10 + digit;
+        temp /= 10;
+    }
+    return (n == reversed);
+}
+\end{lstlisting}
+
+\subsubsection{Armstrong (Narcissistic) Numbers}
+An $n$-digit integer is an Armstrong number if the sum of its individual digits raised to the $n$-th power equals the original number:
+\[
+N = \sum_{k=1}^{d} (\text{digit}_k)^d \quad \text{e.g., } 153 = 1^3 + 5^3 + 3^3 = 1 + 125 + 27 = 153
+\]
+
+\subsection{Harmonic and Alternating Series Implementations}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X l}
+\toprule
+\textbf{Series Classification} & \textbf{Mathematical Definition} & \textbf{Closed-Form / Computational Rule} \\
+\midrule
+Sum of First $n$ Integers & $S_n = 1 + 2 + 3 + \dots + n$ & $S_n = \frac{n(n+1)}{2}$ \\
+Sum of First $n$ Squares & $S_n = 1^2 + 2^2 + \dots + n^2$ & $S_n = \frac{n(n+1)(2n+1)}{6}$ \\
+Sum of First $n$ Cubes & $S_n = 1^3 + 2^3 + \dots + n^3$ & $S_n = \left[\frac{n(n+1)}{2}\right]^2$ \\
+Harmonic Series & $H_n = 1 + \frac{1}{2} + \frac{1}{3} + \dots + \frac{1}{n}$ & Iterative: \texttt{sum += 1.0 / i} (Floating-point) \\
+Alternating Series & $S_n = 1 - 2 + 3 - 4 + \dots + (-1)^{n+1}n$ & Parity Branching or $(-1)^{n+1} \times \lceil n/2 \rceil$ \\
+\bottomrule
+\end{tabularx}
+\caption{Mathematical Series and Asymptotic Summation Identities}
+\label{tab:mathematical_series}
+\end{table}
+
+\section{Matrix Addition and Multiplication}
+\label{sec:matrix_addition_multiplication}
+
+Two-dimensional arrays in C and C++ are laid out in memory according to \textbf{Row-Major Order}, where row elements occupy contiguous linear addresses ($A[i][j] \implies \text{Base} + (i \times \text{Cols} + j) \times \text{sizeof(element)}$).
+
+\subsection{Matrix Addition Conformability and Algorithm}
+Two matrices $A$ and $B$ can be summed if and only if they share identical dimensions ($m \times n$).
+\[
+C_{ij} = A_{ij} + B_{ij} \quad \forall \ i \in [1, m], \ j \in [1, n]
+\]
+Computational time complexity is strictly $O(mn)$, requiring $O(1)$ auxiliary space beyond the destination storage.
+
+\subsection{Matrix Multiplication Conformability and Algorithm}
+Matrix multiplication is defined if and only if the number of columns in the multiplicand matrix $A$ equals the number of rows in the multiplier matrix $B$:
+\[
+A_{m \times n} \times B_{n \times p} = C_{m \times p}
+\]
+Each element $C_{ij}$ is computed as the vector dot product of row $i$ of matrix $A$ and column $j$ of matrix $B$:
+\[
+C_{ij} = \sum_{k=0}^{n-1} A_{ik} \times B_{kj}
+\]
+
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+void multiply_matrices(int r1, int c1, int A[r1][c1],
+                       int r2, int c2, int B[r2][c2],
+                       int C[r1][c2]) {
+    if (c1 != r2) {
+        printf("Error: Incompatible dimensions for matrix multiplication.\n");
+        return;
+    }
+    for (int i = 0; i < r1; i++) {
+        for (int j = 0; j < c2; j++) {
+            C[i][j] = 0; // CRITICAL: Reset accumulator prior to summation
+            for (int k = 0; k < c1; k++) {
+                C[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\begin{keyconcept}[Asymptotic Complexity and Algebraic Properties]
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Asymptotic Complexity:} Standard triple-nested iteration exhibits a runtime of $O(m \times n \times p)$. For two square matrices of dimension $n \times n$, complexity is $O(n^3)$.
+    \item \textbf{Non-Commutative Property:} In general, matrix multiplication is \textbf{not commutative} ($AB \ne BA$). In fact, even when $AB$ is defined, $BA$ may be undefined unless $m = p$.
+    \item \textbf{Associative and Distributive Properties:} Matrix multiplication is strictly associative ($(AB)C = A(BC)$) and distributive over addition ($A(B + C) = AB + AC$).
+\end{itemize}
+\end{keyconcept}
+
+\section{Object-Oriented Programming (OOP) and the Four Pillars}
+\label{sec:oop_four_pillars}
+
+Object-Oriented Programming (OOP) organizes software systems into modular units called \textbf{Objects}, binding internal state (data members / attributes) with behavior (member functions / methods).
+
+\begin{figure}[htbp]
+\centering
+\begin{tcolorbox}[colback=blockbg,colframe=primary,title=\textbf{The Four Foundational Pillars of Object-Oriented Architecture}]
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Encapsulation:} Bundling state and operations within a boundary, enforcing access restrictions to prevent unauthorized state tampering.
+    \item \textbf{Abstraction:} Exposing clean, essential behavioral contracts while completely concealing low-level implementation mechanics.
+    \item \textbf{Inheritance:} Deriving new specialized abstractions from existing generalized base classes, promoting hierarchical reuse.
+    \item \textbf{Polymorphism:} Providing a unified interface that transparently executes distinct, type-specific behaviors at runtime.
+\end{enumerate}
+\end{tcolorbox}
+\end{figure}
+
+\subsection{Encapsulation and Data Hiding}
+Encapsulation enforces internal data consistency by restricting external access via access specifiers (\texttt{private}, \texttt{protected}, \texttt{public}).
+\begin{lstlisting}[language=C++]
+class BankAccount {
+private:
+    double balance; // Hidden from direct external manipulation
+
+public:
+    BankAccount() : balance(0.0) {}
+    void deposit(double amount) {
+        if (amount > 0) balance += amount; // Validated state mutation
+    }
+    double getBalance() const { return balance; } // Controlled access
+};
+\end{lstlisting}
+
+\subsection{Abstraction: Abstract Classes and Pure Virtual Functions}
+In C++, an \textbf{Abstract Class} serves as an interface contract containing at least one \textbf{Pure Virtual Function} (\texttt{virtual void f() = 0;}). Direct instantiation of an abstract class is prohibited by the compiler.
+
+\begin{lstlisting}[language=C++]
+class Shape {
+public:
+    virtual double area() const = 0; // Pure virtual function
+    virtual ~Shape() {}              // Virtual destructor mandatory
+};
+
+class Rectangle : public Shape {
+private:
+    double length, width;
+public:
+    Rectangle(double l, double w) : length(l), width(w) {}
+    double area() const override { return length * width; }
+};
+\end{lstlisting}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Architectural Metric} & \textbf{Abstraction} & \textbf{Encapsulation} \\
+\midrule
+\textbf{Core Focus} & Concentrates on \textit{what} an object does. & Concentrates on \textit{how} internal data is guarded. \\
+\textbf{Implementation} & Achieved via abstract classes and interfaces. & Achieved via classes and access specifiers (\texttt{private}). \\
+\textbf{Design Goal} & Hides implementation complexity. & Hides internal data representation and state mutations. \\
+\textbf{Real-World Analogy} & An automobile accelerator pedal and dashboard. & The internal engine cylinder combustion chamber. \\
+\bottomrule
+\end{tabularx}
+\caption{Systematic Architectural Comparison: Abstraction versus Encapsulation}
+\label{tab:abstraction_vs_encapsulation}
+\end{table}
+
+\subsection{Inheritance Taxonomies and The Diamond Problem}
+C++ supports five distinct inheritance topologies: Single, Multilevel, Multiple, Hierarchical, and Hybrid.
+
+\begin{keyconcept}[The Diamond Problem and Virtual Inheritance]
+In multiple inheritance, when class $D$ inherits from both classes $B$ and $C$, which both inherit from base class $A$, class $D$ inherits two distinct, duplicate subobjects of $A$. Any reference to a member of $A$ (e.g., \texttt{d.x}) produces a compiler ambiguity error:
+\begin{lstlisting}[language=C++]
+class A { public: int x; };
+class B : public A {};
+class C : public A {};
+class D : public B, public C {}; // Ambiguous: D contains two copies of A!
+\end{lstlisting}
+To eliminate this ambiguity, C++ introduces \textbf{Virtual Base Classes}. By declaring inheritance as \texttt{virtual public A}, the compiler ensures that only one shared, canonical instance of base class $A$ is instantiated within derived object $D$:
+\begin{lstlisting}[language=C++]
+class B : virtual public A {};
+class C : virtual public A {};
+class D : public B, public C {}; // Resolved: Exactly one shared subobject of A
+\end{lstlisting}
+\end{keyconcept}
+
+\subsection{C++ Access Specifiers Under Inheritance}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X X}
+\toprule
+\textbf{Base Member Access} & \textbf{Public Inheritance} & \textbf{Protected Inheritance} & \textbf{Private Inheritance} \\
+\midrule
+\texttt{public} & \texttt{public} in derived & \texttt{protected} in derived & \texttt{private} in derived \\
+\texttt{protected} & \texttt{protected} in derived & \texttt{protected} in derived & \texttt{private} in derived \\
+\texttt{private} & Inaccessible directly & Inaccessible directly & Inaccessible directly \\
+\bottomrule
+\end{tabularx}
+\caption{Inherited Member Accessibility Under C++ Derivation Modes}
+\label{tab:inheritance_access_modes}
+\end{table}
+
+\section{Polymorphism, Static Binding, and Dynamic Binding}
+\label{sec:polymorphism_binding}
+
+Polymorphism (``many forms'') enables a single programmatic interface to execute distinct implementations based on object context.
+
+\subsection{Compile-Time (Static) Polymorphism}
+Resolved entirely by the compiler during translation. Incurs zero runtime overhead.
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Function Overloading:} Declaring multiple functions within the same scope sharing an identical name but differing in parameter count or parameter data types.
+    \item \textbf{Operator Overloading:} Redefining the semantics of C++ operators for user-defined types (e.g., implementing vector addition via \texttt{operator+}).
+    \item \textbf{Templates (Generic Programming):} Parameterizing functions and classes over types, instantiated during compilation.
+\end{itemize}
+
+\subsection{Runtime (Dynamic) Polymorphism and Virtual Tables}
+Runtime polymorphism enables a base class pointer or reference to invoke derived class method overrides dynamically based on the actual type of the underlying heap/stack object.
+
+\begin{figure}[htbp]
+\centering
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Vtable and Vptr Internal Dispatch Mechanics in C++}]
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Virtual Table (vtable):} For every class declaring or inheriting at least one virtual function, the compiler constructs a static lookup table (\texttt{vtable}) containing function pointers to the most-derived implementations of those virtual methods.
+    \item \textbf{Virtual Table Pointer (vptr):} Every object instance of a polymorphic class contains an implicit hidden pointer (\texttt{vptr}) inserted at byte-offset zero, pointing directly to that class's static \texttt{vtable}.
+    \item \textbf{Dynamic Dispatch Resolution:} When invoking \texttt{ptr->virtualMethod()}, the machine code dereferences \texttt{ptr} to find \texttt{vptr}, indexes into the \texttt{vtable} at the method's assigned slot, and jumps to the target function address.
+\end{enumerate}
+\end{tcolorbox}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Dispatch Feature} & \textbf{Static Binding (Early Binding)} & \textbf{Dynamic Binding (Late Binding)} \\
+\midrule
+\textbf{Resolution Phase} & Compile-time and link-time. & Runtime during program execution. \\
+\textbf{Mechanisms} & Non-virtual functions, overloaded functions. & Overridden \texttt{virtual} methods via base pointers. \\
+\textbf{Performance} & Direct memory jump; can be inlined. & Indirection overhead via \texttt{vptr} and \texttt{vtable}. \\
+\textbf{Flexibility} & Fixed at build time. & High extensibility; supports open-closed design. \\
+\textbf{Java Equivalence} & \texttt{static}, \texttt{final}, and \texttt{private} methods. & Standard instance methods (polymorphic by default). \\
+\bottomrule
+\end{tabularx}
+\caption{Comprehensive Comparison: Static Binding versus Dynamic Binding}
+\label{tab:static_vs_dynamic_binding}
+\end{table}
+
+\section{Methods, Functions, Objects, Classes, and Friendship Mechanics}
+\label{sec:methods_classes_friends}
+
+\subsection{Free Functions versus Class Methods}
+A \textbf{Free Function} (procedural function) exists independently in a namespace or global scope, accepting all operational state via its parameter list. A \textbf{Method} (member function) is declared within the scope of a class or struct, receiving an implicit \texttt{this} pointer (in C++) or reference (in Java) that binds the operation directly to an object instance.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Architectural Property} & \textbf{Free Function} & \textbf{Class Method} \\
+\midrule
+\textbf{Structural Scope} & Global scope or namespace; procedural. & Enclosed within a class, struct, or interface. \\
+\textbf{Implicit Instance Binding} & No implicit object binding; no \texttt{this} pointer. & Operates on the invoking instance via implicit \texttt{this}. \\
+\textbf{Access to Private State} & Denied unless declared as an explicit \texttt{friend}. & Granted full unrestricted access to private/protected state. \\
+\textbf{Java Equivalence} & Non-existent; all Java functions are methods. & Standard instance and \texttt{static} class methods. \\
+\bottomrule
+\end{tabularx}
+\caption{Systematic Distinction: Free Functions versus Object Methods}
+\label{tab:function_vs_method}
+\end{table}
+
+\subsection{Friend Functions and Friend Classes in C++}
+C++ provides the \texttt{friend} mechanism to grant external functions or external classes controlled access to internal \texttt{private} and \texttt{protected} members, bypassing normal access barriers.
+
+\begin{lstlisting}[language=C++]
+#include <iostream>
+
+class Vector; // Forward declaration
+
+class Matrix {
+private:
+    int data[3][3];
+public:
+    Matrix() { /* initialize data */ }
+    friend Vector multiply(const Matrix& m, const Vector& v); // Friend function
+    friend class LinearAlgebraEngine;                        // Friend class
+};
+
+class Vector {
+private:
+    int elements[3];
+public:
+    Vector() { /* initialize elements */ }
+    friend Vector multiply(const Matrix& m, const Vector& v); // Friend function
+};
+\end{lstlisting}
+
+\begin{keyconcept}[Fundamental Axioms of C++ Friendship]
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Friendship is Granted, Not Taken:} Class $A$ must explicitly declare class $B$ or function $F$ as its friend. Class $B$ cannot declare itself a friend of $A$.
+    \item \textbf{Friendship is Not Reciprocal:} If class $A$ declares class $B$ as a friend, class $B$ can access private members of $A$, but class $A$ \textbf{cannot} access private members of $B$.
+    \item \textbf{Friendship is Not Transitive:} If $A$ is a friend of $B$, and $B$ is a friend of $C$, $A$ is \textbf{not} automatically a friend of $C$.
+    \item \textbf{Friendship is Not Inherited:} If base class $A$ grants friendship to function $F$, derived class $D$ does \textbf{not} grant friendship to $F$.
+    \item \textbf{Java Absence:} The \texttt{friend} keyword does not exist in Java. Java enforces package-level accessibility (default/package-private) instead.
+\end{itemize}
+\end{keyconcept}
+
+\section{Method Overloading versus Method Overriding}
+\label{sec:overloading_vs_overriding}
+
+\subsection{Rules Governing Method Overloading (Compile-Time)}
+Overloading permits multiple functions or methods to share an identical identifier within the same lexical scope, provided their formal parameter signatures are unambiguously distinguishable.
+\begin{itemize}[leftmargin=*]
+    \item Parameter signatures must differ in parameter count, parameter types, or ordering of types.
+    \item \textbf{The Return Type Trap:} Altering the return type alone \textbf{does not constitute a valid overload}. The code below triggers a fatal compile-time ambiguity error:
+    \begin{lstlisting}[language=C++]
+    int calculate(int x);
+    double calculate(int x); // COMPILE ERROR: Cannot overload on return type alone!
+    \end{lstlisting}
+\end{itemize}
+
+\subsection{Rules Governing Method Overriding (Runtime)}
+Overriding occurs when a derived class redefines an inherited virtual member function, substituting a specialized implementation.
+\begin{itemize}[leftmargin=*]
+    \item The method name, parameter count, parameter types, and const-qualifications must match the base virtual function signature exactly.
+    \item The base method must be declared \texttt{virtual} in C++. Derived methods should use the \texttt{override} specifier (C++11) to trigger compiler verification.
+    \item \textbf{Covariant Return Types:} Both C++ and Java allow an overridden method to return a pointer or reference to a more derived type than that returned by the base virtual method.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Technical Criterion} & \textbf{Method Overloading} & \textbf{Method Overriding} \\
+\midrule
+\textbf{Polymorphism Type} & Static / Compile-time polymorphism. & Dynamic / Runtime polymorphism. \\
+\textbf{Scope Requirement} & Same class or same namespace scope. & Distinct classes connected via inheritance. \\
+\textbf{Signature Match} & Must have different parameter lists. & Must have strictly identical parameter signatures. \\
+\textbf{Return Type Constraint} & Return type may vary, but cannot be sole difference. & Must match base return type (or be covariant). \\
+\textbf{Virtual Keyword} & \texttt{virtual} is irrelevant. & Base method must be explicitly \texttt{virtual} (in C++). \\
+\bottomrule
+\end{tabularx}
+\caption{Systematic Comparison: Method Overloading versus Method Overriding}
+\label{tab:overloading_vs_overriding}
+\end{table}
+
+\section{Constructors, Destructors, and Object Lifecycles}
+\label{sec:constructors_destructors}
+
+\subsection{Constructor Taxonomies and Initializer Lists}
+Constructors initialize the memory allocated for an object instance.
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Default Constructor:} Accepts zero arguments or provides defaults for all arguments.
+    \item \textbf{Parameterized Constructor:} Initializes attributes using supplied argument values.
+    \item \textbf{Copy Constructor (\texttt{T(const T\&)}):} Initializes an object by copying state from an existing instance of the identical class.
+    \item \textbf{Move Constructor (\texttt{T(T\&\&) noexcept}):} Transfers ownership of heap-allocated resources from a temporary rvalue reference, avoiding expensive deep copies.
+\end{itemize}
+
+\begin{keyconcept}[Mandatory Use Cases for Member Initializer Lists]
+A member initializer list directly initializes data members prior to the execution of the constructor body:
+\begin{lstlisting}[language=C++]
+class Device {
+private:
+    const int id;      // Const member: CANNOT be assigned inside body
+    int& refPort;      // Reference member: MUST be bound at initialization
+    Sensor sensor;     // Member lacking default constructor
+public:
+    Device(int i, int& port, int sVal) : id(i), refPort(port), sensor(sVal) {
+        // Constructor body executes AFTER members are initialized
+    }
+};
+\end{lstlisting}
+Member initializer lists are strictly mandatory for: (1) \texttt{const} data members, (2) reference data members (\texttt{\&}), (3) members lacking default constructors, and (4) forwarding arguments to base class constructors.
+\end{keyconcept}
+
+\subsection{Constructor and Destructor Execution Order in Inheritance}
+When instantiating a derived object, construction proceeds from the top of the inheritance tree downward; destruction proceeds in exactly reverse order (bottom-up):
+\begin{enumerate}[leftmargin=*]
+    \item Virtual base class constructors execute first.
+    \item Non-virtual direct base class constructors execute in order of declaration.
+    \item Non-static member objects execute their constructors in order of member declaration.
+    \item The derived class constructor body executes.
+    \item \textbf{Destruction Phase:} Executes in precisely reverse chronological sequence.
+\end{enumerate}
+
+\begin{lstlisting}[language=C++]
+#include <iostream>
+
+class Base {
+public:
+    Base() { std::cout << "Base Constructor\n"; }
+    virtual ~Base() { std::cout << "Base Destructor\n"; }
+};
+
+class Derived : public Base {
+public:
+    Derived() { std::cout << "Derived Constructor\n"; }
+    ~Derived() override { std::cout << "Derived Destructor\n"; }
+};
+
+int main() {
+    Derived d;
+    return 0;
+}
+\end{lstlisting}
+Output:
+\begin{lstlisting}
+Base Constructor
+Derived Constructor
+Derived Destructor
+Base Destructor
+\end{lstlisting}
+
+\begin{tcolorbox}[colback=codebg,colframe=quotetext,title=\textbf{Exam Trap: The Absolute Necessity of Virtual Destructors}]
+If a derived class object is allocated dynamically on the heap and manipulated via a base class pointer (\texttt{Base* ptr = new Derived();}), deleting the object via \texttt{delete ptr;} results in \textbf{Undefined Behavior} and fatal memory leaks if the base class destructor is non-virtual! The compiler will statically bind the destructor call to \texttt{\~Base()}, failing to invoke \texttt{\~Derived()}. Always declare base class destructors \texttt{virtual} in polymorphic classes.
+\end{tcolorbox}
+
+\section{Branching and Looping: Control-Flow Tracing}
+\label{sec:branching_looping_tracing}
+
+\subsection{Dangling Else Ambiguity and Control Branching}
+In C, C++, and Java, the compiler parses unbraced nested \texttt{if-else} statements by pairing each \texttt{else} with the \textbf{nearest preceding unmatched \texttt{if}} within the same block scope.
+
+\begin{lstlisting}[language=C]
+int a = 1, b = 0;
+if (a == 1)
+    if (b == 1)
+        printf("A");
+else
+    printf("B");
+\end{lstlisting}
+Despite misleading indentation, the \texttt{else} binds to \texttt{if (b == 1)}. Because $a == 1$ is true but $b == 1$ is false, execution routes to the inner \texttt{else}, printing \texttt{B}. Explicit bracing must be utilized to bind the \texttt{else} to the outer condition.
+
+\subsection{Switch Fall-Through Mechanics}
+In a \texttt{switch} statement, control transfers to the matching \texttt{case} label. If the branch terminates without an explicit \texttt{break} statement, execution \textbf{falls through} sequentially into all subsequent case blocks regardless of their label conditions.
+
+\begin{lstlisting}[language=C]
+int x = 2;
+switch (x) {
+    case 1: printf("One ");
+    case 2: printf("Two ");   // Matches here; falls through!
+    case 3: printf("Three "); // Executes due to missing break!
+            break;            // Exits switch here
+    default: printf("Default");
+}
+\end{lstlisting}
+Output: \texttt{Two Three }.
+
+\subsection{Entry-Controlled vs. Exit-Controlled Iteration}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Operational Feature} & \textbf{\texttt{while} Loop} & \textbf{\texttt{do-while} Loop} \\
+\midrule
+\textbf{Control Classification} & Entry-controlled (pre-test). & Exit-controlled (post-test). \\
+\textbf{Condition Evaluation} & Evaluated \textit{before} executing the loop body. & Evaluated \textit{after} executing the loop body. \\
+\textbf{Minimum Executions} & \textbf{Zero} (if initial condition is false). & \textbf{Exactly One} (body executes unconditionally once). \\
+\textbf{Syntax Structure} & \texttt{while (condition) \{ ... \}} & \texttt{do \{ ... \} while (condition);} \\
+\bottomrule
+\end{tabularx}
+\caption{Systematic Comparison: \texttt{while} versus \texttt{do-while} Iteration}
+\label{tab:while_vs_dowhile}
+\end{table}
+
+\begin{tcolorbox}[colback=codebg,colframe=quotetext,title=\textbf{Exam Trap: The \texttt{continue} Statement in \texttt{while} vs. \texttt{for} Loops}]
+In a \texttt{for} loop, issuing \texttt{continue} skips the remaining body but \textbf{still executes the loop step expression} (\texttt{i++}). In a \texttt{while} loop, if the increment statement resides at the bottom of the body, \texttt{continue} skips the increment entirely, resulting in an \textbf{infinite loop}:
+\begin{lstlisting}[language=C]
+int i = 1;
+while (i <= 5) {
+    if (i == 3) continue; // TRAP: Skips i++; i remains 3 forever!
+    printf("%d ", i);
+    i++;
+}
+\end{lstlisting}
+\end{tcolorbox}
+
+\section{Parameter Passing, Pointers, and Memory Allocation}
+\label{sec:parameter_passing_pointers}
+
+\subsection{Call by Value vs. Call by Reference}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Call by Value (C Default):} The caller's argument is evaluated, and an independent bitwise copy is assigned to the function's formal parameter. Modifications made within the function affect only the local activation record.
+    \item \textbf{Call by Reference (C++):} The formal parameter is declared as an alias (\texttt{\&}) bound directly to the caller's original lvalue. Modifications mutate the caller's variable directly.
+    \item \textbf{Pointer Simulation in C:} C achieves reference semantics by explicitly passing the variable's memory address (\texttt{\&var}) into a pointer parameter (\texttt{*ptr}) and dereferencing it.
+\end{itemize}
+
+\begin{keyconcept}[The Java Pass-by-Value Invariant]
+Java is \textbf{strictly 100\% pass-by-value}. There is no call-by-reference in Java:
+\begin{itemize}[leftmargin=*]
+    \item When passing primitive types (\texttt{int}, \texttt{double}), the raw value is copied.
+    \item When passing object references (\texttt{MyClass obj}), \textbf{the reference handle itself (pointer value) is passed by value}. Both caller and callee reference copies point to the identical heap object. Mutating object fields (\texttt{obj.value = 100}) modifies the shared heap state. However, reassigning the parameter variable (\texttt{obj = new MyClass()}) mutates only the local copy, leaving the caller's reference unchanged!
+\end{itemize}
+\end{keyconcept}
+
+\subsection{Pointer Topologies and Memory Hazards}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Pointer Classification} & \textbf{Architectural Definition} & \textbf{Safety Hazard / Mitigation} \\
+\midrule
+\textbf{Null Pointer} & Points to address $0$ (\texttt{NULL} / \texttt{nullptr}); explicitly denotes unassigned state. & Dereferencing causes OS segmentation fault (\texttt{SIGSEGV}). Always check \texttt{if (ptr != NULL)}. \\
+\textbf{Void Pointer} & Generic pointer (\texttt{void*}) holding address of untyped memory. & Cannot be dereferenced or incremented without explicit typecasting. \\
+\textbf{Wild Pointer} & Uninitialized pointer variable containing random stack/register garbage. & Unpredictable memory corruption. Always initialize to \texttt{NULL} or valid address. \\
+\textbf{Dangling Pointer} & Points to storage that has been deallocated via \texttt{free()} or popped from stack. & Accessing causes undefined behavior. Immediately set \texttt{ptr = NULL} after \texttt{free(ptr)}. \\
+\bottomrule
+\end{tabularx}
+\caption{Taxonomy of C/C++ Pointer Classifications and Memory Hazards}
+\label{tab:pointer_hazards}
+\end{table}
+
+\subsection{Dynamic Memory Allocation: \texttt{malloc}, \texttt{calloc}, \texttt{realloc}, \texttt{free}}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{\texttt{malloc(size\_t size)}:} Allocates a contiguous block of $size$ bytes on the heap. Leaves memory \textbf{uninitialized} (contains garbage).
+    \item \textbf{\texttt{calloc(size\_t num, size\_t size)}:} Allocates storage for $num$ elements of $size$ bytes each, and explicitly initializes \textbf{all bytes to zero}.
+    \item \textbf{\texttt{realloc(void* ptr, size\_t new\_size)}:} Resizes an existing heap block, relocating data to a new address if contiguous space is unavailable.
+    \item \textbf{\texttt{free(void* ptr)}:} Releases the allocated heap block back to the runtime allocator.
+    \item \textbf{Memory Leak:} Occurs when dynamically allocated heap storage is severed from all pointers without first invoking \texttt{free()}, exhausting available system RAM over time.
+\end{itemize}
+
+\section{Data Types, Type Conversion, and Storage Classes}
+\label{sec:data_types_storage_classes}
+
+\subsection{Fundamental Types and Integer Promotion Rules}
+In C and C++, arithmetic operations are never performed directly on types narrower than \texttt{int}.
+\begin{keyconcept}[Integer Promotion Axiom]
+Whenever an expression involves small integer types (\texttt{char}, \texttt{signed char}, \texttt{unsigned char}, \texttt{short}, \texttt{unsigned short}), the compiler automatically promotes them to \texttt{int} (or \texttt{unsigned int} if \texttt{int} cannot represent all values of the original type) before performing the calculation.
+\end{keyconcept}
+
+\subsection{Unsigned Modular Arithmetic and Overflow Traps}
+Signed integer overflow invokes \textbf{Undefined Behavior} in C and C++. In contrast, unsigned integer arithmetic is mathematically guaranteed to adhere to \textbf{modular arithmetic} ($x \pmod{2^n}$), where $n$ is the bit-width of the unsigned type.
+
+\begin{lstlisting}[language=C]
+unsigned int u = 0;
+u--; // Underflows cleanly to (2^32 - 1) on 32-bit systems
+printf("%u\n", u); // Prints 4294967295
+\end{lstlisting}
+
+\subsection{Floating-Point Representation and IEEE-754 Precision}
+Binary floating-point numbers represent values as $(-1)^s \times (1 + \text{fraction}) \times 2^{\text{exponent}-127}$. Because decimal fractions such as $0.1$ and $0.2$ lack terminating representations in binary base-2, floating-point arithmetic incurs rounding discrepancies:
+\[
+0.1_{10} + 0.2_{10} = 0.3000000000000000444 \dots \ne 0.3_{10}
+\]
+In engineering examinations, never check floating-point equality using \texttt{if (a == b)}. Always check against an acceptable epsilon threshold: \texttt{if (fabs(a - b) < 1e-9)}.
+
+\subsection{Storage Classes and Scoping Rules}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l l l X}
+\toprule
+\textbf{Storage Class} & \textbf{Storage Location} & \textbf{Scope} & \textbf{Lifetime / Architectural Semantics} \\
+\midrule
+\texttt{auto} & Stack & Block local & Automatically deallocated upon exiting the enclosing lexical block. \\
+\texttt{static} (local) & Data segment & Block local & Retains state permanently across all subsequent function activations. \\
+\texttt{static} (global) & Data segment & File scope & Restricts linkage to the current translation unit (internal linkage). \\
+\texttt{extern} & Data segment & Global & References a variable or function defined in an external translation unit. \\
+\texttt{volatile} & Memory / Register & Declared scope & Informs compiler that variable may mutate externally (hardware I/O / ISR); disables caching in registers. \\
+\bottomrule
+\end{tabularx}
+\caption{Systematic Summary of C/C++ Storage Classes}
+\label{tab:storage_classes}
+\end{table}
+
+\section{Version Control with Git}
+\label{sec:version_control_git}
+
+Git is a distributed version control system (DVCS) where every developer clone functions as a complete repository containing full cryptographic history.
+
+\subsection{Architectural Stages: The Three-Tier Workflow}
+\begin{figure}[htbp]
+\centering
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Git Architecture: The Four Lifecycle Zones}]
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Working Directory:} Physical sandbox where files are edited locally.
+    \item \textbf{Staging Area (Index):} Intermediate binary index staging changes targeted for the next commit (\texttt{git add}).
+    \item \textbf{Local Repository:} Committed snapshots stored locally inside the hidden \texttt{.git} object database (\texttt{git commit}).
+    \item \textbf{Remote Repository:} Centralized host (GitHub, GitLab, Bitbucket) facilitating distributed synchronization (\texttt{git push} / \texttt{git fetch}).
+\end{enumerate}
+\end{tcolorbox}
+\end{figure}
+
+\subsection{Git Terminology and Essential Command Reference}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Git Command} & \textbf{Operational Function} \\
+\midrule
+\texttt{git init} & Initializes a new, empty Git repository in the current directory. \\
+\texttt{git clone <url>} & Clones an entire remote repository, including branches and history, to local disk. \\
+\texttt{git status} & Displays working tree state: untracked, modified, and staged files. \\
+\texttt{git add <path>} & Stages modified file contents into the Index ready for commit. \\
+\texttt{git commit -m "msg"} & Records a permanent snapshot of staged changes into the local commit history. \\
+\texttt{git log --oneline} & Displays commit history as compact single-line SHA-1 hashes and commit messages. \\
+\texttt{git diff} & Compares modifications between the working directory and the staging area. \\
+\texttt{git diff --staged} & Compares staged modifications against the most recent commit (\texttt{HEAD}). \\
+\texttt{git switch -c <br>} & Creates and immediately checks out a new feature branch (replaces \texttt{git checkout -b}). \\
+\texttt{git merge <branch>} & Combines history from the specified branch into the currently checked-out branch. \\
+\texttt{git fetch <remote>} & Downloads commits, files, and refs from a remote repository without integrating. \\
+\texttt{git pull <remote>} & Executes \texttt{git fetch} followed immediately by \texttt{git merge} into current branch. \\
+\texttt{git push <rem> <br>} & Transmits local branch commits to the upstream remote repository. \\
+\bottomrule
+\end{tabularx}
+\caption{Essential Git Command Reference for IT Engineers}
+\label{tab:git_commands}
+\end{table}
+
+\subsection{Git Merge versus Git Rebase}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Feature} & \textbf{Git Merge} & \textbf{Git Rebase} \\
+\midrule
+\textbf{Branch History} & Preserves complete non-linear branch topology and chronological order. & Rewrites commit history into a clean, linear sequence. \\
+\textbf{Merge Commit} & Creates a dedicated 3-way merge commit (unless fast-forwarded). & Never creates a merge commit; reapplies commits individually. \\
+\textbf{Traceability} & Explicitly records when features were integrated. & Linearizes history; obscures actual parallel branch lifecycles. \\
+\textbf{The Golden Rule} & Safe for shared, published public branches. & \textbf{Never rebase public shared branches}; rewrites public history! \\
+\bottomrule
+\end{tabularx}
+\caption{Systematic Comparison: Git Merge versus Git Rebase}
+\label{tab:git_merge_vs_rebase}
+\end{table}
+
+\subsection{Undoing Changes: Git Reset versus Git Revert}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{\texttt{git reset --soft HEAD\~{}1}:} Moves branch pointer backward by 1 commit. Leaves all modified files intact in the \textbf{Staging Area}.
+    \item \textbf{\texttt{git reset --mixed HEAD\~{}1} (Default):} Moves branch pointer backward by 1 commit. Unstages changes, leaving modified files intact in the \textbf{Working Directory}.
+    \item \textbf{\texttt{git reset --hard HEAD\~{}1}:} Moves branch pointer backward and \textbf{permanently destroys} all uncommitted working tree and staging area changes!
+    \item \textbf{\texttt{git revert <commit-hash>}:} Non-destructive undo. Generates a \textbf{brand-new commit} that mathematically reverses the patch introduced by the target commit, safely preserving historical integrity on public branches.
+\end{itemize}
+
+\section{Essential Bash Commands for IT Recruitment Exams}
+\label{sec:bash_commands_it_exams}
+
+\subsection{File System Navigation and Manipulation}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X l}
+\toprule
+\textbf{Command} & \textbf{Description} & \textbf{Typical Practical Invocation} \\
+\midrule
+\texttt{pwd} & Print current absolute working directory path & \texttt{pwd} \\
+\texttt{ls} & List directory contents with metadata & \texttt{ls -la /var/log} \\
+\texttt{cd} & Change current shell working directory & \texttt{cd /etc/nginx} \\
+\texttt{mkdir} & Create directory (including parent directories) & \texttt{mkdir -p /opt/app/logs} \\
+\texttt{rm} & Remove files or recursively delete directory trees & \texttt{rm -rf /tmp/cache} \\
+\texttt{cp} & Copy files or directories recursively & \texttt{cp -r src/ /backup/src/} \\
+\texttt{mv} & Move or rename files and directories & \texttt{mv old\_name.c new\_name.c} \\
+\texttt{head} / \texttt{tail} & Display top or bottom $N$ lines of a file & \texttt{tail -f /var/log/syslog} \\
+\texttt{wc} & Count lines, words, and byte counts in a file & \texttt{wc -l access.log} \\
+\bottomrule
+\end{tabularx}
+\caption{Core Bash Filesystem Navigation and File Operations}
+\label{tab:bash_file_commands}
+\end{table}
+
+\subsection{Octal Permissions and Ownership Management}
+Linux filesystems enforce a 3-tier security model: \textbf{Owner (User)}, \textbf{Group}, and \textbf{Others}. Permissions are quantified as:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Read ($r = 4$):} Permits viewing file contents or listing directory entries.
+    \item \textbf{Write ($w = 2$):} Permits modifying file contents or creating/deleting files within a directory.
+    \item \textbf{Execute ($x = 1$):} Permits running the file as a program or entering/traversing a directory.
+\end{itemize}
+
+\begin{keyconcept}[Octal Calculation for \texttt{chmod 755}]
+\begin{itemize}[leftmargin=*]
+    \item Owner: $r + w + x = 4 + 2 + 1 = \mathbf{7}$ (Full read, write, execute).
+    \item Group: $r + x = 4 + 0 + 1 = \mathbf{5}$ (Read and execute only).
+    \item Others: $r + x = 4 + 0 + 1 = \mathbf{5}$ (Read and execute only).
+    \item Command: \texttt{chmod 755 deploy.sh} $\implies$ \texttt{-rwxr-xr-x}.
+\end{itemize}
+\end{keyconcept}
+
+\subsection{Process Management and Inter-Process Signals}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l l X}
+\toprule
+\textbf{Signal Name} & \textbf{Number} & \textbf{Operational Semantics} \\
+\midrule
+\texttt{SIGHUP} & 1 & Hangup detected on controlling terminal; reloads daemon configurations. \\
+\texttt{SIGINT} & 2 & Interrupt from keyboard (\texttt{Ctrl+C}); gracefully requests process halt. \\
+\texttt{SIGKILL} & 9 & \textbf{Unconditional, immediate termination} enforced directly by the OS kernel. Cannot be caught, blocked, or ignored. Prevents process cleanup. \\
+\texttt{SIGTERM} & 15 & \textbf{Polite termination request} (Default for \texttt{kill}). Allows process to release sockets, flush buffers, and close file handles. \\
+\bottomrule
+\end{tabularx}
+\caption{Standard POSIX Process Signals and Operational Hierarchy}
+\label{tab:posix_signals}
+\end{table}
+
+\subsection{Networking and Socket Inspection Diagnostics}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{\texttt{ip addr}:} Displays all network interfaces, link states, MAC addresses, and assigned IPv4/IPv6 addresses (replaces legacy \texttt{ifconfig}).
+    \item \textbf{\texttt{ss -tulnp}:} Modern socket statistics utility. Displays active listening TCP/UDP ports (\texttt{-t} TCP, \texttt{-u} UDP, \texttt{-l} listening, \texttt{-n} numeric ports, \texttt{-p} process PID/name). Replaces legacy \texttt{netstat}.
+    \item \textbf{\texttt{ping -c 4 8.8.8.8}:} Injects ICMP Echo Request datagrams to verify Layer~3 IP connectivity and measure round-trip packet latency.
+    \item \textbf{\texttt{curl -I https://api.gov.bd}:} Fetches HTTP response headers without downloading the body payload, verifying web service status.
+    \item \textbf{\texttt{dig domain.com}:} Performs authoritative DNS lookup diagnostics, querying nameserver records (A, AAAA, MX, NS, CNAME).
+\end{itemize}
+
+\subsection{Pipes and Stream Redirection Operators}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Standard Pipe (\texttt{|}):} Diverts \texttt{stdout} of upstream command directly into \texttt{stdin} of downstream command (\texttt{ps aux | grep nginx}).
+    \item \textbf{Output Redirection (\texttt{>}):} Redirects standard output to a file, \textbf{overwriting} existing contents (\texttt{echo "test" > file.txt}).
+    \item \textbf{Append Redirection (\texttt{>>}):} Appends standard output to the end of a file without truncating (\texttt{echo "line" >> file.txt}).
+    \item \textbf{Standard Error Redirection (\texttt{2>}):} Redirects \texttt{stderr} stream ($FD=2$) to a file (\texttt{make 2> errors.log}).
+    \item \textbf{Unified Stream Redirection (\texttt{> file 2>\&1} or \texttt{\&> file}):} Merges both standard output and standard error into a single destination file.
+\end{itemize}
+
+\section{High-Probability Algorithmic Problems and Solutions}
+\label{sec:algorithmic_problems_solutions}
+
+\subsection{Finding the Distinct Second-Largest Array Element in $O(n)$}
+Finding the second-largest element without full sorting ($O(n \log n)$) requires maintaining two tracking variables across a single linear pass.
+
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+#include <limits.h>
+
+int find_second_largest(int arr[], int n) {
+    if (n < 2) return INT_MIN; // Insufficient elements
+    int largest = INT_MIN, second = INT_MIN;
+    for (int i = 0; i < n; i++) {
+        if (arr[i] > largest) {
+            second = largest;
+            largest = arr[i];
+        } else if (arr[i] > second && arr[i] < largest) {
+            second = arr[i]; // Distinct second-largest
+        }
+    }
+    return second;
+}
+\end{lstlisting}
+
+\subsection{Binary Search and the Integer Overflow Mitigation Trap}
+Binary search operates on sorted sequences by halving the search space on each iteration.
+\begin{tcolorbox}[colback=codebg,colframe=quotetext,title=\textbf{Exam Trap: Midpoint Index Arithmetic Overflow}]
+A classic bug occurs when computing the midpoint as \texttt{mid = (low + high) / 2}. In large arrays where $low + high > 2^{31}-1$, the sum wraps around to a negative integer, triggering a segmentation fault. Always write:
+\[
+\boxed{\text{mid} = \text{low} + \frac{\text{high} - \text{low}}{2}}
+\]
+\end{tcolorbox}
+
+\begin{lstlisting}[language=C]
+int binary_search(int a[], int n, int key) {
+    int low = 0, high = n - 1;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (a[mid] == key)
+            return mid; // Key found at index mid
+        else if (a[mid] < key)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    return -1; // Key absent
+}
+\end{lstlisting}
+
+\subsection{Sorting Algorithm Comparative Taxonomy}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l l l l l l}
+\toprule
+\textbf{Algorithm} & \textbf{Best Time} & \textbf{Average Time} & \textbf{Worst Time} & \textbf{Space} & \textbf{Stability} \\
+\midrule
+\textbf{Bubble Sort} & $O(n)$ (Optimized) & $O(n^2)$ & $O(n^2)$ & $O(1)$ & Stable \\
+\textbf{Selection Sort} & $O(n^2)$ & $O(n^2)$ & $O(n^2)$ & $O(1)$ & Unstable \\
+\textbf{Insertion Sort} & $O(n)$ & $O(n^2)$ & $O(n^2)$ & $O(1)$ & Stable \\
+\textbf{Merge Sort} & $O(n \log n)$ & $O(n \log n)$ & $O(n \log n)$ & $O(n)$ & Stable \\
+\textbf{Quick Sort} & $O(n \log n)$ & $O(n \log n)$ & $O(n^2)$ & $O(\log n)$ & Unstable \\
+\textbf{Heap Sort} & $O(n \log n)$ & $O(n \log n)$ & $O(n \log n)$ & $O(1)$ & Unstable \\
+\bottomrule
+\end{tabularx}
+\caption{Algorithmic Performance Matrix: Core Comparison of Sorting Paradigms}
+\label{tab:sorting_comparison}
+\end{table}
+
+\subsection{Euclidean GCD and LCM Formulation}
+The Euclidean algorithm computes the Greatest Common Divisor via repeated modulo division:
+\[
+\gcd(a, b) = \gcd(b, a \pmod b) \quad \text{until } b = 0
+\]
+The Least Common Multiple (LCM) is subsequently derived:
+\[
+\text{LCM}(a, b) = \frac{|a \times b|}{\gcd(a, b)}
+\]
+
+\begin{lstlisting}[language=C]
+long long gcd(long long a, long long b) {
+    while (b != 0) {
+        long long temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+long long lcm(long long a, long long b) {
+    if (a == 0 || b == 0) return 0;
+    return (a / gcd(a, b)) * b; // Divide first to avoid integer overflow
+}
+\end{lstlisting}
+
+\subsection{Leap Year Gregorian Century Validation}
+An astronomical calendar year is a leap year if and only if:
+\[
+(\text{year} \pmod{400} == 0) \quad \lor \quad (\text{year} \pmod 4 == 0 \ \land \ \text{year} \pmod{100} \ne 0)
+\]
+Years divisible by $100$ (e.g., 1900) are \textbf{not} leap years unless divisible by $400$ (e.g., 2000).
+
+\section{Additional Programming Concepts Frequently Tested}
+\label{sec:additional_frequently_tested_concepts}
+
+\subsection{Const Pointers vs. Pointers to Const}
+In C and C++, the positioning of the \texttt{const} keyword relative to the asterisk (\texttt{*}) determines mutability:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{\texttt{const int *ptr} (or \texttt{int const *ptr}):} Pointer to constant data. The integer data being pointed to is read-only (\texttt{*ptr = 20;} is an error). The pointer address itself can be reassigned (\texttt{ptr = \&y;} is valid).
+    \item \textbf{\texttt{int *const ptr = \&x;}:} Constant pointer to mutable data. The pointer address is permanently bound to $x$ (\texttt{ptr = \&y;} is an error). The underlying integer data can be modified (\texttt{*ptr = 20;} is valid).
+    \item \textbf{\texttt{const int *const ptr = \&x;}:} Constant pointer to constant data. Neither the pointer address nor the underlying data can be modified.
+\end{itemize}
+
+\subsection{Structure versus Union Memory Architecture}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Architectural Metric} & \textbf{Structure (\texttt{struct})} & \textbf{Union (\texttt{union})} \\
+\midrule
+\textbf{Memory Allocation} & Every member receives its own distinct, non-overlapping memory offset. & All members share the exact same starting memory address (overlay). \\
+\textbf{Aggregate Size} & Sum of member sizes plus compiler structure alignment padding. & Equal to the size of the largest individual member plus alignment padding. \\
+\textbf{Active Members} & All members can store meaningful values simultaneously. & Only \textbf{one member} can hold an active, valid value at any instant. \\
+\textbf{Mutation Impact} & Modifying member $A$ leaves member $B$ completely unaffected. & Writing to member $A$ overwrites and corrupts the bit-pattern of member $B$. \\
+\bottomrule
+\end{tabularx}
+\caption{Architectural Comparison: C \texttt{struct} versus \texttt{union}}
+\label{tab:struct_vs_union}
+\end{table}
+
+\subsection{C vs. C++ vs. Java Master Comparative Taxonomy}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X X}
+\toprule
+\textbf{Architectural Dimension} & \textbf{C} & \textbf{C++} & \textbf{Java} \\
+\midrule
+\textbf{Dominant Paradigm} & Procedural / Imperative & Multi-paradigm (OOP, Generic) & Pure Object-Oriented / Class-based \\
+\textbf{Memory Model} & Manual (\texttt{malloc}/\texttt{free}) & Manual / RAII (\texttt{new}/\texttt{delete}) & Automatic Tracing Garbage Collection \\
+\textbf{Pointer Manipulation} & Raw pointer arithmetic & Raw pointers and smart pointers & No pointer arithmetic; managed references \\
+\textbf{Multiple Inheritance} & Unsupported & Supported (Virtual base classes) & Multiple interfaces; single class hierarchy \\
+\textbf{Operator Overloading} & Unsupported & Fully supported & Unsupported (except built-in string \texttt{+}) \\
+\textbf{Method Dispatch} & Static function calls & Static by default; \texttt{virtual} dynamic & Dynamic by default (except \texttt{static}/\texttt{final}) \\
+\textbf{Exception Model} & Manual error codes & Structured try-catch-throw & Checked and unchecked exceptions \\
+\bottomrule
+\end{tabularx}
+\caption{Cross-Language Architectural Matrix: C versus C++ versus Java}
+\label{tab:c_cpp_java_matrix}
+\end{table}
+
+\subsection{Recurring Java Examination Traps}
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{String Concatenation Evaluation Order:} In Java, \texttt{10 + 20 + "Java"} evaluates left-to-right as numeric addition ($30$) followed by concatenation: \texttt{"30Java"}. In contrast, \texttt{"Java" + 10 + 20} converts $10$ to string first (\texttt{"Java10"}), then concatenates $20$, producing \texttt{"Java1020"}.
+    \item \textbf{Object Identity (\texttt{==}) vs. Value Equality (\texttt{.equals()}):} For object references, \texttt{a == b} evaluates whether both references point to the identical heap address. \texttt{a.equals(b)} evaluates semantic content equality. Two distinct \texttt{new String("Hello")} objects yield \texttt{false} for \texttt{==}, but \texttt{true} for \texttt{.equals()}.
+    \item \textbf{Static Field Class Lifetime:} In Java, a \texttt{static} variable is tied to the Class object loaded in the JVM Metaspace, not individual object instances. Mutating a static field inside a constructor impacts the global class state across all past and future instances.
+\end{enumerate}
+
+\section{Model Examination Questions with Worked Solutions}
+\label{sec:model_exam_questions_solutions}
+
+\subsection{Section A: Code Output Analysis}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Question 1: Multiple Increment Sequencing}]
+\textbf{Problem:} Determine the exact output of the following C program:
+\begin{lstlisting}[language=C]
+int x = 5;
+printf("%d ", x++);
+printf("%d ", ++x);
+printf("%d", x);
+\end{lstlisting}
+\textbf{Solution:}
+\begin{enumerate}[leftmargin=*]
+    \item \texttt{printf("\%d ", x++);} evaluates to the current value of $x$ ($5$), prints \textbf{5}, then post-increments $x$ to $6$.
+    \item \texttt{printf("\%d ", ++x);} pre-increments $x$ from $6$ to $7$, then yields and prints \textbf{7}.
+    \item \texttt{printf("\%d", x);} prints the current value of $x$ (\textbf{7}).
+\end{enumerate}
+\textbf{Output:} \texttt{5 7 7}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Question 2: Integer Arithmetic and Precedence}]
+\textbf{Problem:} Determine the output of the following code snippet:
+\begin{lstlisting}[language=C]
+int a = 10, b = 3;
+printf("%d ", a / b);
+printf("%d ", a % b);
+printf("%d", a / b * b);
+\end{lstlisting}
+\textbf{Solution:}
+\begin{itemize}[leftmargin=*]
+    \item $a / b = 10 / 3 = 3$ (fractional component discarded). Prints \textbf{3}.
+    \item $a \% b = 10 \pmod 3 = 1$. Prints \textbf{1}.
+    \item $a / b * b$: Associates left-to-right: $(10 / 3) \times 3 = 3 \times 3 = 9$. Prints \textbf{9}.
+\end{itemize}
+\textbf{Output:} \texttt{3 1 9}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Question 3: Short-Circuit Logic with Side Effects}]
+\textbf{Problem:} Trace the execution and determine the output:
+\begin{lstlisting}[language=C]
+int x = 0;
+if (x++ && ++x)
+    printf("A");
+else
+    printf("B");
+printf("%d", x);
+\end{lstlisting}
+\textbf{Solution:}
+\begin{itemize}[leftmargin=*]
+    \item In \texttt{x++ \&\& ++x}, the left operand \texttt{x++} yields $0$ (false) and then post-increments $x$ to $1$.
+    \item Because the left operand of logical AND is false, \textbf{short-circuit evaluation skips \texttt{++x}}.
+    \item The condition evaluates to false; the \texttt{else} branch prints \textbf{B}.
+    \item The trailing statement prints the current value of $x$ (\textbf{1}).
+\end{itemize}
+\textbf{Output:} \texttt{B1}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Question 4: Bitwise Left Shift Multiplication}]
+\textbf{Problem:} What is the printed value of the expression \texttt{printf("\%d", a << 2);} when \texttt{int a = 3;}? \\
+\textbf{Solution:} A bitwise left shift by $k$ bits ($a \ll k$) multiplies the non-negative integer by $2^k$:
+\[
+3 \ll 2 = 3 \times 2^2 = 3 \times 4 = 12
+\]
+Binary verification: $3_{10} = 00000011_2 \implies 00001100_2 = 12_{10}$. \\
+\textbf{Output:} \texttt{12}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Question 5: Switch Statement Fall-Through}]
+\textbf{Problem:} Determine the output when $x = 2$:
+\begin{lstlisting}[language=C]
+int x = 2;
+switch (x) {
+    case 1: printf("A");
+    case 2: printf("B");
+    case 3: printf("C");
+            break;
+    default: printf("D");
+}
+\end{lstlisting}
+\textbf{Solution:} Control jumps directly to \texttt{case 2}, printing \textbf{B}. Because no \texttt{break} exists under \texttt{case 2}, execution falls through into \texttt{case 3}, printing \textbf{C}. The \texttt{break} under \texttt{case 3} terminates the switch. \\
+\textbf{Output:} \texttt{BC}
+\end{tcolorbox}
+
+\subsection{Section B: Recursion Output Tracing}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Question 6: Static Variable Accumulation in Recursion}]
+\textbf{Problem:} Trace the return value and output of \texttt{printf("\%d", fun(3));}:
+\begin{lstlisting}[language=C]
+int fun(int n) {
+    static int x = 1;
+    if (n == 0) return 0;
+    x++;
+    return x + fun(n - 1);
+}
+\end{lstlisting}
+\textbf{Solution:}
+Variable $x$ is static and persists across all calls:
+\begin{itemize}[leftmargin=*]
+    \item Call 1 ($n=3$): $x$ becomes $2$. Returns $2 + \text{fun}(2)$.
+    \item Call 2 ($n=2$): $x$ becomes $3$. Returns $3 + \text{fun}(1)$.
+    \item Call 3 ($n=1$): $x$ becomes $4$. Returns $4 + \text{fun}(0)$.
+    \item Call 4 ($n=0$): Base case matches; returns $0$.
+    \item Summation: $2 + 3 + 4 + 0 = 9$.
+\end{itemize}
+\textbf{Output:} \texttt{9}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Question 7: Unwinding Print vs. Winding Print}]
+\textbf{Problem:} Compare the outputs of \texttt{funA(4)} and \texttt{funB(4)}:
+\begin{lstlisting}[language=C]
+void funA(int n) {
+    if (n == 0) return;
+    printf("%d ", n);
+    funA(n - 1);
+}
+
+void funB(int n) {
+    if (n == 0) return;
+    funB(n - 1);
+    printf("%d ", n);
+}
+\end{lstlisting}
+\textbf{Solution:}
+\begin{itemize}[leftmargin=*]
+    \item In \texttt{funA}, \texttt{printf} precedes the recursive call (winding phase). Output: \texttt{4 3 2 1}.
+    \item In \texttt{funB}, \texttt{printf} follows the recursive call (unwinding phase). Output: \texttt{1 2 3 4}.
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Section C: Object-Oriented C++ Dispatch}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Question 8: Virtual vs. Non-Virtual Member Function Dispatch}]
+\textbf{Problem:} What is the printed output of the following C++ program?
+\begin{lstlisting}[language=C++]
+class A {
+public:
+    void show() { std::cout << "A"; }
+};
+
+class B : public A {
+public:
+    void show() { std::cout << "B"; }
+};
+
+int main() {
+    B obj;
+    A *ptr = &obj;
+    ptr->show();
+    return 0;
+}
+\end{lstlisting}
+\textbf{Solution:} Function \texttt{show()} is \textbf{non-virtual}. The compiler resolves the invocation at compile-time using the static pointer type (\texttt{A*}). It does not consult the vtable. \\
+\textbf{Output:} \texttt{A}. \\
+\textit{Note:} If \texttt{virtual void show()} were declared in base class \texttt{A}, dynamic dispatch would invoke \texttt{B::show()}, yielding \texttt{B}.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Question 9: Constructor and Destructor Destruction Sequencing}]
+\textbf{Problem:} Predict the console output:
+\begin{lstlisting}[language=C++]
+class Test {
+public:
+    Test()  { std::cout << "C"; }
+    ~Test() { std::cout << "D"; }
+};
+
+int main() {
+    Test a;
+    Test b;
+    return 0;
+}
+\end{lstlisting}
+\textbf{Solution:} Local stack objects are constructed in forward declaration order (\texttt{a} then \texttt{b}), printing \texttt{CC}. Upon exiting \texttt{main()}, local objects are destroyed in strictly \textbf{reverse order} (\texttt{b} then \texttt{a}), printing \texttt{DD}. \\
+\textbf{Output:} \texttt{CCDD}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Question 10: Base and Derived Construction Hierarchy}]
+\textbf{Problem:} What does the following program print?
+\begin{lstlisting}[language=C++]
+class A { public: A() { std::cout << "A"; } };
+class B : public A { public: B() { std::cout << "B"; } };
+int main() { B obj; return 0; }
+\end{lstlisting}
+\textbf{Solution:} When an instance of derived class \texttt{B} is instantiated, the base class \texttt{A} constructor must complete before the body of derived constructor \texttt{B} begins. \\
+\textbf{Output:} \texttt{AB}
+\end{tcolorbox}
+
+\section{Analytical Viva Voce Question Bank}
+\label{sec:viva_voce_question_bank}
+
+\begin{enumerate}[leftmargin=*,label=\textbf{Q\arabic*.}]
+    \item \textbf{What is the difference between \texttt{=} and \texttt{==} in C/C++?} \\
+    \textbf{Answer:} \texttt{=} is the assignment operator, storing an rvalue into an lvalue memory location. \texttt{==} is the relational equality operator, comparing two values and returning $1$ (true) or $0$ (false).
+    \item \textbf{Why does \texttt{\&\&} differ fundamentally from \texttt{\&}?} \\
+    \textbf{Answer:} \texttt{\&\&} is a logical operator supporting short-circuit evaluation. \texttt{\&} is a bitwise operator performing bit-by-bit conjunction across integral operands without short-circuiting.
+    \item \textbf{Explain the difference between \texttt{break} and \texttt{continue}.} \\
+    \textbf{Answer:} \texttt{break} terminates the innermost enclosing loop or switch construct immediately. \texttt{continue} terminates only the current iteration, advancing immediately to the loop's next evaluation cycle.
+    \item \textbf{Can a constructor be declared \texttt{virtual} in C++? Why or why not?} \\
+    \textbf{Answer:} \textbf{No.} A constructor cannot be virtual. Virtual function dispatch relies on the virtual table pointer (\texttt{vptr}) inside the object. The \texttt{vptr} is only initialized during constructor execution; prior to object construction, no vtable linkage exists.
+    \item \textbf{Can a destructor be declared \texttt{virtual} in C++? When is it mandatory?} \\
+    \textbf{Answer:} \textbf{Yes.} A virtual destructor is mandatory whenever derived class objects are deleted polymorphically through a base class pointer (\texttt{Base* ptr = new Derived(); delete ptr;}). A non-virtual destructor results in undefined behavior and resource leaks.
+    \item \textbf{Can constructors or destructors be overloaded?} \\
+    \textbf{Answer:} Constructors \textbf{can} be overloaded with distinct parameter signatures. Destructors \textbf{cannot} be overloaded; a class possesses exactly one parameterless destructor.
+    \item \textbf{What is a pure virtual function and an abstract class?} \\
+    \textbf{Answer:} A pure virtual function is a virtual member function declared with \texttt{= 0} and no implementation in the base class. Any class containing at least one pure virtual function is an abstract class and cannot be instantiated.
+    \item \textbf{Is a C++ \texttt{friend} function a member of the class granting friendship?} \\
+    \textbf{Answer:} \textbf{No.} A friend function is a non-member function granted special access to private and protected members. It does not possess a \texttt{this} pointer and is not inherited.
+    \item \textbf{Why does an uninitialized pointer represent a catastrophic security risk?} \\
+    \textbf{Answer:} An uninitialized (wild) pointer contains arbitrary memory garbage. Writing through it can overwrite kernel memory, corrupt the call stack, or introduce arbitrary code execution vulnerabilities.
+    \item \textbf{Explain why Java does not provide support for multiple inheritance of classes.} \\
+    \textbf{Answer:} To eliminate the structural complexity and method ambiguity inherent in the \textbf{Diamond Problem}. Java achieves polymorphic multiple inheritance of interface contracts via \texttt{interface} declarations.
+    \item \textbf{What is the difference between \texttt{df -h} and \texttt{du -sh} in Linux administration?} \\
+    \textbf{Answer:} \texttt{df -h} inspects filesystem superblocks, reporting aggregate disk partition capacity, used space, and mount points. \texttt{du -sh} traverses directory trees recursively, summing file sizes to report disk space consumed by specific folders.
+    \item \textbf{Why should a system administrator issue \texttt{kill -15} before \texttt{kill -9}?} \\
+    \textbf{Answer:} \texttt{kill -15} sends \texttt{SIGTERM}, allowing the process to intercept the signal, terminate child threads, flush database buffers, and delete lock files. \texttt{kill -9} sends \texttt{SIGKILL}, which terminates the process abruptly via the kernel, potentially leaving databases corrupted.
+    \item \textbf{What is the difference between Git merge and Git rebase?} \\
+    \textbf{Answer:} \texttt{git merge} joins two branches by creating a 3-way merge commit, preserving historical topology. \texttt{git rebase} lifts commits from the feature branch and replays them linearly onto the target branch, rewriting commit hashes.
+    \item \textbf{What is the difference between \texttt{git reset} and \texttt{git revert}?} \\
+    \textbf{Answer:} \texttt{git reset} moves branch refs backward in time, modifying history (dangerous on public branches). \texttt{git revert} creates a brand-new commit that applies the inverse diff of a target commit, safely preserving history.
+    \item \textbf{What is the purpose of the \texttt{.gitignore} configuration file?} \\
+    \textbf{Answer:} It specifies path patterns that Git should intentionally ignore, preventing untracked build artifacts, secrets (\texttt{.env}), and temporary files from being committed.
+    \item \textbf{What is the time complexity of searching a sorted array using Binary Search versus Linear Search?} \\
+    \textbf{Answer:} Linear Search requires $O(n)$ time. Binary Search halves the search space each step, requiring $O(\log n)$ time.
+    \item \textbf{Explain the fundamental structural difference between an array and a linked list.} \\
+    \textbf{Answer:} Arrays allocate contiguous memory blocks offering $O(1)$ random indexing but $O(n)$ middle insertions. Linked lists store nodes non-contiguously via pointers, offering $O(1)$ insertions when the node reference is held, but $O(n)$ sequential access and pointer memory overhead.
+    \item \textbf{What is the difference between \texttt{malloc()} and \texttt{calloc()} in C?} \\
+    \textbf{Answer:} \texttt{malloc(size)} allocates raw uninitialized heap memory. \texttt{calloc(num, size)} allocates heap memory and initializes all allocated bytes to zero.
+    \item \textbf{Explain the concept of memory leaks and how they are diagnosed.} \\
+    \textbf{Answer:} A memory leak occurs when dynamically allocated heap blocks lose all pointer references without being deallocated via \texttt{free()}. They are detected via profiling tools such as Valgrind or AddressSanitizer.
+    \item \textbf{What is the difference between Stack and Queue data structures?} \\
+    \textbf{Answer:} A Stack operates under Last-In, First-Out (LIFO) semantics (\texttt{push}, \texttt{pop}). A Queue operates under First-In, First-Out (FIFO) semantics (\texttt{enqueue}, \texttt{dequeue}).
+    \item \textbf{What is a Circular Queue and what problem does it solve?} \\
+    \textbf{Answer:} A circular queue wraps the rear pointer back to index $0$ modulo the capacity. It resolves the ``false overflow'' problem of standard linear array queues where empty front slots cannot be reused.
+    \item \textbf{Differentiate between BFS (Breadth-First Search) and DFS (Depth-First Search).} \\
+    \textbf{Answer:} BFS traverses graphs level-by-level using a FIFO Queue ($O(V+E)$). DFS traverses deeply along graph branches before backtracking using a LIFO Stack or recursion ($O(V+E)$).
+    \item \textbf{What is the difference between a Structure and a Union in C?} \\
+    \textbf{Answer:} In a \texttt{struct}, each member has distinct memory. In a \texttt{union}, all members share the same base address; modifying one member overwrites the others.
+    \item \textbf{What is the difference between a shallow copy and a deep copy?} \\
+    \textbf{Answer:} A shallow copy duplicates primitive values and copies pointers directly, leaving both objects pointing to shared heap data. A deep copy allocates new independent heap memory and duplicates the underlying data.
+    \item \textbf{What is a dangling pointer and how is it mitigated?} \\
+    \textbf{Answer:} A dangling pointer points to memory that has already been freed. Mitigation: Immediately assign \texttt{ptr = NULL;} after invoking \texttt{free(ptr);}.
+    \item \textbf{Why does \texttt{float x = 5 / 2;} evaluate to 2.0 rather than 2.5?} \\
+    \textbf{Answer:} Because both $5$ and $2$ are integer literals, integer division truncates the result to $2$ before assignment to the float. Use \texttt{5.0 / 2}.
+    \item \textbf{What does the \texttt{volatile} keyword signify to the C compiler?} \\
+    \textbf{Answer:} It informs the optimizer that the variable's value can change unexpectedly (via hardware registers or ISRs), forcing the compiler to reload the value from memory on every read rather than caching it in CPU registers.
+    \item \textbf{Explain the difference between \texttt{a++} and \texttt{++a}.} \\
+    \textbf{Answer:} \texttt{a++} (postfix) yields the current value before incrementing. \texttt{++a} (prefix) increments the variable first and yields the updated value.
+    \item \textbf{What is the Sieve of Eratosthenes and its time complexity?} \\
+    \textbf{Answer:} An ancient algorithm that generates prime numbers up to $N$ by marking multiples of primes. Its time complexity is $O(N \log \log N)$.
+    \item \textbf{What is the Diamond Problem in C++ and how is it resolved?} \\
+    \textbf{Answer:} It occurs in multiple inheritance when a class derives from two classes that share a common base, resulting in duplicate base subobjects. It is resolved using \texttt{virtual} inheritance (\texttt{class B : virtual public A}).
+\end{enumerate}
+
+\section{Practical Programming Problems: Exam Practice Set}
+\label{sec:exam_practice_set}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Self-Test Question 1}]
+\textbf{Question:} What is the printed output of: \texttt{printf("\%d", 17 / 5 + 17 \% 5);}? \\
+\textbf{Options:} (A) 3 \quad (B) 4 \quad (C) 5 \quad (D) 6 \\
+\textbf{Answer:} \textbf{(C) 5}. Tracing: $17 / 5 = 3$; $17 \pmod 5 = 2$; $3 + 2 = 5$.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Self-Test Question 2}]
+\textbf{Question:} Which iterative control loop is guaranteed to execute its body at least once? \\
+\textbf{Options:} (A) \texttt{for} \quad (B) \texttt{while} \quad (C) \texttt{do-while} \quad (D) None \\
+\textbf{Answer:} \textbf{(C) \texttt{do-while}}. It is an exit-controlled loop evaluating its condition at the bottom.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Self-Test Question 3}]
+\textbf{Question:} Which search algorithm requires the underlying dataset to be strictly ordered? \\
+\textbf{Options:} (A) Linear search \quad (B) Binary search \quad (C) Both \quad (D) Neither \\
+\textbf{Answer:} \textbf{(B) Binary search}. Relies on order to divide the search space in $O(\log n)$.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Self-Test Question 4}]
+\textbf{Question:} Which C++ mechanism enables runtime dynamic dispatch? \\
+\textbf{Options:} (A) Function overloading \quad (B) Virtual functions \quad (C) Friend functions \quad (D) Templates \\
+\textbf{Answer:} \textbf{(B) Virtual functions}. Dispatch is routed dynamically via the object's vtable.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Self-Test Question 5}]
+\textbf{Question:} What is the average-case asymptotic time complexity of Binary Search? \\
+\textbf{Options:} (A) $O(1)$ \quad (B) $O(\log n)$ \quad (C) $O(n)$ \quad (D) $O(n^2)$ \\
+\textbf{Answer:} \textbf{(B) $O(\log n)$}.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white,colframe=primary,title=\textbf{Self-Test Question 6}]
+\textbf{Question:} Which Git command moves staged index changes permanently into the local repository history? \\
+\textbf{Options:} (A) \texttt{git add} \quad (B) \texttt{git push} \quad (C) \texttt{git commit} \quad (D) \texttt{git fetch} \\
+\textbf{Answer:} \textbf{(C) \texttt{git commit}}.
+\end{tcolorbox}
+
+\section{Common Examination Traps: Final Revision Table}
+\label{sec:exam_traps_revision_table}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Examination Trap / Syntax Pattern} & \textbf{Accurate Technical Interpretation} \\
+\midrule
+\texttt{5 / 2} vs. \texttt{5.0 / 2} & \texttt{5 / 2} evaluates to integer $2$; \texttt{5.0 / 2} evaluates to float $2.5$. \\
+\texttt{i++} vs. \texttt{++i} & \texttt{i++} yields original value; \texttt{++i} increments first and yields new value. \\
+\texttt{\&\&} vs. \texttt{\&} & \texttt{\&\&} is short-circuit logical AND; \texttt{\&} is bitwise conjunction without short-circuiting. \\
+\texttt{||} vs. \texttt{|} & \texttt{||} is short-circuit logical OR; \texttt{|} is bitwise inclusive OR without short-circuiting. \\
+\texttt{=} vs. \texttt{==} & \texttt{=} is assignment; \texttt{==} is relational equality comparison. \\
+\texttt{break} vs. \texttt{continue} & \texttt{break} exits nearest loop/switch; \texttt{continue} skips to next iteration. \\
+Missing \texttt{break} in \texttt{switch} & Causes unconditional fall-through execution into subsequent case blocks. \\
+Recursion lacking base case & Triggers unbounded recursion leading to call stack exhaustion (crash). \\
+Statement after recursive call & Executes in reverse order during call stack unwinding. \\
+Local \texttt{static} variable & Initialized once at startup; retains state across all function activations. \\
+Valid C array index bounds & For array of size $N$, valid indices span strictly from $0$ to $N-1$. \\
+Matrix multiplication constraint & Multiplication $A \times B$ requires: Columns of $A$ == Rows of $B$. \\
+\texttt{*p++} vs. \texttt{(*p)++} & \texttt{*p++} dereferences then moves pointer; \texttt{(*p)++} increments value at pointer. \\
+Java argument passing rule & Java is \textbf{strictly pass-by-value}; object references are copied by value. \\
+C++ base/derived construction & Base class constructor executes \textit{before} derived class constructor. \\
+C++ base/derived destruction & Derived class destructor executes \textit{before} base class destructor. \\
+C++ polymorphic deletion & Base class destructor must be declared \texttt{virtual} to prevent undefined leaks. \\
+Overloading vs. return type & Functions cannot be overloaded on return type alone; parameters must differ. \\
+\texttt{git reset --hard} & Irrevocably destroys uncommitted working tree and staging area changes. \\
+\texttt{df -h} vs. \texttt{du -sh} & \texttt{df -h} reports partition superblock usage; \texttt{du -sh} calculates folder size. \\
+\texttt{kill -9} vs. \texttt{kill -15} & \texttt{SIGKILL} (9) forces instant death; \texttt{SIGTERM} (15) requests clean shutdown. \\
+\bottomrule
+\end{tabularx}
+\caption{Comprehensive Reference of Common Examination Traps and Pitfalls}
+\label{tab:common_exam_traps}
+\end{table}
+
+\section{Formula and Complexity Cheat Sheet}
+\label{sec:formula_complexity_sheet}
+
+\subsection{Mathematical Series Closed-Form Identities}
+\begin{align*}
+\text{Sum of First } n \text{ Integers:} &\quad \sum_{k=1}^{n} k = \frac{n(n+1)}{2} \\
+\text{Sum of First } n \text{ Even Integers:} &\quad \sum_{k=1}^{n} 2k = n(n+1) \\
+\text{Sum of First } n \text{ Odd Integers:} &\quad \sum_{k=1}^{n} (2k - 1) = n^2 \\
+\text{Sum of First } n \text{ Squares:} &\quad \sum_{k=1}^{n} k^2 = \frac{n(n+1)(2n+1)}{6} \\
+\text{Sum of First } n \text{ Cubes:} &\quad \sum_{k=1}^{n} k^3 = \left[\frac{n(n+1)}{2}\right]^2 \\
+\text{Floyd's Triangle Elements (} n \text{ rows):} &\quad T_n = \frac{n(n+1)}{2} \\
+\text{Least Common Multiple:} &\quad \text{LCM}(a, b) = \frac{|a \times b|}{\gcd(a, b)}
+\end{align*}
+
+\subsection{Master Algorithmic Complexity Table}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X l}
+\toprule
+\textbf{Algorithm / Operation} & \textbf{Time Complexity} & \textbf{Auxiliary Space} \\
+\midrule
+Array Element Access by Index & $O(1)$ & $O(1)$ \\
+Linear Search & $O(n)$ & $O(1)$ \\
+Binary Search (Sorted Array) & $O(\log n)$ & $O(1)$ \\
+Bubble Sort & $O(n)$ Best, $O(n^2)$ Average/Worst & $O(1)$ \\
+Selection Sort & $O(n^2)$ All cases & $O(1)$ \\
+Insertion Sort & $O(n)$ Best, $O(n^2)$ Average/Worst & $O(1)$ \\
+Merge Sort & $O(n \log n)$ All cases & $O(n)$ \\
+Quick Sort & $O(n \log n)$ Average, $O(n^2)$ Worst & $O(\log n)$ \\
+Heap Sort & $O(n \log n)$ All cases & $O(1)$ \\
+Square Matrix Multiplication (Standard) & $O(n^3)$ & $O(1)$ \\
+Prime Testing via Trial Division & $O(\sqrt{n})$ & $O(1)$ \\
+Sieve of Eratosthenes & $O(n \log \log n)$ & $O(n)$ \\
+Naïve Recursive Fibonacci & $O(2^n)$ Exponential & $O(n)$ Stack depth \\
+\bottomrule
+\end{tabularx}
+\caption{Master Algorithmic Complexity Reference}
+\label{tab:algorithmic_complexity_reference}
+\end{table}
+
+\section{Recommended Preparation Priorities}
+\label{sec:recommended_preparation_priorities}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Priority Tier} & \textbf{Core Examination Modules} & \textbf{Technical Focus and Mastery Targets} \\
+\midrule
+\textbf{Very High} & C/C++ Code Output Tracing & Operator precedence, integer division, loop side-effects, pointer dereferencing. \\
+\textbf{Very High} & Recursion Analysis & Call stack activation tracing, winding vs. unwinding output, static variables. \\
+\textbf{Very High} & Object-Oriented Programming & Four pillars, inheritance hierarchies, virtual functions, dynamic method dispatch. \\
+\textbf{Very High} & Constructor / Destructor Mechanics & Lifecycle execution order, member initializer lists, virtual destructors. \\
+\textbf{High} & Arrays, Strings, and Matrices & Matrix multiplication conformability, binary search, string palindromes, Euclidean GCD. \\
+\textbf{High} & Parameter Passing Semantics & Value vs. reference, pointer simulation in C, Java pass-by-value reference models. \\
+\textbf{High} & Version Control (Git) & Branching, 3-tier architecture, merge vs. rebase, conflict markers, reset vs. revert. \\
+\textbf{Medium--High} & Linux Shell & File permissions (octal \texttt{chmod}), process signals (\texttt{kill -9} vs. \texttt{-15}), pipes, \texttt{ss}, \texttt{df}/\texttt{du}. \\
+\textbf{Medium} & Fundamental Data Structures & Stack (LIFO), Queue (FIFO), Circular Queue, linked list topologies, BFS vs. DFS traversal. \\
+\bottomrule
+\end{tabularx}
+\caption{Strategic Preparation Roadmap for Government IT Recruitment Examinations}
+\label{tab:preparation_priorities}
+\end{table}

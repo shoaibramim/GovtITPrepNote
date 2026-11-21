@@ -1,0 +1,5485 @@
+\chapter{Technical Questions}
+\label{ch:technical}
+
+
+For candidates preparing for technical roles such as \textbf{Assistant Director (ICT), Assistant Programmer, Assistant Maintenance Engineer, Assistant Database Administrator, Assistant Network Engineer, or similar IT-related positions}, preparation should extend well beyond rote memorization. Interview boards frequently transition from fundamental definitions into deeper conceptual inquiries, requiring candidates to evaluate architectural trade-offs, compare competing concepts, or solve practical problems on the spot.
+
+Below is a \textbf{large viva bank of 300+ questions}, organized from fundamentals to advanced topics. The answers are deliberately \textbf{short, intuitive, and viva-ready} rather than textbook-length.
+
+\medskip
+
+\section{Assistant Programmer Viva: 300+ CSE Questions \& Answers}
+
+\subsection{How to use this}
+
+For each topic, learn in three layers:
+
+\begin{enumerate}
+  \item \textbf{Definition} --- one sentence.
+  \item \textbf{Intuition} --- why it exists / how it works.
+  \item \textbf{Follow-up} --- comparison, example, complexity, or implementation.
+\end{enumerate}
+
+In the actual viva, give the \textbf{shortest correct answer first}. Elaborate only if the board asks.
+
+\medskip
+
+\section{Computer Fundamentals}
+
+\subsection{What is a computer?}
+
+A computer is an electronic programmable machine that accepts data as input, processes it according to instructions, stores it, and produces information as output.
+
+The basic cycle is:
+
+\textbf{Input $\rightarrow$ Processing $\rightarrow$ Output $\rightarrow$ Storage}
+
+\medskip
+
+\subsection{What is the difference between data and information?}
+
+\textbf{Data} is raw facts.
+
+\textbf{Information} is processed data that has meaningful context.
+
+Example:
+
+\begin{lstlisting}
+Data:       85, 72, 91
+Information: Average mark = 82.67
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is hardware?}
+
+Hardware refers to the physical components of a computer.
+
+Examples:
+
+\begin{itemize}
+  \item CPU
+  \item RAM
+  \item motherboard
+  \item keyboard
+  \item SSD
+  \item monitor
+\end{itemize}
+
+\medskip
+
+\subsection{What is software?}
+
+Software is a collection of programs and instructions that tell hardware what to do.
+
+Examples:
+
+\begin{itemize}
+  \item Windows
+  \item Linux
+  \item Chrome
+  \item MySQL
+  \item Python
+\end{itemize}
+
+\medskip
+
+\subsection{What are the major types of software?}
+
+Two broad categories:
+
+\begin{enumerate}
+  \item \textbf{System software}
+  \item \textbf{Application software}
+\end{enumerate}
+
+Operating systems, device drivers and compilers are system software.
+
+Word processors, browsers and accounting applications are application software.
+
+\medskip
+
+\subsection{What is firmware?}
+
+Firmware is software stored in non-volatile memory that provides low-level control of hardware.
+
+Examples:
+
+\begin{itemize}
+  \item BIOS/UEFI firmware
+  \item router firmware
+  \item embedded-controller firmware
+\end{itemize}
+
+\medskip
+
+\subsection{What is an operating system?}
+
+An operating system is system software that manages computer hardware and provides services and abstractions to applications.
+
+Examples:
+
+\begin{itemize}
+  \item Linux
+  \item Windows
+  \item macOS
+  \item Android
+\end{itemize}
+
+\medskip
+
+\subsection{What is a kernel?}
+
+The kernel is the core component of an operating system responsible for managing resources such as:
+
+\begin{itemize}
+  \item CPU
+  \item memory
+  \item processes
+  \item devices
+  \item files
+\end{itemize}
+
+\medskip
+
+\subsection{What is a process?}
+
+A process is a \textbf{program in execution}.
+
+A program is passive code; a process is the active execution instance of that code.
+
+\medskip
+
+\subsection{What is a thread?}
+
+A thread is the smallest commonly scheduled unit of execution within a process.
+
+Multiple threads of the same process typically share:
+
+\begin{itemize}
+  \item code
+  \item heap
+  \item global data
+\end{itemize}
+
+but have their own:
+
+\begin{itemize}
+  \item stack
+  \item program counter
+  \item registers/state
+\end{itemize}
+
+\medskip
+
+\subsection{Process vs program?}
+
+\begin{center}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Program} & \textbf{Process} \\
+\hline
+Passive & Active \\
+Stored instructions & Executing instructions \\
+No execution state & Has execution state \\
+Can exist on disk & Exists while executing \\
+\hline
+\end{tabular}
+\end{center}
+
+\medskip
+
+\subsection{What is a CPU?}
+
+CPU stands for \textbf{Central Processing Unit}.
+
+It executes instructions and performs arithmetic, logical and control operations.
+
+Major conceptual components:
+
+\begin{itemize}
+  \item ALU
+  \item Control Unit
+  \item Registers
+\end{itemize}
+
+\medskip
+
+\subsection{What is ALU?}
+
+\textbf{Arithmetic Logic Unit} performs:
+
+\begin{itemize}
+  \item arithmetic operations
+  \item logical operations
+  \item comparisons
+  \item bitwise operations
+\end{itemize}
+
+\medskip
+
+\subsection{What is the Control Unit?}
+
+The Control Unit coordinates CPU operations by fetching, decoding and controlling execution of instructions.
+
+\medskip
+
+\subsection{What is a register?}
+
+A register is a very small, extremely fast storage location inside the CPU used to hold data, addresses or intermediate results.
+
+\medskip
+
+\subsection{Why is RAM faster than SSD?}
+
+RAM is directly accessible by the memory subsystem and is designed for very low-latency random access.
+
+SSD uses persistent flash storage and involves additional controller and interface operations.
+
+\medskip
+
+\subsection{Why is cache faster than RAM?}
+
+Cache is implemented using faster memory technology, typically SRAM, and is physically close to or integrated with the CPU.
+
+The hierarchy is approximately:
+
+\begin{lstlisting}
+Registers
+   $\downarrow$
+L1 Cache
+   $\downarrow$
+L2 Cache
+   $\downarrow$
+L3 Cache
+   $\downarrow$
+RAM
+   $\downarrow$
+SSD/HDD
+\end{lstlisting}
+
+As we go downward:
+
+\begin{itemize}
+  \item capacity generally increases
+  \item cost per bit decreases
+  \item latency increases
+\end{itemize}
+
+\medskip
+
+\subsection{What is cache memory?}
+
+Cache is a small, high-speed memory that stores frequently or recently used data/instructions to reduce access time.
+
+\medskip
+
+\subsection{What is locality of reference?}
+
+Programs tend to access the same or nearby memory locations repeatedly.
+
+Two important types:
+
+\subsubsection{Temporal locality}
+
+Recently accessed data is likely to be accessed again.
+
+\subsubsection{Spatial locality}
+
+Nearby memory locations are likely to be accessed soon.
+
+Cache exploits both.
+
+\medskip
+
+\subsection{What is ROM?}
+
+ROM means \textbf{Read Only Memory}.
+
+It is non-volatile memory traditionally used to store firmware.
+
+Modern ROM-like technologies include:
+
+\begin{itemize}
+  \item PROM
+  \item EPROM
+  \item EEPROM
+  \item Flash
+\end{itemize}
+
+\medskip
+
+\subsection{RAM vs ROM?}
+
+\begin{center}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{RAM} & \textbf{ROM} \\
+\hline
+Volatile & Non-volatile \\
+Read/write & Primarily firmware/read-oriented \\
+Working memory & Firmware/storage \\
+Loses contents without power & Retains contents \\
+\hline
+\end{tabular}
+\end{center}
+
+\medskip
+
+\subsection{What is volatile memory?}
+
+Memory whose contents are lost when power is removed.
+
+Example:
+
+\begin{quote}
+RAM\\
+\end{quote}
+
+\medskip
+
+\subsection{What is non-volatile memory?}
+
+Memory that retains information without continuous power.
+
+Examples:
+
+\begin{itemize}
+  \item SSD
+  \item HDD
+  \item ROM
+  \item flash memory
+\end{itemize}
+
+\medskip
+
+\subsection{What is a bit?}
+
+A bit is the smallest unit of digital information.
+
+It can be:
+
+\begin{lstlisting}
+0 or 1
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is a byte?}
+
+A byte consists of \textbf{8 bits}.
+
+Therefore:
+
+\begin{lstlisting}
+1 byte = 8 bits
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is ASCII?}
+
+ASCII is a character encoding standard originally using 7 bits to represent 128 characters.
+
+For example:
+
+\begin{lstlisting}
+'A' = 65
+'a' = 97
+'0' = 48
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is Unicode?}
+
+Unicode is a universal character-set standard designed to represent characters from languages and writing systems around the world.
+
+UTF-8 is a popular Unicode encoding.
+
+\medskip
+
+\subsection{ASCII vs Unicode?}
+
+ASCII represents a relatively small character set.
+
+Unicode supports a vastly larger range of characters.
+
+UTF-8 is backward-compatible with ASCII for ASCII characters.
+
+\medskip
+
+\subsection{What is binary?}
+
+Binary is a base-2 number system using:
+
+\begin{lstlisting}
+0 and 1
+\end{lstlisting}
+
+Computers use binary because digital electronic circuits naturally represent two stable states.
+
+\medskip
+
+\subsection{Why do computers use binary?}
+
+Digital hardware can reliably distinguish two states, such as:
+
+\begin{lstlisting}
+High voltage $\rightarrow$ 1
+Low voltage  $\rightarrow$ 0
+\end{lstlisting}
+
+Binary therefore provides a robust representation for digital logic.
+
+\medskip
+
+\section{Number Systems \& Digital Logic}
+
+\subsection{What number systems are commonly used in computing?}
+
+\begin{itemize}
+  \item Binary --- base 2
+  \item Octal --- base 8
+  \item Decimal --- base 10
+  \item Hexadecimal --- base 16
+\end{itemize}
+
+\medskip
+
+\subsection{Why is hexadecimal useful?}
+
+Binary numbers become very long.
+
+One hexadecimal digit represents exactly four binary bits.
+
+Example:
+
+\begin{lstlisting}
+1111 = F
+1010 = A
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is a logic gate?}
+
+A logic gate is a digital circuit that performs a Boolean operation.
+
+Common gates:
+
+\begin{itemize}
+  \item AND
+  \item OR
+  \item NOT
+  \item NAND
+  \item NOR
+  \item XOR
+  \item XNOR
+\end{itemize}
+
+\medskip
+
+\subsection{Why are NAND and NOR called universal gates?}
+
+Any Boolean function can be constructed using only NAND gates or only NOR gates.
+
+\medskip
+
+\subsection{AND vs OR?}
+
+AND outputs 1 only when \textbf{all inputs are 1}.
+
+OR outputs 1 when \textbf{at least one input is 1}.
+
+\medskip
+
+\subsection{XOR?}
+
+XOR outputs 1 when the inputs are different.
+
+For two inputs:
+
+\begin{lstlisting}
+0 XOR 0 = 0
+0 XOR 1 = 1
+1 XOR 0 = 1
+1 XOR 1 = 0
+\end{lstlisting}
+
+\medskip
+
+\subsection{Where is XOR useful?}
+
+Common applications include:
+
+\begin{itemize}
+  \item parity checking
+  \item bit toggling
+  \item detecting differences
+  \item cryptographic constructions
+  \item finding a unique element using XOR properties
+\end{itemize}
+
+\medskip
+
+\subsection{What is a flip-flop?}
+
+A flip-flop is a sequential digital circuit capable of storing one bit of state.
+
+\medskip
+
+\subsection{Combinational vs sequential circuit?}
+
+\textbf{Combinational:} output depends only on current input.
+
+Examples:
+
+\begin{itemize}
+  \item adder
+  \item multiplexer
+  \item decoder
+\end{itemize}
+
+\textbf{Sequential:} output depends on current input and previous state.
+
+Examples:
+
+\begin{itemize}
+  \item flip-flop
+  \item register
+  \item counter
+\end{itemize}
+
+\medskip
+
+\section{Data Structures}
+
+\subsection{What is a data structure?}
+
+A data structure is a way of organizing and storing data so that operations can be performed efficiently.
+
+\medskip
+
+\subsection{Why do we need data structures?}
+
+Because different operations require different performance characteristics.
+
+For example:
+
+\begin{itemize}
+  \item Array $\rightarrow$ fast indexed access
+  \item Hash table $\rightarrow$ fast average lookup
+  \item Linked list $\rightarrow$ efficient insertion/deletion with a known node
+  \item Heap $\rightarrow$ efficient priority operations
+\end{itemize}
+
+\medskip
+
+\subsection{What are linear data structures?}
+
+Elements are conceptually arranged sequentially.
+
+Examples:
+
+\begin{itemize}
+  \item array
+  \item linked list
+  \item stack
+  \item queue
+\end{itemize}
+
+\medskip
+
+\subsection{What are non-linear data structures?}
+
+Elements form hierarchical or graph-like relationships.
+
+Examples:
+
+\begin{itemize}
+  \item tree
+  \item graph
+  \item heap
+\end{itemize}
+
+\medskip
+
+\section{Arrays}
+
+\subsection{What is an array?}
+
+An array is a collection of elements stored in contiguous memory locations, typically with the same data type.
+
+\medskip
+
+\subsection{Why is array access O(1)?}
+
+Because the address of an element can be calculated directly:
+
+\begin{lstlisting}
+address = base + index $\times$ element_size
+\end{lstlisting}
+
+Therefore no traversal is necessary.
+
+\medskip
+
+\subsection{Array advantages?}
+
+\begin{itemize}
+  \item O(1) indexed access
+  \item cache-friendly
+  \item simple structure
+  \item low per-element overhead
+\end{itemize}
+
+\medskip
+
+\subsection{Array disadvantages?}
+
+\begin{itemize}
+  \item fixed size in many traditional implementations
+  \item insertion/deletion can require shifting
+  \item contiguous memory requirement
+\end{itemize}
+
+\medskip
+
+\subsection{Array insertion complexity?}
+
+At the beginning:
+
+\begin{lstlisting}
+O(n)
+\end{lstlisting}
+
+At the end:
+
+\begin{lstlisting}
+O(1)
+\end{lstlisting}
+
+amortized for a dynamic array.
+
+At an arbitrary position:
+
+\begin{lstlisting}
+O(n)
+\end{lstlisting}
+
+because elements may need shifting.
+
+\medskip
+
+\section{Linked Lists}
+
+\subsection{What is a linked list?}
+
+A linked list is a sequence of nodes where each node contains data and one or more links to other nodes.
+
+\medskip
+
+\subsection{Array vs linked list?}
+
+\begin{center}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Array} & \textbf{Linked List} \\
+\hline
+Contiguous memory & Non-contiguous \\
+O(1) indexing & O(n) indexing \\
+Better cache locality & Poorer cache locality \\
+Insertion can require shifting & Easy insertion with known node \\
+Less pointer overhead & Pointer overhead \\
+\hline
+\end{tabular}
+\end{center}
+
+\medskip
+
+\subsection{Types of linked lists?}
+
+\begin{itemize}
+  \item Singly linked list
+  \item Doubly linked list
+  \item Circular singly linked list
+  \item Circular doubly linked list
+\end{itemize}
+
+\medskip
+
+\subsection{What is a doubly linked list?}
+
+Each node has links to both:
+
+\begin{lstlisting}
+previous node
+next node
+\end{lstlisting}
+
+This allows traversal in both directions.
+
+\medskip
+
+\subsection{What is a circular linked list?}
+
+The final node points back to the first node.
+
+\medskip
+
+\section{Stack}
+
+\subsection{What is a stack?}
+
+A stack is a linear data structure following:
+
+\begin{quote}
+\textbf{LIFO --- Last In, First Out}\\
+\end{quote}
+
+\medskip
+
+\subsection{Stack applications?}
+
+\begin{itemize}
+  \item function call stack
+  \item recursion
+  \item undo operations
+  \item expression evaluation
+  \item parentheses matching
+  \item DFS
+\end{itemize}
+
+\medskip
+
+\subsection{What are stack operations?}
+
+\begin{itemize}
+  \item push
+  \item pop
+  \item peek/top
+\end{itemize}
+
+Usually O(1).
+
+\medskip
+
+\section{Queue}
+
+\subsection{What is a queue?}
+
+A queue follows:
+
+\begin{quote}
+\textbf{FIFO --- First In, First Out}\\
+\end{quote}
+
+\medskip
+
+\subsection{Queue applications?}
+
+\begin{itemize}
+  \item CPU scheduling
+  \item printer queues
+  \item network buffering
+  \item BFS
+  \item request processing
+\end{itemize}
+
+\medskip
+
+\subsection{What is a circular queue?}
+
+A queue where the end wraps around to the beginning, allowing efficient reuse of freed positions.
+
+\medskip
+
+\subsection{Stack vs queue?}
+
+\begin{lstlisting}
+Stack:
+Last in $\rightarrow$ First out
+
+Queue:
+First in $\rightarrow$ First out
+\end{lstlisting}
+
+\medskip
+
+\section{Hash Table}
+
+\subsection{What is a hash table?}
+
+A hash table stores key-value pairs using a hash function to map keys to storage positions.
+
+\medskip
+
+\subsection{Average lookup complexity?}
+
+Typically:
+
+\begin{lstlisting}
+O(1)
+\end{lstlisting}
+
+Average case.
+
+Worst case can be:
+
+\begin{lstlisting}
+O(n)
+\end{lstlisting}
+
+depending on implementation and collisions.
+
+\medskip
+
+\subsection{What is a hash collision?}
+
+A collision occurs when two different keys map to the same hash-table position.
+
+\medskip
+
+\subsection{How can collisions be handled?}
+
+Common methods:
+
+\begin{enumerate}
+  \item Chaining
+  \item Open addressing
+\end{enumerate}
+
+Open addressing includes:
+
+\begin{itemize}
+  \item linear probing
+  \item quadratic probing
+  \item double hashing
+\end{itemize}
+
+\medskip
+
+\subsection{What is a hash function?}
+
+A function that maps a key to a hash value/index.
+
+A good hash function should distribute keys approximately uniformly.
+
+\medskip
+
+\section{Algorithms \& Complexity}
+
+\subsection{What is an algorithm?}
+
+An algorithm is a finite, well-defined sequence of steps for solving a problem.
+
+\medskip
+
+\subsection{What makes a good algorithm?}
+
+It should ideally have:
+
+\begin{itemize}
+  \item correctness
+  \item termination
+  \item efficiency
+  \item clarity
+  \item appropriate resource usage
+\end{itemize}
+
+\medskip
+
+\subsection{What is time complexity?}
+
+Time complexity describes how an algorithm's computational work grows as input size increases.
+
+\medskip
+
+\subsection{What is space complexity?}
+
+Space complexity describes how additional memory requirements grow with input size.
+
+\medskip
+
+\subsection{What is Big-O?}
+
+Big-O describes an asymptotic upper bound on growth rate.
+
+Common complexities:
+
+\begin{lstlisting}
+O(1)
+O(log n)
+O(n)
+O(n log n)
+O(n\textsuperscript{2})
+O(2)
+O(n!)
+\end{lstlisting}
+
+\medskip
+
+\subsection{Which is better: O(n) or O(n\textsuperscript{2})?}
+
+Generally O(n), especially as n becomes large.
+
+\medskip
+
+\subsection{What is O(1)?}
+
+Constant time.
+
+The operation does not grow with input size.
+
+Example:
+
+\begin{lstlisting}
+array[index]
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is O(log n)?}
+
+The problem size is reduced by a constant factor at each step.
+
+Classic example:
+
+\begin{quote}
+Binary search.\\
+\end{quote}
+
+\medskip
+
+\subsection{Why is binary search O(log n)?}
+
+Because each comparison approximately halves the search space.
+
+For n elements:
+
+\begin{lstlisting}
+n
+n/2
+n/4
+n/8
+...
+1
+\end{lstlisting}
+
+The number of steps is approximately:
+
+\begin{lstlisting}
+log n
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is O(n log n)?}
+
+A common complexity for efficient comparison sorting algorithms.
+
+Examples:
+
+\begin{itemize}
+  \item Merge sort
+  \item Heap sort
+  \item average-case quicksort
+\end{itemize}
+
+\medskip
+
+\section{Searching}
+
+\subsection{Linear search?}
+
+Checks elements sequentially.
+
+Complexity:
+
+\begin{lstlisting}
+Best:    O(1)
+Average: O(n)
+Worst:   O(n)
+\end{lstlisting}
+
+\medskip
+
+\subsection{Binary search?}
+
+Binary search repeatedly divides a \textbf{sorted} search space in half.
+
+Complexity:
+
+\begin{lstlisting}
+O(log n)
+\end{lstlisting}
+
+\medskip
+
+\subsection{Why must binary search normally use sorted data?}
+
+Because it decides which half to discard based on ordering.
+
+Without ordering, discarding half would not be justified.
+
+\medskip
+
+\section{Sorting}
+
+\subsection{What is sorting?}
+
+Arranging data according to a specified order.
+
+Example:
+
+\begin{lstlisting}
+5 2 9 1
+$\downarrow$
+1 2 5 9
+\end{lstlisting}
+
+\medskip
+
+\subsection{Bubble sort complexity?}
+
+Worst case:
+
+\begin{lstlisting}
+O(n\textsuperscript{2})
+\end{lstlisting}
+
+Best case with optimization:
+
+\begin{lstlisting}
+O(n)
+\end{lstlisting}
+
+\medskip
+
+\subsection{Selection sort complexity?}
+
+Generally:
+
+\begin{lstlisting}
+O(n\textsuperscript{2})
+\end{lstlisting}
+
+even in the best case.
+
+\medskip
+
+\subsection{Insertion sort complexity?}
+
+\begin{lstlisting}
+Best:  O(n)
+Worst: O(n\textsuperscript{2})
+\end{lstlisting}
+
+It works particularly well for small or nearly sorted datasets.
+
+\medskip
+
+\subsection{Merge sort complexity?}
+
+\begin{lstlisting}
+Time: O(n log n)
+Space: O(n)
+\end{lstlisting}
+
+It uses divide and conquer.
+
+\medskip
+
+\subsection{Quick sort complexity?}
+
+Average:
+
+\begin{lstlisting}
+O(n log n)
+\end{lstlisting}
+
+Worst:
+
+\begin{lstlisting}
+O(n\textsuperscript{2})
+\end{lstlisting}
+
+depending on pivot choices.
+
+\medskip
+
+\subsection{Heap sort complexity?}
+
+\begin{lstlisting}
+O(n log n)
+\end{lstlisting}
+
+with O(1) auxiliary array space for a typical in-place implementation.
+
+\medskip
+
+\subsection{Which sorting algorithm is stable?}
+
+Examples:
+
+\begin{itemize}
+  \item Merge sort
+  \item Insertion sort
+  \item Bubble sort
+\end{itemize}
+
+Quicksort and heapsort are not inherently stable in their common in-place forms.
+
+\medskip
+
+\subsection{What is a stable sort?}
+
+If two elements have equal keys, their relative order remains unchanged.
+
+\medskip
+
+\section{Recursion}
+
+\subsection{What is recursion?}
+
+Recursion occurs when a function directly or indirectly calls itself.
+
+A recursive solution normally needs:
+
+\begin{enumerate}
+  \item Base case
+  \item Recursive case
+\end{enumerate}
+
+\medskip
+
+\subsection{What happens if there is no base case?}
+
+The recursion may continue indefinitely until resources are exhausted, typically causing stack overflow.
+
+\medskip
+
+\subsection{Recursion vs iteration?}
+
+Recursion uses function calls and stack frames.
+
+Iteration uses loops.
+
+Recursion can make tree and divide-and-conquer algorithms easier to express, but may consume additional stack memory.
+
+\medskip
+
+\section{Object-Oriented Programming}
+
+\subsection{What is OOP?}
+
+Object-Oriented Programming organizes software around objects that combine state and behavior.
+
+\medskip
+
+\subsection{Four pillars of OOP?}
+
+\begin{enumerate}
+  \item Encapsulation
+  \item Abstraction
+  \item Inheritance
+  \item Polymorphism
+\end{enumerate}
+
+\medskip
+
+\subsection{What is a class?}
+
+A class is a blueprint or user-defined type describing data and behavior.
+
+\medskip
+
+\subsection{What is an object?}
+
+An object is an instance of a class.
+
+\medskip
+
+\subsection{Class vs object?}
+
+\begin{lstlisting}
+Class  = blueprint
+Object = actual instance
+\end{lstlisting}
+
+Example:
+
+\begin{lstlisting}
+Class: Car
+Objects: Toyota, BMW, Honda
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is encapsulation?}
+
+Encapsulation combines data and related methods while controlling access to internal state.
+
+For example:
+
+\begin{lstlisting}
+private double balance;
+
+public double getBalance() {
+    return balance;
+}
+\end{lstlisting}
+
+\medskip
+
+\subsection{Why use private variables?}
+
+To prevent uncontrolled external modification and preserve invariants.
+
+\medskip
+
+\subsection{What is abstraction?}
+
+Abstraction exposes essential behavior while hiding unnecessary implementation details.
+
+Example:
+
+\begin{lstlisting}
+ATM user:
+withdraw()
+deposit()
+\end{lstlisting}
+
+The user does not need to know the internal banking implementation.
+
+\medskip
+
+\subsection{Encapsulation vs abstraction?}
+
+\textbf{Encapsulation:} controls access and bundles state with behavior.
+
+\textbf{Abstraction:} hides unnecessary implementation complexity and exposes essential concepts.
+
+\medskip
+
+\subsection{What is inheritance?}
+
+Inheritance allows a class to derive properties and behavior from another class.
+
+Example:
+
+\begin{lstlisting}
+Vehicle
+   $\downarrow$
+Car
+\end{lstlisting}
+
+\medskip
+
+\subsection{Why use inheritance?}
+
+For:
+
+\begin{itemize}
+  \item code reuse
+  \item specialization
+  \item hierarchical modeling
+  \item polymorphism
+\end{itemize}
+
+However, inheritance should not be used merely for code reuse when composition is more appropriate.
+
+\medskip
+
+\subsection{What is polymorphism?}
+
+Polymorphism means one interface can represent different underlying implementations.
+
+Two common forms:
+
+\begin{itemize}
+  \item compile-time polymorphism
+  \item runtime polymorphism
+\end{itemize}
+
+\medskip
+
+\subsection{Method overloading?}
+
+Same method name but different parameter lists.
+
+This is compile-time polymorphism.
+
+\medskip
+
+\subsection{Method overriding?}
+
+A subclass provides a new implementation of an inherited method.
+
+This supports runtime polymorphism when dynamic dispatch is used.
+
+\medskip
+
+\subsection{Overloading vs overriding?}
+
+\begin{center}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Overloading} & \textbf{Overriding} \\
+\hline
+Same class commonly & Parent-child relationship \\
+Different parameters & Same method signature \\
+Compile-time selection & Runtime dispatch \\
+Different behavior signatures & Replaces inherited implementation \\
+\hline
+\end{tabular}
+\end{center}
+
+\medskip
+
+\subsection{What is a constructor?}
+
+A constructor initializes an object when it is created.
+
+\medskip
+
+\subsection{Does a constructor have a return type?}
+
+No.
+
+Not even \texttt{void}.
+
+\medskip
+
+\subsection{What is a destructor?}
+
+A destructor is a special mechanism used in languages such as C++ to perform cleanup when an object's lifetime ends.
+
+Java does not use C++-style destructors.
+
+\medskip
+
+\subsection{What is an interface?}
+
+An interface defines a contract that implementing classes must satisfy.
+
+In Java, interfaces can also contain default and static methods.
+
+\medskip
+
+\subsection{Abstract class vs interface?}
+
+An abstract class can contain:
+
+\begin{itemize}
+  \item state
+  \item constructors
+  \item concrete methods
+  \item abstract methods
+\end{itemize}
+
+An interface primarily defines a contract and supports multiple interface inheritance in Java.
+
+\medskip
+
+\subsection{What is composition?}
+
+Composition means building a class using objects of other classes.
+
+Example:
+
+\begin{lstlisting}
+Car has an Engine
+\end{lstlisting}
+
+This is a \textbf{has-a} relationship.
+
+\medskip
+
+\subsection{Inheritance vs composition?}
+
+Inheritance:
+
+\begin{quote}
+\textbf{is-a}\\
+\end{quote}
+
+Composition:
+
+\begin{quote}
+\textbf{has-a}\\
+\end{quote}
+
+In many designs, composition provides looser coupling and greater flexibility.
+
+\medskip
+
+\section{C / C++}
+
+\subsection{What is C?}
+
+C is a procedural, compiled, general-purpose programming language known for low-level memory access and efficiency.
+
+\medskip
+
+\subsection{What is C++?}
+
+C++ is a multi-paradigm language supporting procedural, object-oriented, generic and other programming styles.
+
+\medskip
+
+\subsection{C vs C++?}
+
+C primarily emphasizes procedural programming.
+
+C++ adds features such as:
+
+\begin{itemize}
+  \item classes
+  \item inheritance
+  \item polymorphism
+  \item templates
+  \item exceptions
+  \item STL
+\end{itemize}
+
+\medskip
+
+\subsection{What is a pointer?}
+
+A pointer is a variable that stores the memory address of another object or function, depending on the pointer type.
+
+\medskip
+
+\subsection{What is a reference in C++?}
+
+A reference is an alias for an existing object.
+
+Example:
+
+\begin{lstlisting}
+int x = 10;
+int &r = x;
+\end{lstlisting}
+
+\medskip
+
+\subsection{Pointer vs reference?}
+
+A pointer:
+
+\begin{itemize}
+  \item stores an address
+  \item can be null
+  \item can be reassigned
+\end{itemize}
+
+A reference:
+
+\begin{itemize}
+  \item aliases an existing object
+  \item normally must be initialized
+  \item cannot be reseated to refer to another object
+\end{itemize}
+
+\medskip
+
+\subsection{What is a null pointer?}
+
+A pointer that does not point to a valid object.
+
+In modern C++:
+
+\begin{lstlisting}
+nullptr
+\end{lstlisting}
+
+is preferred.
+
+\medskip
+
+\subsection{What is a dangling pointer?}
+
+A pointer that refers to memory whose lifetime has ended.
+
+\medskip
+
+\subsection{What is a memory leak?}
+
+Allocated memory that is no longer reachable and therefore cannot be properly released.
+
+\medskip
+
+\subsection{Stack vs heap memory?}
+
+\subsubsection{Stack}
+
+Usually stores:
+
+\begin{itemize}
+  \item local variables
+  \item function call frames
+\end{itemize}
+
+Fast and automatically managed.
+
+\subsubsection{Heap}
+
+Used for dynamically allocated objects.
+
+Lifetime can extend beyond the current function, depending on allocation and ownership.
+
+\medskip
+
+\subsection{What is dynamic memory allocation?}
+
+Allocating memory during program execution.
+
+C:
+
+\begin{lstlisting}
+malloc()
+calloc()
+realloc()
+free()
+\end{lstlisting}
+
+C++:
+
+\begin{lstlisting}
+new
+delete
+\end{lstlisting}
+
+Modern C++ generally prefers RAII and smart pointers over raw \texttt{new/delete}.
+
+\medskip
+
+\subsection{malloc vs calloc?}
+
+\texttt{malloc} allocates uninitialized memory.
+
+\texttt{calloc} allocates memory and initializes the allocated bytes to zero.
+
+\medskip
+
+\subsection{malloc vs new?}
+
+\texttt{malloc} is a C library allocation function and returns raw storage.
+
+\texttt{new} is a C++ operator that allocates storage and constructs an object.
+
+\medskip
+
+\subsection{What is free()?}
+
+It releases memory allocated using C allocation functions such as \texttt{malloc}.
+
+\medskip
+
+\subsection{What is delete?}
+
+It destroys an object allocated with \texttt{new}.
+
+\medskip
+
+\subsection{Why should we not mix malloc/free with new/delete?}
+
+Because they use different allocation/deallocation mechanisms.
+
+Correct pairs:
+
+\begin{lstlisting}
+malloc  $\rightarrow$ free
+new     $\rightarrow$ delete
+new[]   $\rightarrow$ delete[]
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is a segmentation fault?}
+
+An invalid memory access that causes the operating system to terminate the process.
+
+Common causes:
+
+\begin{itemize}
+  \item dereferencing invalid pointers
+  \item accessing outside an array
+  \item using freed memory
+\end{itemize}
+
+\medskip
+
+\subsection{What is a structure?}
+
+A structure groups related variables, potentially of different types, under one user-defined type.
+
+\medskip
+
+\subsection{Structure vs class in C++?}
+
+The main default access difference:
+
+\begin{lstlisting}
+struct $\rightarrow$ public
+class  $\rightarrow$ private
+\end{lstlisting}
+
+Otherwise, C++ supports many of the same capabilities in both.
+
+\medskip
+
+\subsection{What is STL?}
+
+STL means \textbf{Standard Template Library}.
+
+It provides reusable:
+
+\begin{itemize}
+  \item containers
+  \item algorithms
+  \item iterators
+  \item function objects/utilities
+\end{itemize}
+
+Examples:
+
+\begin{lstlisting}
+vector
+map
+set
+queue
+stack
+sort()
+\end{lstlisting}
+
+\medskip
+
+\subsection{vector vs array?}
+
+\texttt{std::array} has fixed size.
+
+\texttt{std::vector} is dynamically resizable.
+
+Both provide O(1) random access.
+
+\medskip
+
+\subsection{vector vs linked list?}
+
+\texttt{vector} usually has much better cache locality and O(1) random access.
+
+\texttt{list} provides constant-time insertion/deletion at a known iterator position but O(n) traversal and significant pointer overhead.
+
+\medskip
+
+\subsection{map vs unordered\_map?}
+
+\texttt{map} is typically implemented as a balanced tree:
+
+\begin{lstlisting}
+lookup: O(log n)
+ordered
+\end{lstlisting}
+
+\texttt{unordered\_map} is hash-based:
+
+\begin{lstlisting}
+average lookup: O(1)
+unordered
+\end{lstlisting}
+
+\medskip
+
+\subsection{set vs unordered\_set?}
+
+\texttt{set} maintains ordered unique elements.
+
+\texttt{unordered\_set} stores unique elements using hashing without ordering.
+
+\medskip
+
+\section{Java}
+
+\subsection{Why is Java platform independent?}
+
+Java source is compiled into bytecode, which runs on a Java Virtual Machine.
+
+\begin{lstlisting}
+Java source
+    $\downarrow$
+Bytecode
+    $\downarrow$
+JVM
+    $\downarrow$
+Operating system
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is JVM?}
+
+\textbf{Java Virtual Machine} executes Java bytecode.
+
+\medskip
+
+\subsection{JDK vs JRE vs JVM?}
+
+\subsubsection{JVM}
+
+Executes bytecode.
+
+\subsubsection{JRE}
+
+JVM + libraries/runtime components.
+
+\subsubsection{JDK}
+
+JRE/runtime + development tools such as the compiler.
+
+\medskip
+
+\subsection{Why is Java not purely object-oriented?}
+
+Because it has primitive types such as:
+
+\begin{lstlisting}
+int
+char
+boolean
+double
+\end{lstlisting}
+
+which are not objects.
+
+\medskip
+
+\subsection{What is garbage collection?}
+
+Automatic identification and reclamation of heap objects that are no longer reachable.
+
+\medskip
+
+\subsection{Can Java have memory leaks?}
+
+Yes.
+
+Garbage collection prevents many manual-memory errors, but objects can remain reachable unnecessarily.
+
+Example:
+
+\begin{lstlisting}
+Static collection
+     $\downarrow$
+Object retained forever
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is final?}
+
+Depending on context:
+
+\begin{itemize}
+  \item final variable $\rightarrow$ cannot be reassigned
+  \item final method $\rightarrow$ cannot be overridden
+  \item final class $\rightarrow$ cannot be extended
+\end{itemize}
+
+\medskip
+
+\subsection{What is static?}
+
+A static member belongs to the class rather than to individual instances.
+
+\medskip
+
+\subsection{What is an exception?}
+
+An exception is an event representing an abnormal condition during program execution.
+
+\medskip
+
+\subsection{Checked vs unchecked exception?}
+
+Checked exceptions are checked by the compiler.
+
+Unchecked exceptions generally derive from \texttt{RuntimeException}.
+
+\medskip
+
+\section{Operating Systems}
+
+\subsection{Main functions of an OS?}
+
+\begin{itemize}
+  \item process management
+  \item memory management
+  \item file management
+  \item device management
+  \item security/protection
+  \item networking
+  \item resource allocation
+\end{itemize}
+
+\medskip
+
+\subsection{What is process scheduling?}
+
+Selecting which ready process/thread should receive CPU time.
+
+\medskip
+
+\subsection{Common CPU scheduling algorithms?}
+
+\begin{itemize}
+  \item FCFS
+  \item SJF
+  \item SRTF
+  \item Round Robin
+  \item Priority Scheduling
+  \item Multilevel Queue
+  \item Multilevel Feedback Queue
+\end{itemize}
+
+\medskip
+
+\subsection{What is FCFS?}
+
+\textbf{First Come First Served.}
+
+Processes execute in arrival order.
+
+Simple, but can suffer from the \textbf{convoy effect}.
+
+\medskip
+
+\subsection{What is SJF?}
+
+\textbf{Shortest Job First.}
+
+The process with the smallest estimated CPU burst is selected.
+
+It minimizes average waiting time under ideal assumptions, but requires burst-time estimation and can starve long jobs.
+
+\medskip
+
+\subsection{What is Round Robin?}
+
+Each process receives a fixed time slice called a \textbf{quantum}.
+
+It is widely suited to interactive/time-sharing systems.
+
+\medskip
+
+\subsection{What happens if the time quantum is too small?}
+
+There are too many context switches, increasing overhead.
+
+\medskip
+
+\subsection{What if quantum is too large?}
+
+Round Robin approaches FCFS behavior.
+
+\medskip
+
+\subsection{What is context switching?}
+
+Saving the state of one running task and restoring another task's state so the CPU can switch execution.
+
+\medskip
+
+\subsection{What is a PCB?}
+
+\textbf{Process Control Block.}
+
+It stores process information such as:
+
+\begin{itemize}
+  \item process ID
+  \item state
+  \item program counter
+  \item CPU registers
+  \item scheduling information
+  \item memory-management information
+\end{itemize}
+
+\medskip
+
+\section{Threads}
+
+\subsection{Process vs thread?}
+
+A process has its own address space.
+
+Threads within a process generally share the process's address space and resources.
+
+Threads are therefore cheaper to create/switch than separate processes in many systems.
+
+\medskip
+
+\subsection{What is multithreading?}
+
+Executing multiple threads concurrently within a process.
+
+\medskip
+
+\subsection{Advantage of multithreading?}
+
+\begin{itemize}
+  \item responsiveness
+  \item resource sharing
+  \item concurrency
+  \item parallelism on multicore systems
+\end{itemize}
+
+\medskip
+
+\subsection{Concurrency vs parallelism?}
+
+\textbf{Concurrency:} multiple tasks make progress during overlapping periods.
+
+\textbf{Parallelism:} multiple tasks literally execute simultaneously on multiple processing resources.
+
+\medskip
+
+\section{Synchronization}
+
+\subsection{What is a race condition?}
+
+A race condition occurs when program behavior depends on the timing/interleaving of concurrent operations.
+
+\medskip
+
+\subsection{What is a critical section?}
+
+A section of code that accesses shared resources and therefore must be protected from unsafe concurrent access.
+
+\medskip
+
+\subsection{What is a mutex?}
+
+A mutex provides mutual exclusion so that only one thread can hold the lock at a time.
+
+\medskip
+
+\subsection{What is a semaphore?}
+
+A semaphore is a synchronization primitive containing a counter used to control access to resources.
+
+Types include:
+
+\begin{itemize}
+  \item binary semaphore
+  \item counting semaphore
+\end{itemize}
+
+\medskip
+
+\subsection{Mutex vs semaphore?}
+
+A mutex is primarily an ownership-based mutual-exclusion mechanism.
+
+A semaphore is a signaling/resource-counting mechanism and does not necessarily have ownership semantics.
+
+\medskip
+
+\section{Deadlock}
+
+\subsection{What is deadlock?}
+
+A situation where processes/threads wait indefinitely for resources held by one another.
+
+\medskip
+
+\subsection{Four necessary conditions for deadlock?}
+
+\textbf{Coffman conditions:}
+
+\begin{enumerate}
+  \item Mutual exclusion
+  \item Hold and wait
+  \item No preemption
+  \item Circular wait
+\end{enumerate}
+
+\medskip
+
+\subsection{How can deadlock be prevented?}
+
+Break at least one necessary condition.
+
+For example, impose a strict resource acquisition ordering to prevent circular wait.
+
+\medskip
+
+\subsection{Deadlock vs starvation?}
+
+\textbf{Deadlock:} involved processes wait indefinitely for one another.
+
+\textbf{Starvation:} a process waits indefinitely because resources/CPU repeatedly go to others.
+
+\medskip
+
+\subsection{What is livelock?}
+
+Processes remain active and repeatedly change state in response to one another but make no useful progress.
+
+\medskip
+
+\section{Memory Management}
+
+\subsection{What is virtual memory?}
+
+Virtual memory allows processes to use an address space larger than physical RAM by using mechanisms such as paging and secondary storage.
+
+\medskip
+
+\subsection{What is paging?}
+
+Paging divides:
+
+\begin{itemize}
+  \item virtual memory into pages
+  \item physical memory into frames
+\end{itemize}
+
+Pages can be mapped to frames.
+
+\medskip
+
+\subsection{What is a page fault?}
+
+A page fault occurs when a process accesses a virtual page that is not currently available in physical memory.
+
+The OS then handles the fault, potentially loading the page from storage.
+
+\medskip
+
+\subsection{What is segmentation?}
+
+Memory is divided into logical variable-sized segments such as:
+
+\begin{itemize}
+  \item code
+  \item data
+  \item stack
+\end{itemize}
+
+Modern systems commonly rely heavily on paging, though segmentation concepts remain important historically and architecturally.
+
+\medskip
+
+\subsection{What is fragmentation?}
+
+Two types:
+
+\subsubsection{Internal fragmentation}
+
+Allocated block contains unused space.
+
+\subsubsection{External fragmentation}
+
+Free memory exists but is split into small non-contiguous pieces.
+
+\medskip
+
+\section{DBMS}
+
+\subsection{What is a DBMS?}
+
+A Database Management System is software used to store, organize, retrieve and manage data.
+
+Examples:
+
+\begin{itemize}
+  \item PostgreSQL
+  \item MySQL
+  \item Oracle Database
+  \item SQL Server
+\end{itemize}
+
+\medskip
+
+\subsection{What is a database?}
+
+An organized collection of data that can be efficiently stored and accessed.
+
+\medskip
+
+\subsection{DBMS vs RDBMS?}
+
+An RDBMS organizes data primarily into related tables and generally follows the relational model.
+
+Examples:
+
+\begin{itemize}
+  \item MySQL
+  \item PostgreSQL
+  \item Oracle
+\end{itemize}
+
+\medskip
+
+\subsection{What is a table?}
+
+A relational table represents data using rows and columns.
+
+\medskip
+
+\subsection{What is a row?}
+
+A row represents one record/tuple.
+
+\medskip
+
+\subsection{What is a column?}
+
+A column represents an attribute/field of the records.
+
+\medskip
+
+\section{Keys}
+
+\subsection{What is a primary key?}
+
+A primary key uniquely identifies each row in a table.
+
+Properties:
+
+\begin{itemize}
+  \item unique
+  \item not null
+\end{itemize}
+
+\medskip
+
+\subsection{What is a foreign key?}
+
+A foreign key references a key in another table and establishes a relationship between tables.
+
+\medskip
+
+\subsection{Primary key vs unique key?}
+
+A primary key uniquely identifies rows and cannot be NULL.
+
+A table can have multiple UNIQUE constraints, and NULL behavior depends on the DBMS.
+
+\medskip
+
+\subsection{What is a candidate key?}
+
+A minimal set of attributes capable of uniquely identifying a tuple.
+
+\medskip
+
+\subsection{What is a super key?}
+
+Any set of attributes that uniquely identifies a tuple.
+
+A candidate key is a \textbf{minimal super key}.
+
+\medskip
+
+\section{Normalization}
+
+\subsection{What is normalization?}
+
+Normalization is the process of organizing relational data to reduce redundancy and undesirable dependencies.
+
+\medskip
+
+\subsection{What is 1NF?}
+
+A relation is in First Normal Form when attributes contain atomic values and there are no repeating groups in the relational sense.
+
+\medskip
+
+\subsection{What is 2NF?}
+
+2NF requires:
+
+\begin{itemize}
+  \item 1NF
+  \item no partial dependency of a non-key attribute on part of a composite candidate key
+\end{itemize}
+
+\medskip
+
+\subsection{What is 3NF?}
+
+3NF eliminates relevant transitive dependencies of non-key attributes on candidate keys.
+
+A common simplified formulation:
+
+\begin{quote}
+Every non-key attribute depends on the key, the whole key, and nothing but the key.\\
+\end{quote}
+
+\medskip
+
+\subsection{What is BCNF?}
+
+A relation is in BCNF if every determinant is a candidate key.
+
+BCNF is stricter than 3NF.
+
+\medskip
+
+\subsection{Why normalize databases?}
+
+To reduce:
+
+\begin{itemize}
+  \item redundancy
+  \item update anomalies
+  \item insertion anomalies
+  \item deletion anomalies
+\end{itemize}
+
+\medskip
+
+\subsection{Can over-normalization be bad?}
+
+Yes.
+
+Highly normalized designs may require many joins and can hurt read performance.
+
+Sometimes \textbf{denormalization} is intentionally used for performance.
+
+\medskip
+
+\section{SQL}
+
+\subsection{What is SQL?}
+
+SQL stands for \textbf{Structured Query Language} and is used to interact with relational databases.
+
+\medskip
+
+\subsection{SQL categories?}
+
+Common classification:
+
+\subsubsection{DDL}
+
+\begin{lstlisting}
+CREATE
+ALTER
+DROP
+TRUNCATE
+\end{lstlisting}
+
+\subsubsection{DML}
+
+\begin{lstlisting}
+INSERT
+UPDATE
+DELETE
+\end{lstlisting}
+
+\subsubsection{DQL}
+
+\begin{lstlisting}
+SELECT
+\end{lstlisting}
+
+\subsubsection{DCL}
+
+\begin{lstlisting}
+GRANT
+REVOKE
+\end{lstlisting}
+
+\subsubsection{TCL}
+
+\begin{lstlisting}
+COMMIT
+ROLLBACK
+SAVEPOINT
+\end{lstlisting}
+
+\medskip
+
+\subsection{DELETE vs TRUNCATE vs DROP?}
+
+\subsubsection{DELETE}
+
+Removes rows and can use a WHERE condition.
+
+\subsubsection{TRUNCATE}
+
+Removes all rows efficiently, subject to DBMS-specific transactional behavior.
+
+\subsubsection{DROP}
+
+Removes the table/object itself.
+
+\medskip
+
+\subsection{What is a JOIN?}
+
+A JOIN combines rows from multiple tables based on a related condition.
+
+\medskip
+
+\subsection{Types of joins?}
+
+\begin{itemize}
+  \item INNER JOIN
+  \item LEFT JOIN
+  \item RIGHT JOIN
+  \item FULL OUTER JOIN
+  \item CROSS JOIN
+  \item SELF JOIN
+\end{itemize}
+
+\medskip
+
+\subsection{INNER JOIN?}
+
+Returns rows satisfying the join condition in both tables.
+
+\medskip
+
+\subsection{LEFT JOIN?}
+
+Returns all rows from the left table and matching rows from the right table.
+
+If no match exists, right-side columns become NULL.
+
+\medskip
+
+\subsection{What is a self join?}
+
+Joining a table with itself.
+
+Example:
+
+\begin{lstlisting}
+Employee $\rightarrow$ Manager
+\end{lstlisting}
+
+where both are stored in the Employee table.
+
+\medskip
+
+\subsection{WHERE vs HAVING?}
+
+\texttt{WHERE} filters rows before grouping.
+
+\texttt{HAVING} filters groups after \texttt{GROUP BY}.
+
+\medskip
+
+\subsection{GROUP BY?}
+
+Groups rows according to specified columns, usually for aggregate calculations.
+
+\medskip
+
+\subsection{Common aggregate functions?}
+
+\begin{lstlisting}
+COUNT()
+SUM()
+AVG()
+MIN()
+MAX()
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is a subquery?}
+
+A query nested inside another SQL statement.
+
+\medskip
+
+\subsection{JOIN vs subquery?}
+
+Neither is universally better.
+
+JOINs are often natural for combining related tables.
+
+Subqueries can make certain existence/filtering logic clearer.
+
+The optimizer may transform equivalent queries into similar execution plans.
+
+\medskip
+
+\subsection{What is a view?}
+
+A view is a virtual table defined by a query.
+
+It generally stores the query definition rather than a separate copy of the underlying data.
+
+\medskip
+
+\subsection{What is an index?}
+
+An index is a data structure that speeds up data retrieval at the cost of additional storage and write overhead.
+
+\medskip
+
+\subsection{Why can too many indexes be harmful?}
+
+Every insert/update/delete may need to maintain those indexes.
+
+Therefore indexes improve reads but can increase write cost and storage usage.
+
+\medskip
+
+\section{Transactions}
+
+\subsection{What is a transaction?}
+
+A transaction is a logical unit of database work that should be completed consistently.
+
+\medskip
+
+\subsection{ACID properties?}
+
+\subsubsection{Atomicity}
+
+All or nothing.
+
+\subsubsection{Consistency}
+
+Preserves database rules/invariants.
+
+\subsubsection{Isolation}
+
+Concurrent transactions behave according to the isolation model.
+
+\subsubsection{Durability}
+
+Committed changes survive failures according to the DBMS's guarantees.
+
+\medskip
+
+\subsection{COMMIT?}
+
+Makes transaction changes permanent.
+
+\medskip
+
+\subsection{ROLLBACK?}
+
+Undoes uncommitted transaction changes.
+
+\medskip
+
+\subsection{What is a transaction isolation level?}
+
+It determines how one transaction can observe changes made by concurrent transactions.
+
+Common levels:
+
+\begin{itemize}
+  \item Read Uncommitted
+  \item Read Committed
+  \item Repeatable Read
+  \item Serializable
+\end{itemize}
+
+Some DBMSs also implement snapshot/MVCC-based semantics.
+
+\medskip
+
+\section{Computer Networks}
+
+\subsection{What is a computer network?}
+
+A network is a collection of interconnected devices that communicate and share resources.
+
+\medskip
+
+\subsection{LAN?}
+
+\textbf{Local Area Network.}
+
+Covers a relatively small area such as:
+
+\begin{itemize}
+  \item office
+  \item home
+  \item campus
+\end{itemize}
+
+\medskip
+
+\subsection{WAN?}
+
+\textbf{Wide Area Network.}
+
+Covers large geographic areas.
+
+The Internet is the largest example of an interconnected collection of networks.
+
+\medskip
+
+\subsection{What is the Internet?}
+
+The Internet is a global network of interconnected networks communicating primarily using the TCP/IP protocol suite.
+
+\medskip
+
+\section{OSI Model}
+
+\subsection{Seven OSI layers?}
+
+From bottom to top:
+
+\begin{enumerate}
+  \item Physical
+  \item Data Link
+  \item Network
+  \item Transport
+  \item Session
+  \item Presentation
+  \item Application
+\end{enumerate}
+
+Mnemonic:
+
+\begin{quote}
+\textbf{Please Do Not Throw Sausage Pizza Away}\\
+\end{quote}
+
+\medskip
+
+\subsection{TCP/IP model?}
+
+Common four-layer representation:
+
+\begin{enumerate}
+  \item Link
+  \item Internet
+  \item Transport
+  \item Application
+\end{enumerate}
+
+Some textbooks use a five-layer model by separating physical and data-link layers.
+
+\medskip
+
+\subsection{What is the Physical layer?}
+
+Deals with transmission of raw bits over physical media.
+
+Examples:
+
+\begin{itemize}
+  \item cables
+  \item radio
+  \item connectors
+  \item electrical/optical signals
+\end{itemize}
+
+\medskip
+
+\subsection{Data Link layer?}
+
+Provides node-to-node delivery over a local link.
+
+Examples:
+
+\begin{itemize}
+  \item Ethernet
+  \item Wi-Fi MAC
+  \item switches operate primarily here
+\end{itemize}
+
+\medskip
+
+\subsection{Network layer?}
+
+Responsible for logical addressing and routing.
+
+Main example:
+
+\begin{quote}
+IP\\
+\end{quote}
+
+\medskip
+
+\subsection{Transport layer?}
+
+Provides end-to-end transport services.
+
+Major protocols:
+
+\begin{itemize}
+  \item TCP
+  \item UDP
+\end{itemize}
+
+\medskip
+
+\subsection{Application layer?}
+
+Provides network services to applications.
+
+Examples:
+
+\begin{itemize}
+  \item HTTP
+  \item DNS
+  \item SMTP
+  \item FTP
+  \item SSH
+\end{itemize}
+
+\medskip
+
+\section{TCP / UDP}
+
+\subsection{TCP?}
+
+Transmission Control Protocol is:
+
+\begin{itemize}
+  \item connection-oriented
+  \item reliable
+  \item ordered
+  \item flow-controlled
+  \item congestion-controlled
+\end{itemize}
+
+\medskip
+
+\subsection{UDP?}
+
+User Datagram Protocol is connectionless and provides minimal transport functionality without TCP's reliability guarantees.
+
+\medskip
+
+\subsection{TCP vs UDP?}
+
+\begin{center}
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{TCP} & \textbf{UDP} \\
+\hline
+Reliable & Best-effort \\
+Ordered & No delivery ordering guarantee \\
+Connection-oriented & Connectionless \\
+More overhead & Lower overhead \\
+Flow/congestion control & No TCP-style mechanisms \\
+\hline
+\end{tabular}
+\end{center}
+
+\medskip
+
+\subsection{Where is UDP useful?}
+
+\begin{itemize}
+  \item DNS
+  \item real-time media
+  \item online gaming
+  \item VoIP
+  \item QUIC's underlying transport is UDP
+\end{itemize}
+
+Applications may implement their own reliability where needed.
+
+\medskip
+
+\section{IP}
+
+\subsection{What is an IP address?}
+
+A logical address used to identify an interface in an IP network.
+
+\medskip
+
+\subsection{IPv4?}
+
+IPv4 uses \textbf{32-bit addresses}.
+
+Example:
+
+\begin{lstlisting}
+192.168.1.10
+\end{lstlisting}
+
+\medskip
+
+\subsection{IPv6?}
+
+IPv6 uses \textbf{128-bit addresses}.
+
+Example:
+
+\begin{lstlisting}
+2001:db8::1
+\end{lstlisting}
+
+\medskip
+
+\subsection{Why was IPv6 introduced?}
+
+Primarily because IPv4 has a limited address space.
+
+IPv6 provides vastly more addresses and includes other architectural improvements.
+
+\medskip
+
+\subsection{Private IPv4 addresses?}
+
+Common private ranges:
+
+\begin{lstlisting}
+10.0.0.0/8
+172.16.0.0/12
+192.168.0.0/16
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is NAT?}
+
+Network Address Translation maps addresses between network domains, commonly translating private internal addresses to public addresses.
+
+It also helps conserve IPv4 address space.
+
+\medskip
+
+\section{Subnetting}
+
+\subsection{What is subnetting?}
+
+Subnetting divides an IP network into smaller logical networks.
+
+Benefits:
+
+\begin{itemize}
+  \item efficient address allocation
+  \item isolation
+  \item routing control
+  \item broadcast-domain reduction
+\end{itemize}
+
+\medskip
+
+\subsection{What does /24 mean?}
+
+It means the first 24 bits are network-prefix bits.
+
+IPv4 \texttt{/24} corresponds to:
+
+\begin{lstlisting}
+255.255.255.0
+\end{lstlisting}
+
+\medskip
+
+\subsection{/27?}
+
+\begin{lstlisting}
+255.255.255.224
+\end{lstlisting}
+
+It provides:
+
+\begin{lstlisting}
+32 addresses
+\end{lstlisting}
+
+per subnet.
+
+Traditionally:
+
+\begin{lstlisting}
+30 usable host addresses
+\end{lstlisting}
+
+for an ordinary IPv4 subnet excluding network and broadcast addresses.
+
+\medskip
+
+\subsection{What is a default gateway?}
+
+The router/interface to which a host sends traffic destined for networks outside its local subnet.
+
+\medskip
+
+\section{Network Devices}
+
+\subsection{Hub vs switch?}
+
+A hub broadcasts incoming signals to all ports.
+
+A switch forwards Ethernet frames based on MAC addresses.
+
+\medskip
+
+\subsection{Switch vs router?}
+
+A switch primarily connects devices within a LAN.
+
+A router forwards packets between different IP networks.
+
+\medskip
+
+\subsection{What is a MAC address?}
+
+A MAC address is a link-layer identifier associated with a network interface.
+
+Ethernet MAC addresses are typically 48 bits.
+
+\medskip
+
+\subsection{MAC vs IP?}
+
+MAC:
+
+\begin{quote}
+Link-layer identification.\\
+\end{quote}
+
+IP:
+
+\begin{quote}
+Network-layer logical addressing/routing.\\
+\end{quote}
+
+\medskip
+
+\section{DNS}
+
+\subsection{What is DNS?}
+
+Domain Name System translates domain names into information such as IP addresses.
+
+Example:
+
+\begin{lstlisting}
+google.com
+    $\downarrow$
+IP address
+\end{lstlisting}
+
+\medskip
+
+\subsection{Why is DNS called hierarchical?}
+
+Because DNS is organized into levels:
+
+\begin{lstlisting}
+Root
+ $\downarrow$
+TLD
+ $\downarrow$
+Authoritative domain
+ $\downarrow$
+Subdomain/host
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is DHCP?}
+
+Dynamic Host Configuration Protocol automatically provides network configuration such as:
+
+\begin{itemize}
+  \item IP address
+  \item subnet mask/prefix
+  \item default gateway
+  \item DNS server
+\end{itemize}
+
+\medskip
+
+\section{HTTP}
+
+\subsection{What is HTTP?}
+
+HyperText Transfer Protocol is an application-layer protocol used for communication between clients and web servers.
+
+\medskip
+
+\subsection{HTTP vs HTTPS?}
+
+HTTPS is HTTP carried over a secure TLS connection.
+
+It provides:
+
+\begin{itemize}
+  \item confidentiality
+  \item integrity
+  \item server authentication
+\end{itemize}
+
+when TLS is correctly configured.
+
+\medskip
+
+\subsection{Common HTTP methods?}
+
+\begin{itemize}
+  \item GET
+  \item POST
+  \item PUT
+  \item PATCH
+  \item DELETE
+  \item HEAD
+  \item OPTIONS
+\end{itemize}
+
+\medskip
+
+\subsection{GET vs POST?}
+
+GET generally retrieves a resource and is intended to be safe/idempotent.
+
+POST generally submits data for processing or creates subordinate resources and is not inherently idempotent.
+
+\medskip
+
+\subsection{What is REST?}
+
+REST is an architectural style for distributed systems.
+
+RESTful APIs commonly use:
+
+\begin{itemize}
+  \item resources
+  \item HTTP methods
+  \item stateless requests
+  \item representations such as JSON
+\end{itemize}
+
+\medskip
+
+\subsection{What is an API?}
+
+Application Programming Interface.
+
+It defines how software components communicate.
+
+\medskip
+
+\section{Software Engineering}
+
+\subsection{What is software engineering?}
+
+The systematic application of engineering principles to the development, operation and maintenance of software.
+
+\medskip
+
+\subsection{SDLC?}
+
+Software Development Life Cycle.
+
+Common stages:
+
+\begin{lstlisting}
+Requirements
+    $\downarrow$
+Design
+    $\downarrow$
+Implementation
+    $\downarrow$
+Testing
+    $\downarrow$
+Deployment
+    $\downarrow$
+Maintenance
+\end{lstlisting}
+
+\medskip
+
+\subsection{Waterfall model?}
+
+A largely sequential development model where phases are performed in planned stages.
+
+Useful when requirements are stable, but less flexible when requirements change frequently.
+
+\medskip
+
+\subsection{Agile?}
+
+An iterative development approach emphasizing:
+
+\begin{itemize}
+  \item incremental delivery
+  \item customer feedback
+  \item adaptability
+  \item collaboration
+\end{itemize}
+
+\medskip
+
+\subsection{Scrum?}
+
+An Agile framework using:
+
+\begin{itemize}
+  \item sprints
+  \item product backlog
+  \item sprint backlog
+  \item review
+  \item retrospective
+  \item defined roles/accountabilities
+\end{itemize}
+
+\medskip
+
+\subsection{What is version control?}
+
+A system for tracking changes to source code and collaborating among developers.
+
+Example:
+
+\begin{quote}
+Git\\
+\end{quote}
+
+\medskip
+
+\subsection{Git vs GitHub?}
+
+Git is a distributed version-control system.
+
+GitHub is a platform for hosting and collaborating around Git repositories.
+
+\medskip
+
+\subsection{What is debugging?}
+
+The process of identifying, understanding and fixing defects in software.
+
+\medskip
+
+\subsection{Verification vs validation?}
+
+\textbf{Verification:}
+
+\begin{quote}
+Are we building the product correctly?\\
+\end{quote}
+
+\textbf{Validation:}
+
+\begin{quote}
+Are we building the correct product?\\
+\end{quote}
+
+\medskip
+
+\subsection{Unit testing?}
+
+Testing an individual function, method or small component in isolation.
+
+\medskip
+
+\subsection{Integration testing?}
+
+Tests whether multiple components work correctly together.
+
+\medskip
+
+\subsection{System testing?}
+
+Tests the complete integrated system against requirements.
+
+\medskip
+
+\subsection{Acceptance testing?}
+
+Determines whether the system meets business/user acceptance criteria.
+
+\medskip
+
+\section{Computer Architecture}
+
+\subsection{What is instruction cycle?}
+
+Conceptually:
+
+\begin{lstlisting}
+Fetch
+ $\downarrow$
+Decode
+ $\downarrow$
+Execute
+ $\downarrow$
+Memory access if needed
+ $\downarrow$
+Write back
+\end{lstlisting}
+
+Actual implementations use pipelines and more complex microarchitectures.
+
+\medskip
+
+\subsection{What is pipelining?}
+
+Pipelining overlaps different stages of multiple instructions.
+
+Example:
+
+\begin{lstlisting}
+Instruction 1: Fetch $\rightarrow$ Decode $\rightarrow$ Execute
+Instruction 2:         Fetch $\rightarrow$ Decode $\rightarrow$ Execute
+Instruction 3:                 Fetch $\rightarrow$ Decode $\rightarrow$ Execute
+\end{lstlisting}
+
+This improves instruction throughput.
+
+\medskip
+
+\subsection{What is a pipeline hazard?}
+
+A situation that prevents the next instruction from executing normally.
+
+Types:
+
+\begin{itemize}
+  \item structural hazard
+  \item data hazard
+  \item control hazard
+\end{itemize}
+
+\medskip
+
+\subsection{What is RISC?}
+
+Reduced Instruction Set Computer.
+
+It emphasizes a relatively simple instruction set and regular instruction execution.
+
+\medskip
+
+\subsection{What is CISC?}
+
+Complex Instruction Set Computer.
+
+It supports a richer and more varied instruction set.
+
+x86 is historically associated with CISC-style ISA design.
+
+\medskip
+
+\subsection{What is clock speed?}
+
+The frequency of the CPU clock, typically measured in GHz.
+
+It is not by itself a complete measure of CPU performance.
+
+\medskip
+
+\subsection{Why doesn't higher GHz always mean faster CPU?}
+
+Performance also depends on:
+
+\begin{itemize}
+  \item instructions per cycle
+  \item architecture
+  \item cache
+  \item memory subsystem
+  \item number of cores
+  \item workload
+  \item compiler optimization
+\end{itemize}
+
+\medskip
+
+\subsection{What is multicore processing?}
+
+A CPU contains multiple processing cores capable of executing multiple instruction streams concurrently.
+
+\medskip
+
+\section{Compiler \& Programming Languages}
+
+\subsection{What is a compiler?}
+
+A compiler translates source code into another form, commonly machine code or intermediate representation.
+
+\medskip
+
+\subsection{What is an interpreter?}
+
+An interpreter executes a program through runtime interpretation rather than producing a conventional native executable as the primary execution artifact.
+
+Modern implementations often combine interpretation with JIT compilation.
+
+\medskip
+
+\subsection{Compiler vs interpreter?}
+
+Traditional compiler:
+
+\begin{lstlisting}
+Source $\rightarrow$ compiled program $\rightarrow$ execute
+\end{lstlisting}
+
+Traditional interpreter:
+
+\begin{lstlisting}
+Source $\rightarrow$ runtime execution
+\end{lstlisting}
+
+Modern language implementations frequently combine both techniques.
+
+\medskip
+
+\subsection{Compiler phases?}
+
+A simplified compiler pipeline:
+
+\begin{lstlisting}
+Lexical Analysis
+       $\downarrow$
+Syntax Analysis
+       $\downarrow$
+Semantic Analysis
+       $\downarrow$
+Intermediate Representation
+       $\downarrow$
+Optimization
+       $\downarrow$
+Code Generation
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is lexical analysis?}
+
+Converts character sequences into tokens.
+
+Example:
+
+\begin{lstlisting}
+int x = 10;
+\end{lstlisting}
+
+Tokens include:
+
+\begin{lstlisting}
+int
+x
+=
+10
+;
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is parsing?}
+
+Parsing analyzes token sequences according to the grammar of the language.
+
+\medskip
+
+\subsection{What is semantic analysis?}
+
+Checks meaning-related rules.
+
+Examples:
+
+\begin{itemize}
+  \item type compatibility
+  \item variable declarations
+  \item scope
+  \item function arguments
+\end{itemize}
+
+\medskip
+
+\subsection{Syntax error vs semantic error?}
+
+Syntax error:
+
+\begin{quote}
+Violates language grammar.\\
+\end{quote}
+
+Semantic error:
+
+\begin{quote}
+Grammatically valid but violates language meaning/rules.\\
+\end{quote}
+
+\medskip
+
+\section{Operating System + File Systems}
+
+\subsection{What is a file system?}
+
+A file system organizes and manages files and directories on storage devices.
+
+Examples:
+
+\begin{itemize}
+  \item NTFS
+  \item ext4
+  \item APFS
+  \item FAT32
+\end{itemize}
+
+\medskip
+
+\subsection{What is a file?}
+
+A named collection of data managed by the operating system/file system.
+
+\medskip
+
+\subsection{What is a directory?}
+
+A structure used to organize references to files and other directories.
+
+\medskip
+
+\subsection{Absolute vs relative path?}
+
+Absolute path starts from a root/location.
+
+Relative path is interpreted relative to the current working directory.
+
+\medskip
+
+\subsection{What is a file descriptor?}
+
+A file descriptor is a small integer handle used by Unix-like operating systems to refer to an open file or I/O resource.
+
+Standard descriptors:
+
+\begin{lstlisting}
+0 $\rightarrow$ stdin
+1 $\rightarrow$ stdout
+2 $\rightarrow$ stderr
+\end{lstlisting}
+
+\medskip
+
+\section{Cybersecurity}
+
+\subsection{What is cybersecurity?}
+
+Protection of systems, networks, applications and data against unauthorized access, disruption, modification or destruction.
+
+\medskip
+
+\subsection{CIA triad?}
+
+\subsubsection{Confidentiality}
+
+Only authorized parties can access information.
+
+\subsubsection{Integrity}
+
+Information is not improperly modified.
+
+\subsubsection{Availability}
+
+Authorized users can access resources when needed.
+
+\medskip
+
+\subsection{Authentication vs authorization?}
+
+\textbf{Authentication:}
+
+\begin{quote}
+Who are you?\\
+\end{quote}
+
+\textbf{Authorization:}
+
+\begin{quote}
+What are you allowed to do?\\
+\end{quote}
+
+\medskip
+
+\subsection{Encryption?}
+
+Encryption transforms plaintext into ciphertext using a cryptographic process and key.
+
+\medskip
+
+\subsection{Symmetric encryption?}
+
+The same secret key is used for encryption and decryption.
+
+Example:
+
+\begin{quote}
+AES\\
+\end{quote}
+
+\medskip
+
+\subsection{Asymmetric encryption?}
+
+Uses a public/private key pair.
+
+Examples:
+
+\begin{itemize}
+  \item RSA
+  \item elliptic-curve cryptography
+\end{itemize}
+
+\medskip
+
+\subsection{Hashing vs encryption?}
+
+Hashing:
+
+\begin{quote}
+One-way transformation designed for integrity/fingerprinting.\\
+\end{quote}
+
+Encryption:
+
+\begin{quote}
+Reversible with the appropriate key.\\
+\end{quote}
+
+\medskip
+
+\subsection{Why shouldn't passwords be stored using plain encryption?}
+
+Password systems generally need to store password-derived verifiers rather than recoverable passwords.
+
+Use a password-hashing scheme such as:
+
+\begin{itemize}
+  \item Argon2
+  \item bcrypt
+  \item scrypt
+\end{itemize}
+
+with appropriate salting and parameters.
+
+\medskip
+
+\subsection{What is SQL injection?}
+
+An attack where untrusted input alters the intended SQL query structure.
+
+Primary defense:
+
+\begin{quote}
+Parameterized queries/prepared statements.\\
+\end{quote}
+
+\medskip
+
+\subsection{What is XSS?}
+
+\textbf{Cross-Site Scripting} occurs when attacker-controlled content is executed as script in another user's browser.
+
+Defenses include:
+
+\begin{itemize}
+  \item output encoding
+  \item safe templating
+  \item input validation where appropriate
+  \item Content Security Policy
+  \item avoiding unsafe HTML injection
+\end{itemize}
+
+\medskip
+
+\subsection{What is CSRF?}
+
+Cross-Site Request Forgery tricks an authenticated browser into making an unwanted state-changing request.
+
+Common defenses:
+
+\begin{itemize}
+  \item CSRF tokens
+  \item SameSite cookies
+  \item appropriate origin checks
+\end{itemize}
+
+\medskip
+
+\subsection{What is a firewall?}
+
+A security control that filters network traffic according to defined rules.
+
+\medskip
+
+\subsection{What is malware?}
+
+Malicious software.
+
+Examples:
+
+\begin{itemize}
+  \item virus
+  \item worm
+  \item trojan
+  \item ransomware
+  \item spyware
+\end{itemize}
+
+\medskip
+
+\subsection{Virus vs worm?}
+
+A virus generally requires a host/program or user-assisted propagation mechanism.
+
+A worm can self-propagate across networks.
+
+\medskip
+
+\section{Web \& Modern Application Architecture}
+
+\subsection{Frontend vs backend?}
+
+Frontend handles the user-facing interface.
+
+Backend handles:
+
+\begin{itemize}
+  \item business logic
+  \item data access
+  \item authentication
+  \item APIs
+  \item server-side processing
+\end{itemize}
+
+\medskip
+
+\subsection{What is a database server?}
+
+A system running DBMS software that accepts database requests and manages stored data.
+
+\medskip
+
+\subsection{What is a web server?}
+
+Software that handles HTTP requests and serves web resources or forwards requests to application logic.
+
+Examples:
+
+\begin{itemize}
+  \item Apache
+  \item Nginx
+\end{itemize}
+
+\medskip
+
+\subsection{What is a reverse proxy?}
+
+A server that receives requests on behalf of backend servers and forwards them appropriately.
+
+It can provide:
+
+\begin{itemize}
+  \item TLS termination
+  \item load balancing
+  \item caching
+  \item routing
+  \item security controls
+\end{itemize}
+
+\medskip
+
+\subsection{What is load balancing?}
+
+Distributing incoming workloads across multiple servers.
+
+Benefits:
+
+\begin{itemize}
+  \item scalability
+  \item availability
+  \item fault tolerance
+\end{itemize}
+
+\medskip
+
+\subsection{Vertical vs horizontal scaling?}
+
+\subsubsection{Vertical scaling}
+
+Increase resources of one machine.
+
+\begin{lstlisting}
+More CPU/RAM
+\end{lstlisting}
+
+\subsubsection{Horizontal scaling}
+
+Add more machines/instances.
+
+\begin{lstlisting}
+Server 1
+Server 2
+Server 3
+\end{lstlisting}
+
+\medskip
+
+\section{Cloud Computing}
+
+\subsection{What is cloud computing?}
+
+On-demand delivery of computing resources over a network with elastic scaling and usage-based resource allocation.
+
+\medskip
+
+\subsection{IaaS?}
+
+\textbf{Infrastructure as a Service}
+
+Provides resources such as:
+
+\begin{itemize}
+  \item virtual machines
+  \item storage
+  \item networking
+\end{itemize}
+
+\medskip
+
+\subsection{PaaS?}
+
+\textbf{Platform as a Service}
+
+Provides a managed platform for deploying applications.
+
+\medskip
+
+\subsection{SaaS?}
+
+\textbf{Software as a Service}
+
+Users consume a complete software application.
+
+Examples include web-based productivity applications.
+
+\medskip
+
+\subsection{Public vs private cloud?}
+
+Public cloud infrastructure is provided by a third-party cloud provider.
+
+Private cloud is dedicated to a particular organization.
+
+\medskip
+
+\subsection{What is virtualization?}
+
+Running virtualized computing environments on shared physical hardware through a hypervisor or similar mechanism.
+
+\medskip
+
+\subsection{What is a container?}
+
+A lightweight isolated application environment that shares the host operating system kernel.
+
+Docker is a common container technology.
+
+\medskip
+
+\subsection{Container vs virtual machine?}
+
+VM:
+
+\begin{lstlisting}
+Hardware
+ $\downarrow$
+Hypervisor
+ $\downarrow$
+Guest OS
+ $\downarrow$
+Application
+\end{lstlisting}
+
+Container:
+
+\begin{lstlisting}
+Hardware
+ $\downarrow$
+Host OS
+ $\downarrow$
+Container runtime
+ $\downarrow$
+Containers
+\end{lstlisting}
+
+Containers are generally lighter because they share the host kernel.
+
+\medskip
+
+\section{Artificial Intelligence \& Machine Learning}
+
+Because your background includes AI/ML, the board may probe this area.
+
+\subsection{What is AI?}
+
+Artificial Intelligence is the field of building systems capable of performing tasks that normally require aspects of human intelligence.
+
+\medskip
+
+\subsection{Machine learning?}
+
+Machine learning enables systems to learn patterns from data rather than being explicitly programmed with every rule.
+
+\medskip
+
+\subsection{Deep learning?}
+
+Deep learning uses multi-layer neural networks to learn hierarchical representations from data.
+
+\medskip
+
+\subsection{Supervised learning?}
+
+Learning from labeled examples.
+
+Examples:
+
+\begin{itemize}
+  \item classification
+  \item regression
+\end{itemize}
+
+\medskip
+
+\subsection{Unsupervised learning?}
+
+Learning patterns from unlabeled data.
+
+Examples:
+
+\begin{itemize}
+  \item clustering
+  \item dimensionality reduction
+\end{itemize}
+
+\medskip
+
+\subsection{Classification vs regression?}
+
+Classification predicts discrete categories.
+
+Regression predicts continuous numerical values.
+
+\medskip
+
+\subsection{What is overfitting?}
+
+The model learns training-specific patterns, including noise, so training performance is high but generalization performance is poor.
+
+\medskip
+
+\subsection{How can overfitting be reduced?}
+
+\begin{itemize}
+  \item more data
+  \item regularization
+  \item dropout
+  \item data augmentation
+  \item early stopping
+  \item simpler models
+  \item cross-validation
+\end{itemize}
+
+\medskip
+
+\subsection{What is underfitting?}
+
+The model is too simple or insufficiently trained to capture the underlying pattern.
+
+Both training and validation performance are poor.
+
+\medskip
+
+\subsection{Bias vs variance?}
+
+\textbf{High bias:}
+
+Model is too simple.
+
+$\rightarrow$ underfitting.
+
+\textbf{High variance:}
+
+Model is overly sensitive to training data.
+
+$\rightarrow$ overfitting.
+
+\medskip
+
+\subsection{What is a neural network?}
+
+A computational model consisting of interconnected parameterized units that transform inputs through learned weights and nonlinear activation functions.
+
+\medskip
+
+\subsection{What is an activation function?}
+
+A nonlinear function applied to a neuron's output.
+
+Examples:
+
+\begin{itemize}
+  \item ReLU
+  \item sigmoid
+  \item tanh
+  \item softmax
+\end{itemize}
+
+\medskip
+
+\subsection{Why is ReLU popular?}
+
+It is computationally simple and introduces nonlinearity while generally reducing the severe saturation problem of sigmoid in positive regions.
+
+\medskip
+
+\subsection{What is softmax?}
+
+Softmax converts logits into a probability distribution over classes.
+
+For class i:
+
+\$\$
+P\_i = \textbackslash\{\}frac\{e\textasciicircum{}\{z\_i\}\}\{\textbackslash\{\}sum\_j e\textasciicircum{}\{z\_j\}\}
+\$\$
+
+\medskip
+
+\subsection{What is gradient descent?}
+
+An optimization algorithm that updates parameters in the direction that reduces the loss.
+
+Conceptually:
+
+\$\$
+\textbackslash\{\}theta \textbackslash\{\}leftarrow \textbackslash\{\}theta-\textbackslash\{\}eta\textbackslash\{\}nabla\_\textbackslash\{\}theta L
+\$\$
+
+where:
+
+\begin{itemize}
+  \item  = parameters
+  \item  = learning rate
+  \item L = loss
+\end{itemize}
+
+\medskip
+
+\subsection{What is learning rate?}
+
+The step size used by an optimization algorithm when updating model parameters.
+
+Too large:
+
+\begin{quote}
+unstable/divergent training.\\
+\end{quote}
+
+Too small:
+
+\begin{quote}
+slow convergence.\\
+\end{quote}
+
+\medskip
+
+\subsection{What is an epoch?}
+
+One complete pass through the training dataset.
+
+\medskip
+
+\subsection{What is batch size?}
+
+Number of training examples processed before a parameter update.
+
+\medskip
+
+\subsection{What is an iteration?}
+
+One parameter-update step.
+
+Approximately:
+
+\$\$
+\textbackslash\{\}text\{iterations per epoch\}
+=
+\textbackslash\{\}frac\{\textbackslash\{\}text\{training samples\}\}\{\textbackslash\{\}text\{batch size\}\}
+\$\$
+
+\medskip
+
+\subsection{What is a confusion matrix?}
+
+A table showing predicted vs actual class outcomes.
+
+For binary classification:
+
+\begin{lstlisting}
+                 Predicted
+              Positive Negative
+
+Actual Pos       TP       FN
+Actual Neg       FP       TN
+\end{lstlisting}
+
+\medskip
+
+\subsection{Accuracy?}
+
+\$\$
+Accuracy=\textbackslash\{\}frac\{TP+TN\}\{TP+TN+FP+FN\}
+\$\$
+
+\medskip
+
+\subsection{Precision?}
+
+\$\$
+Precision=\textbackslash\{\}frac\{TP\}\{TP+FP\}
+\$\$
+
+It answers:
+
+\begin{quote}
+Of predicted positives, how many were actually positive?\\
+\end{quote}
+
+\medskip
+
+\subsection{Recall?}
+
+\$\$
+Recall=\textbackslash\{\}frac\{TP\}\{TP+FN\}
+\$\$
+
+It answers:
+
+\begin{quote}
+Of actual positives, how many did we identify?\\
+\end{quote}
+
+\medskip
+
+\subsection{F1-score?}
+
+Harmonic mean of precision and recall:
+
+\$\$
+F1=2\textbackslash\{\}frac\{Precision\textbackslash\{\}times Recall\}\{Precision+Recall\}
+\$\$
+
+\medskip
+
+\subsection{Why can accuracy be misleading?}
+
+Especially with imbalanced datasets.
+
+Example:
+
+\begin{lstlisting}
+99% healthy
+1% diseased
+\end{lstlisting}
+
+A model predicting "healthy" every time gets 99\% accuracy but detects no disease.
+
+\medskip
+
+\subsection{What is transfer learning?}
+
+Using knowledge learned by a model on one task/dataset as a starting point for another related task.
+
+\medskip
+
+\subsection{What is fine-tuning?}
+
+Continuing training of a pretrained model, usually with a smaller learning rate, so that its parameters adapt to the target task.
+
+\medskip
+
+\section{Software Design}
+
+\subsection{What is modularity?}
+
+Dividing software into relatively independent modules with clear responsibilities and interfaces.
+
+\medskip
+
+\subsection{What is cohesion?}
+
+How strongly related the responsibilities inside a module are.
+
+High cohesion is generally desirable.
+
+\medskip
+
+\subsection{What is coupling?}
+
+How strongly modules depend on one another.
+
+Low coupling is generally desirable.
+
+\medskip
+
+\subsection{High cohesion and low coupling --- why desirable?}
+
+It makes software:
+
+\begin{itemize}
+  \item easier to understand
+  \item easier to test
+  \item easier to modify
+  \item easier to maintain
+\end{itemize}
+
+\medskip
+
+\subsection{What is SOLID?}
+
+Five object-oriented design principles:
+
+\begin{lstlisting}
+S $\rightarrow$ Single Responsibility
+O $\rightarrow$ Open/Closed
+L $\rightarrow$ Liskov Substitution
+I $\rightarrow$ Interface Segregation
+D $\rightarrow$ Dependency Inversion
+\end{lstlisting}
+
+\medskip
+
+\subsection{Single Responsibility Principle?}
+
+A class/module should have one coherent responsibility and one primary reason to change.
+
+\medskip
+
+\subsection{Open/Closed Principle?}
+
+Software entities should be:
+
+\begin{quote}
+open for extension, closed for modification.\\
+\end{quote}
+
+\medskip
+
+\subsection{Liskov Substitution Principle?}
+
+Subtypes should be substitutable for their base types without breaking expected behavior.
+
+\medskip
+
+\subsection{Dependency Inversion Principle?}
+
+High-level modules should not depend directly on low-level implementation details.
+
+Both should depend on abstractions.
+
+\medskip
+
+\section{Git \& Development}
+
+\subsection{What is Git?}
+
+A distributed version-control system.
+
+\medskip
+
+\subsection{What is a commit?}
+
+A recorded snapshot of changes in a Git repository.
+
+\medskip
+
+\subsection{What is a branch?}
+
+An independent line of development.
+
+\medskip
+
+\subsection{What is merge?}
+
+Combining changes from different branches.
+
+\medskip
+
+\subsection{What is a merge conflict?}
+
+When Git cannot automatically reconcile conflicting changes.
+
+\medskip
+
+\subsection{What is git clone?}
+
+Copies an existing repository to your local system.
+
+\medskip
+
+\subsection{What is git pull?}
+
+Fetches remote changes and integrates them into the current branch, depending on configuration.
+
+\medskip
+
+\subsection{What is git fetch?}
+
+Downloads changes from a remote repository without automatically integrating them into the current branch.
+
+\medskip
+
+\section{Common Programming Viva Traps}
+
+\subsection{What is the difference between = and ==?}
+
+\texttt{=} is assignment.
+
+\texttt{==} compares equality.
+
+\medskip
+
+\subsection{What is ++i vs i++?}
+
+Both increment \texttt{i}.
+
+But:
+
+\begin{lstlisting}
+++i
+\end{lstlisting}
+
+increments before yielding the value.
+
+\begin{lstlisting}
+i++
+\end{lstlisting}
+
+yields the old value before incrementing.
+
+\medskip
+
+\subsection{What is pass-by-value?}
+
+A copy of the argument is passed to the function.
+
+Changes to the parameter don't directly modify the original variable.
+
+\medskip
+
+\subsection{What is pass-by-reference?}
+
+The function receives an alias/reference to the original object, allowing modification of the original depending on language semantics.
+
+\medskip
+
+\subsection{What is scope?}
+
+Scope determines where a name can be accessed in a program.
+
+\medskip
+
+\subsection{What is lifetime?}
+
+Lifetime is the period during which an object or variable exists.
+
+Scope and lifetime are related but not identical.
+
+\medskip
+
+\subsection{What is static variable?}
+
+A static variable has a lifetime extending across the relevant program execution scope, while its accessibility depends on where it is declared.
+
+In C/C++, \texttt{static} also affects linkage for certain file-scope declarations.
+
+\medskip
+
+\subsection{What is constant?}
+
+A value that the program should not modify after initialization, depending on the language's const/final semantics.
+
+\medskip
+
+\section{Important Conceptual Comparisons}
+
+These are \textbf{high-value viva questions} because interviewers love comparisons.
+
+\subsection{Compiler vs interpreter}
+
+\begin{lstlisting}
+Compiler:
+Source $\rightarrow$ translation $\rightarrow$ executable/IR
+
+Interpreter:
+Program $\rightarrow$ runtime execution
+\end{lstlisting}
+
+Modern systems often combine compilation and interpretation.
+
+\medskip
+
+\subsection{Stack vs heap}
+
+\begin{lstlisting}
+Stack:
+Automatic/local lifetime
+Fast
+Structured by function calls
+
+Heap:
+Dynamic allocation
+Flexible lifetime
+Requires management/GC
+\end{lstlisting}
+
+\medskip
+
+\subsection{TCP vs UDP}
+
+\begin{lstlisting}
+TCP:
+Reliable + ordered + connection-oriented
+
+UDP:
+Minimal + connectionless + best-effort
+\end{lstlisting}
+
+\medskip
+
+\subsection{Process vs thread}
+
+\begin{lstlisting}
+Process:
+Independent address space
+
+Thread:
+Execution unit within process
+\end{lstlisting}
+
+\medskip
+
+\subsection{Primary key vs foreign key}
+
+\begin{lstlisting}
+Primary key:
+Identifies row
+
+Foreign key:
+References another table's key
+\end{lstlisting}
+
+\medskip
+
+\subsection{WHERE vs HAVING}
+
+\begin{lstlisting}
+WHERE:
+Filters rows
+
+HAVING:
+Filters groups
+\end{lstlisting}
+
+\medskip
+
+\subsection{DELETE vs TRUNCATE vs DROP}
+
+\begin{lstlisting}
+DELETE:
+Rows
+
+TRUNCATE:
+All rows
+
+DROP:
+Entire database object
+\end{lstlisting}
+
+\medskip
+
+\subsection{Array vs linked list}
+
+\begin{lstlisting}
+Array:
+Fast indexing
+
+Linked list:
+Flexible node-based insertion/deletion
+\end{lstlisting}
+
+\medskip
+
+\subsection{BFS vs DFS}
+
+\subsubsection{BFS}
+
+Uses:
+
+\begin{quote}
+Queue\\
+\end{quote}
+
+Useful for shortest paths in \textbf{unweighted graphs}.
+
+\subsubsection{DFS}
+
+Uses:
+
+\begin{quote}
+Stack/recursion\\
+\end{quote}
+
+Useful for:
+
+\begin{itemize}
+  \item traversal
+  \item cycle detection
+  \item topological algorithms
+  \item connected components
+\end{itemize}
+
+\medskip
+
+\subsection{What is BFS complexity?}
+
+For adjacency-list representation:
+
+\$\$
+O(V+E)
+\$\$
+
+\medskip
+
+\subsection{DFS complexity?}
+
+Also:
+
+\$\$
+O(V+E)
+\$\$
+
+with adjacency lists.
+
+\medskip
+
+\subsection{What is a tree?}
+
+A connected acyclic graph.
+
+For a tree with n vertices:
+
+\$\$
+E=n-1
+\$\$
+
+\medskip
+
+\subsection{What is a binary tree?}
+
+A tree where each node has at most two children.
+
+\medskip
+
+\subsection{What is a binary search tree?}
+
+A binary tree satisfying an ordering property such as:
+
+\begin{lstlisting}
+left subtree < node < right subtree
+\end{lstlisting}
+
+for unique keys in the standard formulation.
+
+\medskip
+
+\subsection{BST search complexity?}
+
+Average:
+
+\begin{lstlisting}
+O(log n)
+\end{lstlisting}
+
+for a reasonably balanced tree.
+
+Worst case:
+
+\begin{lstlisting}
+O(n)
+\end{lstlisting}
+
+if the tree becomes highly skewed.
+
+\medskip
+
+\subsection{What is AVL tree?}
+
+A self-balancing binary search tree where the balance factor of each node is restricted, commonly to -1, 0 or +1.
+
+Search/insert/delete:
+
+\begin{lstlisting}
+O(log n)
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is a heap?}
+
+A complete binary tree satisfying a heap-order property.
+
+Max heap:
+
+\begin{lstlisting}
+parent $\geq$ children
+\end{lstlisting}
+
+Min heap:
+
+\begin{lstlisting}
+parent $\leq$ children
+\end{lstlisting}
+
+\medskip
+
+\subsection{Heap applications?}
+
+\begin{itemize}
+  \item priority queues
+  \item heap sort
+  \item scheduling
+  \item graph algorithms such as Dijkstra/Prim implementations
+\end{itemize}
+
+\medskip
+
+\section{Advanced CS Questions}
+
+\subsection{What is dynamic programming?}
+
+Dynamic programming solves problems with overlapping subproblems and optimal substructure by storing previously computed results.
+
+Two common approaches:
+
+\begin{itemize}
+  \item memoization
+  \item tabulation
+\end{itemize}
+
+\medskip
+
+\subsection{Greedy vs dynamic programming?}
+
+Greedy makes the locally best choice at each step.
+
+Dynamic programming systematically considers subproblem solutions.
+
+Greedy works only when the problem has the appropriate greedy-choice property.
+
+\medskip
+
+\subsection{What is divide and conquer?}
+
+Break a problem into smaller independent subproblems, solve them recursively, and combine their solutions.
+
+Example:
+
+\begin{quote}
+Merge sort.\\
+\end{quote}
+
+\medskip
+
+\subsection{What is a graph?}
+
+A graph consists of:
+
+\begin{itemize}
+  \item vertices/nodes
+  \item edges
+\end{itemize}
+
+It can model relationships such as:
+
+\begin{lstlisting}
+Cities $\leftrightarrow$ Roads
+Users $\leftrightarrow$ Friendships
+Computers $\leftrightarrow$ Network links
+\end{lstlisting}
+
+\medskip
+
+\subsection{Directed vs undirected graph?}
+
+Directed:
+
+\begin{lstlisting}
+A $\rightarrow$ B
+\end{lstlisting}
+
+Undirected:
+
+\begin{lstlisting}
+A --- B
+\end{lstlisting}
+
+\medskip
+
+\subsection{Weighted graph?}
+
+Edges have associated numerical weights.
+
+Example:
+
+\begin{lstlisting}
+Dhaka --5km-- Gazipur
+\end{lstlisting}
+
+\medskip
+
+\subsection{Dijkstra's algorithm?}
+
+Finds shortest paths from a source in graphs with \textbf{non-negative edge weights}.
+
+\medskip
+
+\subsection{Can Dijkstra handle negative edges?}
+
+No.
+
+Bellman-Ford can handle negative edge weights and can detect reachable negative cycles.
+
+\medskip
+
+\subsection{What is a minimum spanning tree?}
+
+A spanning tree of a connected weighted undirected graph with minimum total edge weight.
+
+Algorithms:
+
+\begin{itemize}
+  \item Kruskal
+  \item Prim
+\end{itemize}
+
+\medskip
+
+\subsection{What is topological sorting?}
+
+A linear ordering of vertices in a directed acyclic graph such that:
+
+\begin{lstlisting}
+u $\rightarrow$ v
+\end{lstlisting}
+
+means u appears before v.
+
+\medskip
+
+\subsection{Where is topological sorting used?}
+
+\begin{itemize}
+  \item course prerequisites
+  \item build systems
+  \item dependency management
+  \item task scheduling
+\end{itemize}
+
+\medskip
+
+\section{Distributed Systems}
+
+\subsection{What is a distributed system?}
+
+A collection of independent computers that cooperate and appear to users as a coherent system.
+
+\medskip
+
+\subsection{Why use distributed systems?}
+
+\begin{itemize}
+  \item scalability
+  \item fault tolerance
+  \item geographic distribution
+  \item availability
+  \item performance
+\end{itemize}
+
+\medskip
+
+\subsection{What is replication?}
+
+Maintaining multiple copies of data/services.
+
+Benefits:
+
+\begin{itemize}
+  \item availability
+  \item fault tolerance
+  \item read scalability
+\end{itemize}
+
+\medskip
+
+\subsection{What is sharding?}
+
+Partitioning data across multiple machines/nodes.
+
+\medskip
+
+\subsection{Replication vs sharding?}
+
+Replication:
+
+\begin{quote}
+Same data copied to multiple nodes.\\
+\end{quote}
+
+Sharding:
+
+\begin{quote}
+Different portions of data distributed among nodes.\\
+\end{quote}
+
+They can be combined.
+
+\medskip
+
+\subsection{What is CAP theorem?}
+
+In the presence of a network partition, a distributed system cannot simultaneously guarantee both:
+
+\begin{itemize}
+  \item strong consistency
+  \item full availability
+\end{itemize}
+
+while also tolerating the partition.
+
+The three properties are:
+
+\begin{lstlisting}
+Consistency
+Availability
+Partition tolerance
+\end{lstlisting}
+
+\medskip
+
+\subsection{What is eventual consistency?}
+
+If no new updates occur and communication continues, replicas will eventually converge to the same value.
+
+\medskip
+
+\section{Modern Technology Questions}
+
+\subsection{What is cloud computing?}
+
+On-demand computing resources delivered over networks with elasticity and resource pooling.
+
+\medskip
+
+\subsection{What is edge computing?}
+
+Processing data closer to where it is generated instead of sending everything to a centralized cloud.
+
+Benefits:
+
+\begin{itemize}
+  \item lower latency
+  \item reduced bandwidth
+  \item improved local responsiveness
+\end{itemize}
+
+\medskip
+
+\subsection{What is IoT?}
+
+Internet of Things refers to interconnected physical devices capable of sensing, processing and communicating data.
+
+Examples:
+
+\begin{itemize}
+  \item smart meters
+  \item industrial sensors
+  \item wearable devices
+\end{itemize}
+
+\medskip
+
+\subsection{What is blockchain?}
+
+A distributed ledger technology in which transactions are recorded using cryptographic mechanisms and consensus protocols.
+
+\medskip
+
+\subsection{What is generative AI?}
+
+AI systems capable of generating new content such as:
+
+\begin{itemize}
+  \item text
+  \item images
+  \item audio
+  \item video
+  \item code
+\end{itemize}
+
+\medskip
+
+\subsection{What is an LLM?}
+
+Large Language Model.
+
+A neural language model trained on large datasets to model and generate natural language.
+
+Modern LLMs are commonly based on Transformer architectures.
+
+\medskip
+
+\subsection{What is a Transformer?}
+
+A neural-network architecture based heavily on attention mechanisms rather than recurrence.
+
+It powers many modern language and multimodal models.
+
+\medskip
+
+\subsection{What is attention?}
+
+Attention allows a model to assign different weights to different parts of the input when producing a representation or output.
+
+\medskip
+
+\subsection{What is Generative AI vs traditional ML?}
+
+Traditional ML often predicts or classifies:
+
+\begin{lstlisting}
+Input $\rightarrow$ Prediction
+\end{lstlisting}
+
+Generative AI can produce new content:
+
+\begin{lstlisting}
+Prompt/Input $\rightarrow$ Generated content
+\end{lstlisting}
+
+\medskip
+
+\section{High-Probability Technical Questions}
+
+These are the questions I would give \textbf{extra priority} because of the position.
+
+\subsection{Why is data structure important for a programmer?}
+
+Because algorithm performance depends heavily on how data is organized.
+
+Choosing the right structure can turn an operation from:
+
+\begin{lstlisting}
+O(n)
+\end{lstlisting}
+
+into:
+
+\begin{lstlisting}
+O(1)
+\end{lstlisting}
+
+average-case, for example with hash-based lookup.
+
+\medskip
+
+\subsection{Which language would you use for system-level programming?}
+
+C/C++ are common choices because they provide:
+
+\begin{itemize}
+  \item low-level control
+  \item predictable performance
+  \item direct memory manipulation
+\end{itemize}
+
+\medskip
+
+\subsection{Which language would you choose for enterprise application development?}
+
+It depends on requirements.
+
+Common choices include:
+
+\begin{itemize}
+  \item Java
+  \item C\#
+  \item C++
+  \item JavaScript/TypeScript
+  \item Python
+\end{itemize}
+
+\medskip
+
+\subsection{How would you design an employee management system?}
+
+I would first identify:
+
+\subsubsection{Entities}
+
+\begin{lstlisting}
+Employee
+Department
+Position
+Salary
+Attendance
+\end{lstlisting}
+
+Then define:
+
+\begin{itemize}
+  \item relationships
+  \item primary/foreign keys
+  \item business rules
+  \item API requirements
+  \item authentication/authorization
+  \item indexes
+  \item transaction boundaries
+\end{itemize}
+
+\medskip
+
+\subsection{How would you secure an organization's employee database?}
+
+I would use:
+
+\begin{itemize}
+  \item authentication
+  \item role-based authorization
+  \item parameterized SQL
+  \item encryption in transit
+  \item encryption at rest where appropriate
+  \item password hashing
+  \item audit logs
+  \item backups
+  \item least privilege
+  \item input validation
+  \item regular security updates
+\end{itemize}
+
+\medskip
+
+\subsection{How would you improve a slow database query?}
+
+I would investigate:
+
+\begin{enumerate}
+  \item Execution plan
+  \item Missing/ineffective indexes
+  \item Join conditions
+  \item Filtering
+  \item Excessive data retrieval
+  \item Sorting/grouping
+  \item Statistics
+  \item Query structure
+\end{enumerate}
+
+Then benchmark changes rather than assuming an index will always help.
+
+\medskip
+
+\subsection{How would you troubleshoot a slow application?}
+
+I'd follow a measurement-driven process:
+
+\begin{lstlisting}
+Reproduce
+   $\downarrow$
+Measure
+   $\downarrow$
+Identify bottleneck
+   $\downarrow$
+Optimize
+   $\downarrow$
+Test
+   $\downarrow$
+Monitor
+\end{lstlisting}
+
+Potential bottlenecks:
+
+\begin{itemize}
+  \item CPU
+  \item memory
+  \item disk I/O
+  \item database
+  \item network
+  \item inefficient algorithms
+  \item external APIs
+\end{itemize}
+
+\medskip
+
+\subsection{What would you do if a program suddenly crashes?}
+
+I'd:
+
+\begin{enumerate}
+  \item Reproduce the issue.
+  \item Inspect logs/error messages.
+  \item Identify the failing component.
+  \item Use a debugger if appropriate.
+  \item Check memory/resource issues.
+  \item Fix the root cause.
+  \item Add regression tests.
+  \item Verify the fix.
+\end{enumerate}
+
+\medskip
+
+\subsection{What is the most important skill of a programmer?}
+
+I would answer:
+
+\begin{quote}
+\textbf{Problem-solving ability.}\\
+\end{quote}
+
+Programming languages and frameworks can change, but the ability to decompose a problem, design an algorithm, reason about complexity, debug and verify a solution remains fundamental.
+
+\medskip
+
+\section{Very Short Rapid-Fire Round}
+
+These are designed for the situation where the board fires questions one after another.
+
+\subsubsection{What is an algorithm?}
+
+A finite sequence of steps for solving a problem.
+
+\subsubsection{What is a data structure?}
+
+A method of organizing data for efficient operations.
+
+\subsubsection{Stack principle?}
+
+LIFO.
+
+\subsubsection{Queue principle?}
+
+FIFO.
+
+\subsubsection{Binary search complexity?}
+
+O(log n).
+
+\subsubsection{Linear search complexity?}
+
+O(n).
+
+\subsubsection{Merge sort?}
+
+O(n log n).
+
+\subsubsection{Worst-case quicksort?}
+
+O(n\textbackslash\{\}textsuperscript\{2\}).
+
+\subsubsection{Hash table average lookup?}
+
+O(1).
+
+\subsubsection{Tree with no cycles?}
+
+Tree.
+
+\subsubsection{Tree with two children maximum?}
+
+Binary tree.
+
+\subsubsection{Sorted binary tree?}
+
+BST.
+
+\subsubsection{Graph shortest path with nonnegative weights?}
+
+Dijkstra.
+
+\subsubsection{Graph traversal using queue?}
+
+BFS.
+
+\subsubsection{Graph traversal using stack?}
+
+DFS.
+
+\subsubsection{SQL full form?}
+
+Structured Query Language.
+
+\subsubsection{DBMS full form?}
+
+Database Management System.
+
+\subsubsection{Primary key?}
+
+Unique row identifier.
+
+\subsubsection{Foreign key?}
+
+Reference to another table's key.
+
+\subsubsection{ACID?}
+
+Atomicity, Consistency, Isolation, Durability.
+
+\subsubsection{OS full form?}
+
+Operating System.
+
+\subsubsection{CPU?}
+
+Central Processing Unit.
+
+\subsubsection{RAM?}
+
+Random Access Memory.
+
+\subsubsection{ROM?}
+
+Read Only Memory.
+
+\subsubsection{HTTP?}
+
+HyperText Transfer Protocol.
+
+\subsubsection{HTTPS?}
+
+HTTP over TLS.
+
+\subsubsection{IP?}
+
+Internet Protocol.
+
+\subsubsection{TCP?}
+
+Transmission Control Protocol.
+
+\subsubsection{UDP?}
+
+User Datagram Protocol.
+
+\subsubsection{DNS?}
+
+Domain Name System.
+
+\subsubsection{DHCP?}
+
+Dynamic Host Configuration Protocol.
+
+\subsubsection{LAN?}
+
+Local Area Network.
+
+\subsubsection{WAN?}
+
+Wide Area Network.
+
+\subsubsection{API?}
+
+Application Programming Interface.
+
+\subsubsection{OOP pillars?}
+
+Encapsulation, abstraction, inheritance, polymorphism.
+
+\subsubsection{Git?}
+
+Distributed version-control system.
+
+\subsubsection{Compiler?}
+
+Translates source code into another executable/intermediate representation.
+
+\subsubsection{Deadlock?}
+
+Processes wait indefinitely for resources held by one another.
+
+\subsubsection{Race condition?}
+
+Outcome depends on concurrent execution timing.
+
+\subsubsection{Semaphore?}
+
+Synchronization/resource-counting primitive.
+
+\subsubsection{Mutex?}
+
+Mutual-exclusion lock.
+
+\subsubsection{Virtual memory?}
+
+Abstraction providing processes with virtual address spaces backed by physical memory/storage.
+
+\subsubsection{Page fault?}
+
+Access to a page not currently resident in physical memory.
+
+\subsubsection{Cache?}
+
+Small, fast memory storing frequently/recently used data.
+
+\subsubsection{AI?}
+
+Artificial Intelligence.
+
+\subsubsection{ML?}
+
+Machine Learning.
+
+\subsubsection{CNN?}
+
+Convolutional Neural Network.
+
+\subsubsection{RNN?}
+
+Recurrent Neural Network.
+
+\subsubsection{Transformer?}
+
+Attention-based neural architecture.
+
+\subsubsection{Overfitting?}
+
+Excellent training fit but poor generalization.
+
+\medskip
+
+\section{Questions the Board May Ask After Your Answer}
+
+This is particularly important.
+
+Suppose they ask:
+
+\begin{quote}
+\textbf{``What is a primary key?''}\\
+\end{quote}
+
+Don't assume the conversation ends there.
+
+They may immediately ask:
+
+\begin{quote}
+Can it be NULL?\\
+\end{quote}
+
+\textbf{No.}
+
+\begin{quote}
+Can a table have two primary keys?\\
+\end{quote}
+
+\textbf{No. A table has one primary-key constraint, although it may contain multiple columns as a composite primary key.}
+
+Then:
+
+\begin{quote}
+What is a candidate key?\\
+\end{quote}
+
+\textbf{A minimal attribute set that uniquely identifies a row.}
+
+Then:
+
+\begin{quote}
+What is a super key?\\
+\end{quote}
+
+\textbf{Any attribute set that uniquely identifies a row; it need not be minimal.}
+
+Then:
+
+\begin{quote}
+What is a foreign key?\\
+\end{quote}
+
+\textbf{An attribute or set of attributes referencing a key in another or sometimes the same table.}
+
+That is how a viva can escalate.
+
+\medskip
+
+\section{Follow-up Chains You Should Practice}
+
+\subsection{Chain 1: Array}
+
+\begin{quote}
+What is an array?\\
+\end{quote}
+
+$\rightarrow$ Contiguous collection.
+
+\begin{quote}
+Why is access O(1)?\\
+\end{quote}
+
+$\rightarrow$ Address calculation.
+
+\begin{quote}
+Why is insertion O(n)?\\
+\end{quote}
+
+$\rightarrow$ Elements may need shifting.
+
+\begin{quote}
+What if insertion is at the end?\\
+\end{quote}
+
+$\rightarrow$ O(1) amortized for dynamic arrays.
+
+\begin{quote}
+Why is vector faster than linked list in many workloads?\\
+\end{quote}
+
+$\rightarrow$ Better cache locality.
+
+\medskip
+
+\section{Chain 2: Database}
+
+\begin{quote}
+What is normalization?\\
+\end{quote}
+
+$\rightarrow$ Reducing redundancy/dependency anomalies.
+
+\begin{quote}
+Why normalize?\\
+\end{quote}
+
+$\rightarrow$ Avoid insertion/update/deletion anomalies.
+
+\begin{quote}
+What is 1NF?\\
+\end{quote}
+
+$\rightarrow$ Atomic attributes/no repeating groups.
+
+\begin{quote}
+2NF?\\
+\end{quote}
+
+$\rightarrow$ No partial dependency.
+
+\begin{quote}
+3NF?\\
+\end{quote}
+
+$\rightarrow$ No relevant transitive dependency of non-key attributes.
+
+\begin{quote}
+Can normalization hurt performance?\\
+\end{quote}
+
+$\rightarrow$ Yes; excessive joins may increase read cost.
+
+\medskip
+
+\section{Chain 3: Networking}
+
+\begin{quote}
+What is TCP?\\
+\end{quote}
+
+$\rightarrow$ Reliable connection-oriented transport protocol.
+
+\begin{quote}
+How does TCP establish a connection?\\
+\end{quote}
+
+$\rightarrow$ Three-way handshake.
+
+\begin{lstlisting}
+Client $\rightarrow$ SYN
+Server $\rightarrow$ SYN-ACK
+Client $\rightarrow$ ACK
+\end{lstlisting}
+
+\begin{quote}
+Why three messages?\\
+\end{quote}
+
+$\rightarrow$ To establish and confirm both sides' sequence/acknowledgment state.
+
+\begin{quote}
+TCP vs UDP?\\
+\end{quote}
+
+$\rightarrow$ Reliability/ordering/control versus lightweight best-effort transport.
+
+\medskip
+
+\section{Chain 4: Operating System}
+
+\begin{quote}
+What is a process?\\
+\end{quote}
+
+$\rightarrow$ Program in execution.
+
+\begin{quote}
+Process vs thread?\\
+\end{quote}
+
+$\rightarrow$ Separate address space vs shared process resources.
+
+\begin{quote}
+What is context switching?\\
+\end{quote}
+
+$\rightarrow$ Save one execution state and restore another.
+
+\begin{quote}
+What is deadlock?\\
+\end{quote}
+
+$\rightarrow$ Circular resource waiting.
+
+\begin{quote}
+Four conditions?\\
+\end{quote}
+
+$\rightarrow$ Mutual exclusion, hold-and-wait, no preemption, circular wait.
+
+\medskip
+
+\section{Chain 5: OOP}
+
+\begin{quote}
+What is OOP?\\
+\end{quote}
+
+$\rightarrow$ Object-centered programming paradigm.
+
+\begin{quote}
+Four pillars?\\
+\end{quote}
+
+$\rightarrow$ Encapsulation, abstraction, inheritance, polymorphism.
+
+\begin{quote}
+Encapsulation?\\
+\end{quote}
+
+$\rightarrow$ Controlled access to state and behavior bundling.
+
+\begin{quote}
+Abstraction?\\
+\end{quote}
+
+$\rightarrow$ Hide unnecessary implementation details.
+
+\begin{quote}
+Overloading?\\
+\end{quote}
+
+$\rightarrow$ Same method name, different parameter lists.
+
+\begin{quote}
+Overriding?\\
+\end{quote}
+
+$\rightarrow$ Subclass replaces inherited implementation.
+
+\medskip
+
+\section{Chain 6: Algorithm}
+
+\begin{quote}
+What is binary search?\\
+\end{quote}
+
+$\rightarrow$ Search sorted data by repeatedly halving the search space.
+
+\begin{quote}
+Complexity?\\
+\end{quote}
+
+$\rightarrow$ O(log n).
+
+\begin{quote}
+Why?\\
+\end{quote}
+
+$\rightarrow$ Search space halves each step.
+
+\begin{quote}
+Can it work on unsorted data?\\
+\end{quote}
+
+$\rightarrow$ Not in its standard form.
+
+\begin{quote}
+What is interpolation search?\\
+\end{quote}
+
+$\rightarrow$ Uses estimated position based on key distribution; can outperform binary search on uniformly distributed data but has worse worst-case behavior.
+
+\medskip
+
+\section{Chain 7: Security}
+
+\begin{quote}
+What is authentication?\\
+\end{quote}
+
+$\rightarrow$ Verifying identity.
+
+\begin{quote}
+Authorization?\\
+\end{quote}
+
+$\rightarrow$ Determining permissions.
+
+\begin{quote}
+SQL injection?\\
+\end{quote}
+
+$\rightarrow$ Input manipulates SQL query structure.
+
+\begin{quote}
+Defense?\\
+\end{quote}
+
+$\rightarrow$ Prepared statements/parameterized queries.
+
+\begin{quote}
+Password storage?\\
+\end{quote}
+
+$\rightarrow$ Salted password hashing using an appropriate password-hashing algorithm.
+
+\medskip

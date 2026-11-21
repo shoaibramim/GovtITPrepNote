@@ -1,0 +1,652 @@
+\chapter{Data Structures --- Circular Queue and Priority Queue}
+\label{ch:circular_priority_queue}
+
+This chapter covers two fundamental queue variants: the \textbf{circular queue}, which eliminates memory wastage by wrapping array indices, and the \textbf{priority queue}, which processes elements according to importance or urgency rather than strictly following their arrival order.
+
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section I: Circular Queue}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{What is a Circular Queue?}
+
+A \textbf{circular queue} is an array-based queue in which the end of the underlying memory buffer is logically wrapped around to connect with the beginning. When the rear pointer reaches the final array index $N-1$, the next insertion wraps back to index $0$, provided that earlier positions have been vacated by dequeue operations.
+
+Like a standard queue, a circular queue strictly honors the \textbf{FIFO (First In, First Out)} principle. The distinction lies entirely in how physical memory slots are recycled.
+
+A circular queue is also called a \textbf{ring buffer} when utilized as a fixed-capacity streaming or buffering data structure.
+
+\subsection{Practical Applications}
+\begin{itemize}
+    \item \textbf{Network Packet Buffers:} Network routers and switches buffer incoming packets in ring buffers awaiting processing by network processors.
+    \item \textbf{Keyboard Typeahead Buffers:} Operating systems capture hardware keystrokes in circular buffers until the active process reads them.
+    \item \textbf{Producer-Consumer Architectures:} Thread-safe circular queues decouple producer threads from consumer threads in concurrent systems.
+    \item \textbf{Audio and Video Streaming:} Multimedia players buffer sound/video frames in circular audio rings to prevent playback jitter.
+    \item \textbf{Embedded Systems:} Embedded microcontrollers with strict, bounded RAM use fixed ring buffers for serial (UART/SPI) communication.
+    \item \textbf{Operating System Schedulers:} Round-robin process ready queues cycle through processes efficiently.
+\end{itemize}
+
+\section{Why is a Circular Queue Needed?}
+
+To appreciate the necessity of circular wrapping, examine the structural flaws of a naive linear array queue.
+
+Suppose an array has five slots ($N=5$):
+\begin{lstlisting}[style=pseudocode]
+Index:  0    1    2    3    4
+Data:  [10,  20,  30,  40,  50]
+        ^                    ^
+      front                 rear
+\end{lstlisting}
+Here, \texttt{front} points to index $0$, and \texttt{rear} points to index $4$. The queue is full.
+
+Now, perform two dequeue operations, removing $10$ and $20$. The queue logically contains:
+\[
+30, \; 40, \; 50
+\]
+The state of the array is now:
+\begin{lstlisting}[style=pseudocode]
+Index:  0    1    2    3    4
+Data:  [--,  --,  30,  40,  50]
+                  ^          ^
+                front       rear
+\end{lstlisting}
+Indices $0$ and $1$ are now vacant and completely unused. However, in a simple linear implementation, \texttt{rear} is already located at index $N-1$ ($4$). If another element is to be enqueued, the algorithm inspects \texttt{rear == N - 1} and reports an overflow condition!
+
+This failure is termed \textbf{false overflow} (or space wastage in a linear queue): the queue rejects new elements despite having unoccupied slots available.
+
+\begin{quote}
+\textbf{The Circular Solution:} A circular queue resolves false overflow by wrapping \texttt{rear} around to index $0$, reusing vacated memory without shifting existing elements.
+\end{quote}
+
+\textbf{Important Qualification:} Circular wrapping does not confer infinite capacity. A fixed-capacity circular queue still experiences genuine overflow when all $N$ slots are occupied simultaneously.
+
+\section{Front and Rear Indexing in a Circular Queue}
+
+A circular queue manages two primary index pointers:
+\begin{itemize}
+    \item \textbf{Front:} The index of the next element awaiting extraction (read/dequeue).
+    \item \textbf{Rear:} The index of the most recently inserted element.
+\end{itemize}
+
+For an array of capacity $N$, indexed $0$ through $N-1$, pointer advancement uses the \textbf{modulo operator}:
+\[
+\boxed{\text{Next Index} = (\text{Current Index} + 1) \bmod N}
+\]
+
+For example, when $N = 5$:
+\begin{align*}
+(4 + 1) \bmod 5 &= 0 \quad (\text{wraps from last index to start}) \\
+(0 + 1) \bmod 5 &= 1 \\
+(2 + 1) \bmod 5 &= 3
+\end{align*}
+Modulo arithmetic guarantees that indices remain strictly within $[0, N-1]$ across indefinite cycles.
+
+\section{Circular Queue Operations}
+
+Two primary implementation models exist:
+\begin{enumerate}
+    \item \textbf{Convention A (Pointer-based with $-1$ for empty):} Tracks \texttt{front} and \texttt{rear}, initializing both to $-1$.
+    \item \textbf{Convention B (Count-based):} Explicitly maintains a \texttt{count} variable alongside \texttt{front} and \texttt{rear}.
+\end{enumerate}
+
+\subsection{Method A: Front and Rear with -1 Initialization}
+
+Let capacity be $N$. Initially:
+\[
+\texttt{front} = -1, \quad \texttt{rear} = -1
+\]
+
+\subsubsection{A. Enqueue Operation}
+To insert element $x$:
+\begin{enumerate}
+    \item \textbf{Check for Queue Overflow:} The queue is full if the next position after \texttt{rear} equals \texttt{front}:
+    \[
+    (\texttt{rear} + 1) \bmod N == \texttt{front}
+    \]
+    If true, report overflow and abort.
+    \item \textbf{Handle Empty State:} If $\texttt{front} == -1$ (queue is empty), initialize both:
+    \[
+    \texttt{front} = 0, \quad \texttt{rear} = 0
+    \]
+    \item \textbf{Advance Rear Circularly:} If not empty:
+    \[
+    \texttt{rear} = (\texttt{rear} + 1) \bmod N
+    \]
+    \item \textbf{Store Data:} Set $\texttt{array}[\texttt{rear}] = x$.
+\end{enumerate}
+
+\subsubsection{B. Dequeue Operation}
+To remove the front element:
+\begin{enumerate}
+    \item \textbf{Check for Queue Underflow:} If $\texttt{front} == -1$, report underflow and abort.
+    \item \textbf{Retrieve Data:} Read $x = \texttt{array}[\texttt{front}]$.
+    \item \textbf{Check for Single-Element Queue:} If $\texttt{front} == \texttt{rear}$, the queue contained exactly one element. Reset both pointers to empty:
+    \[
+    \texttt{front} = -1, \quad \texttt{rear} = -1
+    \]
+    \item \textbf{Advance Front Circularly:} Otherwise:
+    \[
+    \texttt{front} = (\texttt{front} + 1) \bmod N
+    \]
+    \item Return $x$.
+\end{enumerate}
+
+\subsubsection{C. Peek / Front}
+If $\texttt{front} \neq -1$, return $\texttt{array}[\texttt{front}]$ without modifying indices.
+
+\subsection{Step-by-Step Execution Trace}
+
+Consider a circular queue with $N = 5$, initially empty ($\texttt{front} = -1, \texttt{rear} = -1$):
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l c c X l}
+\toprule
+\textbf{Operation} & \textbf{Front} & \textbf{Rear} & \textbf{Array Layout ($0 \dots 4$)} & \textbf{Status / Result} \\
+\midrule
+Initial        & $-1$ & $-1$ & $[\;,\;,\;,\;,\;]$               & Empty \\
+\texttt{enqueue(10)} & $0$  & $0$  & $[10, \;,\;,\;,\;]$              & First element \\
+\texttt{enqueue(20)} & $0$  & $1$  & $[10, 20, \;,\;,\;]$             & Enqueued \\
+\texttt{enqueue(30)} & $0$  & $2$  & $[10, 20, 30, \;,\;]$            & Enqueued \\
+\texttt{enqueue(40)} & $0$  & $3$  & $[10, 20, 30, 40, \;]$           & Enqueued \\
+\texttt{dequeue()}   & $1$  & $3$  & $[--, 20, 30, 40, \;]$           & Returns $10$ \\
+\texttt{dequeue()}   & $2$  & $3$  & $[--, --, 30, 40, \;]$           & Returns $20$ \\
+\texttt{enqueue(50)} & $2$  & $4$  & $[--, --, 30, 40, 50]$           & Enqueued at index 4 \\
+\texttt{enqueue(60)} & $2$  & $0$  & $[60, --, 30, 40, 50]$           & \textbf{Wraps to index 0!} \\
+\texttt{enqueue(70)} & $2$  & $1$  & $[60, 70, 30, 40, 50]$           & \textbf{Wraps to index 1; Full!} \\
+\bottomrule
+\end{tabularx}
+\caption{Detailed step-by-step state trace of circular queue pointer wrapping.}
+\end{table}
+
+\textbf{Analysis:} At the final step, the elements in FIFO order are:
+\[
+30 \longrightarrow 40 \longrightarrow 50 \longrightarrow 60 \longrightarrow 70
+\]
+Although physically stored at indices $\{2, 3, 4, 0, 1\}$, reading circularly from $\texttt{front} = 2$ to $\texttt{rear} = 1$ extracts them in precise chronological order. The condition $(1 + 1) \bmod 5 = 2 == \texttt{front}$ confirms that the queue is full.
+
+\section{Circular Queue Implementation in C++}
+
+The production-grade implementation below maintains an explicit \texttt{count} variable. This elegantly eliminates ambiguities between full and empty states when indices match.
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class CircularQueue {
+private:
+    vector<int> data;
+    size_t frontIndex = 0;
+    size_t rearIndex = 0;   // Points to the NEXT available slot
+    size_t count = 0;
+
+public:
+    explicit CircularQueue(size_t capacity)
+        : data(capacity) {}
+
+    bool isEmpty() const {
+        return count == 0;
+    }
+
+    bool isFull() const {
+        return count == data.size();
+    }
+
+    size_t size() const {
+        return count;
+    }
+
+    // Insert an element at the rear: O(1)
+    bool enqueue(int value) {
+        if (isFull()) {
+            return false; // Overflow
+        }
+        data[rearIndex] = value;
+        rearIndex = (rearIndex + 1) % data.size();
+        ++count;
+        return true;
+    }
+
+    // Remove the front element: O(1)
+    bool dequeue(int& value) {
+        if (isEmpty()) {
+            return false; // Underflow
+        }
+        value = data[frontIndex];
+        frontIndex = (frontIndex + 1) % data.size();
+        --count;
+        return true;
+    }
+
+    // Read the front element without removing it: O(1)
+    bool front(int& value) const {
+        if (isEmpty()) {
+            return false;
+        }
+        value = data[frontIndex];
+        return true;
+    }
+};
+
+int main() {
+    CircularQueue q(5);
+    int value;
+
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+
+    if (q.dequeue(value)) cout << "Removed: " << value << '\n';
+
+    q.enqueue(40);
+    q.enqueue(50);
+    q.enqueue(60);
+
+    cout << "Queue size: " << q.size() << '\n';
+
+    if (q.front(value)) cout << "Front: " << value << '\n';
+
+    if (!q.enqueue(70)) cout << "Queue is full\n";
+
+    while (q.dequeue(value)) {
+        cout << "Removed: " << value << '\n';
+    }
+
+    if (!q.dequeue(value)) cout << "Queue is empty\n";
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsubsection{Expected Output}
+\begin{lstlisting}[style=pseudocode]
+Removed: 10
+Queue size: 5
+Front: 20
+Queue is full
+Removed: 20
+Removed: 30
+Removed: 40
+Removed: 50
+Removed: 60
+Queue is empty
+\end{lstlisting}
+
+\subsection{Complexity and Advantages}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{0.75\textwidth}{l X}
+\toprule
+\textbf{Operation} & \textbf{Time / Space Complexity} \\
+\midrule
+Enqueue      & $O(1)$ worst-case \\
+Dequeue      & $O(1)$ worst-case \\
+Front / Peek & $O(1)$ \\
+isEmpty      & $O(1)$ \\
+isFull       & $O(1)$ \\
+Auxiliary Space & $O(N)$ fixed pre-allocated buffer \\
+\bottomrule
+\end{tabularx}
+\caption{Operational complexity profile of Circular Queue.}
+\end{table}
+
+\textbf{Key Advantages:}
+\begin{itemize}
+    \item Reuses vacated memory automatically without element shifting ($O(1)$ dequeue).
+    \item Fixed memory footprint suitable for mission-critical and embedded real-time systems.
+    \item Eliminates memory fragmentation caused by dynamic node allocations.
+\end{itemize}
+
+\begin{center}
+\vspace{1em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section II: Priority Queue}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{What is a Priority Queue?}
+
+A \textbf{priority queue} is an Abstract Data Type (ADT) in which each stored element is associated with a priority value. Elements are extracted according to priority order rather than strictly following their arrival sequence.
+
+Unlike a FIFO queue, the earliest arriving element is not necessarily served first. A critical task arriving late can preempt older, lower-priority tasks.
+
+\subsection{Real-Life Analogy: Hospital Emergency Triage}
+Consider hospital emergency patients arriving at a clinic:
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{0.85\textwidth}{l c X}
+\toprule
+\textbf{Patient} & \textbf{Priority Level} & \textbf{Condition} \\
+\midrule
+Patient A & 2 & Mild fever (arrived 10:00 AM) \\
+Patient B & 5 & Cardiac arrest (arrived 10:15 AM) \\
+Patient C & 3 & Bone fracture (arrived 10:05 AM) \\
+\bottomrule
+\end{tabularx}
+\caption{Emergency triage priority comparison.}
+\end{table}
+Although Patient A arrived first, Patient B has the highest medical urgency (priority 5) and is attended to immediately. This encapsulates priority queue semantics.
+
+\subsection{Key Terminology}
+\begin{itemize}
+    \item \textbf{Max-Priority Queue:} Extracts the element with the largest priority key first.
+    \item \textbf{Min-Priority Queue:} Extracts the element with the smallest priority key first.
+    \item \textbf{Priority Key:} The metric (e.g., urgency score, shortest distance, timestamp) determining extraction precedence.
+    \item \textbf{Stable Priority Queue:} An implementation that guarantees FIFO ordering among items with identical priorities.
+\end{itemize}
+
+\section{Types of Priority Queues}
+
+\subsection{Max-Priority Queue vs Min-Priority Queue}
+
+\begin{itemize}
+    \item \textbf{Max-Priority Queue:} Given inputs $\{10, 40, 20, 30\}$, extractions proceed:
+    \[
+    40 \longrightarrow 30 \longrightarrow 20 \longrightarrow 10
+    \]
+    This is the default configuration of C++ STL's \texttt{std::priority\_queue<int>}.
+    \item \textbf{Min-Priority Queue:} For the same inputs, extractions proceed:
+    \[
+    10 \longrightarrow 20 \longrightarrow 30 \longrightarrow 40
+    \]
+    Indispensable for shortest-path algorithms (Dijkstra) and Minimum Spanning Trees (Prim).
+\end{itemize}
+
+\subsection{Does a Priority Queue Preserve FIFO Order for Equal Priorities?}
+
+\textbf{Not by default.} Standard priority queue specifications do not mandate stability. If Task 1, Task 2, and Task 3 all share priority 5, an ordinary heap may extract them in any arbitrary order. If strict FIFO tie-breaking is required, a sequence number or secondary timestamp must be incorporated into the comparator.
+
+\section{Priority Queue Implementation Strategies}
+
+A priority queue can be realized using multiple underlying data structures, each presenting distinct trade-offs:
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X X}
+\toprule
+\textbf{Implementation} & \textbf{Insert} & \textbf{Peek Highest} & \textbf{Extract Highest} \\
+\midrule
+Unsorted Array          & $O(1)$ amortized & $O(n)$ linear scan    & $O(n)$ search and shift \\
+Unsorted Linked List    & $O(1)$           & $O(n)$                & $O(n)$ search and delete \\
+Sorted Array            & $O(n)$ insertion & $O(1)$                & $O(1)$ pop back \\
+Sorted Linked List      & $O(n)$ traversal & $O(1)$                & $O(1)$ pop head \\
+\textbf{Binary Heap}    & $\mathbf{O(\log n)}$ & $\mathbf{O(1)}$   & $\mathbf{O(\log n)}$ \\
+Balanced BST (AVL/RB)   & $O(\log n)$      & $O(\log n)$ (or $O(1)$) & $O(\log n)$ \\
+\bottomrule
+\end{tabularx}
+\caption{Comparison of underlying priority queue data structures.}
+\end{table}
+
+\textbf{Why the Binary Heap is Universally Preferred:}
+A binary heap strikes the optimal practical balance: both insertions and extractions run in guaranteed $O(\log n)$ time, inspection is instantaneous ($O(1)$), and memory storage requires zero explicit pointer overhead because it maps into a flat 1D array.
+
+\section{Implementing a Priority Queue Using a Binary Heap}
+
+A binary heap is a complete binary tree obeying the heap-order property:
+\begin{itemize}
+    \item \textbf{Insert:} Append element at end of heap array, then \textbf{sift-up} ($O(\log n)$).
+    \item \textbf{Extract (Max/Min):} Swap root with last array element, reduce size, and \textbf{sift-down} ($O(\log n)$).
+    \item \textbf{Peek:} Read root element $A[0]$ ($O(1)$).
+\end{itemize}
+
+\section{C++ Priority Queue Using the Standard Library}
+
+C++ provides \texttt{std::priority\_queue} in the \texttt{<queue>} header.
+
+\subsection{Standard Max-Priority Queue}
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include <queue>
+using namespace std;
+
+int main() {
+    priority_queue<int> pq; // Max-heap by default
+
+    pq.push(10);
+    pq.push(40);
+    pq.push(20);
+    pq.push(30);
+
+    cout << "Highest priority: " << pq.top() << '\n'; // 40
+
+    while (!pq.empty()) {
+        cout << pq.top() << " ";
+        pq.pop();
+    }
+    cout << '\n'; // Prints: 40 30 20 10
+    return 0;
+}
+\end{lstlisting}
+
+\subsection{Standard Min-Priority Queue}
+To construct a min-heap, pass \texttt{greater<T>} as the comparator:
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <functional>
+using namespace std;
+
+int main() {
+    // Min-Priority Queue declaration
+    priority_queue<int, vector<int>, greater<int>> minPQ;
+
+    minPQ.push(10);
+    minPQ.push(40);
+    minPQ.push(20);
+    minPQ.push(30);
+
+    while (!minPQ.empty()) {
+        cout << minPQ.top() << " ";
+        minPQ.pop();
+    }
+    cout << '\n'; // Prints: 10 20 30 40
+    return 0;
+}
+\end{lstlisting}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l p{7cm} X}
+\toprule
+\textbf{Method} & \textbf{Description} & \textbf{Complexity} \\
+\midrule
+\texttt{push(x)} & Inserts element $x$ into the heap & $O(\log n)$ \\
+\texttt{emplace(args)} & In-place constructs and inserts element & $O(\log n)$ \\
+\texttt{top()} & Inspects highest-priority element & $O(1)$ \\
+\texttt{pop()} & Removes highest-priority element & $O(\log n)$ \\
+\texttt{empty()} & Checks if container is empty & $O(1)$ \\
+\texttt{size()} & Returns count of active elements & $O(1)$ \\
+\bottomrule
+\end{tabularx}
+\caption{C++ STL priority\_queue member functions and complexities.}
+\end{table}
+
+\begin{quote}
+\textbf{Crucial API Detail:} In C++, \texttt{pop()} returns \texttt{void}. To read the extracted value, you must inspect \texttt{top()} \emph{before} calling \texttt{pop()}. Invoking \texttt{top()} or \texttt{pop()} on an empty container causes undefined behavior.
+\end{quote}
+
+\section{Priority Queue with Real-World Tasks and Custom Comparators}
+
+In production software, queues manage complex objects (jobs, network requests, database alerts) with custom priorities.
+
+\subsection{Stable Priority Queue Implementation}
+
+The following C++ program demonstrates a custom struct \texttt{Task} prioritized by urgency. A secondary \texttt{sequence} counter enforces strict FIFO arrival order whenever priorities collide.
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include <queue>
+#include <string>
+#include <vector>
+using namespace std;
+
+struct Task {
+    string name;
+    int priority;
+    unsigned long long sequence; // Arrival counter for stability
+};
+
+struct CompareTask {
+    bool operator()(const Task& a, const Task& b) const {
+        // Higher numeric priority value goes first
+        if (a.priority != b.priority) {
+            return a.priority < b.priority;
+        }
+        // For identical priorities, smaller sequence number (earlier) goes first
+        return a.sequence > b.sequence;
+    }
+};
+
+int main() {
+    priority_queue<Task, vector<Task>, CompareTask> tasks;
+    unsigned long long nextSeq = 0;
+
+    tasks.push({"Database backup", 2, nextSeq++});
+    tasks.push({"Critical server alert", 5, nextSeq++});
+    tasks.push({"Routine report", 1, nextSeq++});
+    tasks.push({"Transaction recovery", 4, nextSeq++});
+    tasks.push({"Second critical alert", 5, nextSeq++});
+
+    while (!tasks.empty()) {
+        Task current = tasks.top();
+        tasks.pop();
+        cout << current.name << " | Priority: " << current.priority << '\n';
+    }
+    return 0;
+}
+\end{lstlisting}
+
+\subsubsection{Expected Output}
+\begin{lstlisting}[style=pseudocode]
+Critical server alert | Priority: 5
+Second critical alert | Priority: 5
+Transaction recovery | Priority: 4
+Database backup | Priority: 2
+Routine report | Priority: 1
+\end{lstlisting}
+Notice that the two priority-5 tasks depart in exact insertion order.
+
+\section{Priority Queue Applications and Important Concepts}
+
+\subsection{Operating System Scheduling and Starvation}
+Priority-based schedulers select highest-priority threads first. However, continuous arrival of high-priority jobs can cause \textbf{starvation} (indefinite postponement) for low-priority tasks.
+\begin{itemize}
+    \item \textbf{Aging Technique:} Operating systems counter starvation by periodically incrementing the priority of tasks waiting in the queue. Over time, an aging low-priority task eventually becomes the highest-priority task.
+\end{itemize}
+
+\subsection{Dijkstra's Shortest Path Algorithm}
+Dijkstra's algorithm repeatedly extracts the unvisited vertex with the smallest tentative distance. Using a \textbf{min-priority queue} reduces the running time from $O(V^2)$ to $O((V + E) \log V)$.
+
+\subsection{Huffman Coding Tree Construction}
+Huffman compression uses a min-priority queue to repeatedly extract the two smallest frequency symbols, merge them into an internal tree node, and push the combined sum back into the queue.
+
+\subsection{Top-$K$ Problem in Streaming Big Data}
+To extract the $k$ largest elements from $n$ continuous numbers ($n \gg k$):
+\begin{enumerate}
+    \item Maintain a \textbf{min-heap of size $k$}.
+    \item For every incoming element $x$: if $x > \text{heap.top()}$, pop the root and insert $x$.
+    \item The min-heap perpetually retains the $k$ largest elements in $O(n \log k)$ time and $O(k)$ memory.
+\end{enumerate}
+
+\section{Circular Queue versus Priority Queue}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Basis} & \textbf{Circular Queue} & \textbf{Priority Queue} \\
+\midrule
+Primary Purpose       & Recycles array storage while preserving arrival order & Selects elements based on priority metrics \\
+Processing Order      & Strict FIFO (First In, First Out)                    & Urgency / Priority (Highest or Lowest first) \\
+Underlying Structure  & Fixed-size circular 1D array                         & Binary heap, balanced BST, or sorted array \\
+Enqueue / Insert      & $O(1)$ worst-case                                    & $O(\log n)$ with binary heap \\
+Dequeue / Extract     & $O(1)$ worst-case                                    & $O(\log n)$ with binary heap \\
+Front / Peek Access   & Oldest waiting element                               & Highest-priority element \\
+Buffer Capacity       & Fixed (pre-allocated array)                          & Bounded or dynamically resizable \\
+Typical Application   & Network buffers, audio streams, UART rings           & CPU scheduling, Dijkstra, Huffman, event queues \\
+\bottomrule
+\end{tabularx}
+\caption{Architectural comparison between Circular Queue and Priority Queue.}
+\end{table}
+
+\section{Common Examination Mistakes and Traps}
+
+\begin{enumerate}
+    \item \textbf{Circular Queue vs Circular Linked List:} A circular queue is a FIFO buffer (typically implemented with a circular array). A circular linked list is a pointer-based node cycle.
+    \item \textbf{Forgetting Modulo Wrapping:} Pointer advancement requires $(\text{index} + 1) \bmod N$, not simple incrementation.
+    \item \textbf{Mixing Front/Rear Indexing Conventions:} In some textbooks, \texttt{rear} holds the last inserted element; in others, \texttt{rear} points to the next available slot. Full/empty conditions must match the convention used.
+    \item \textbf{Assuming Priority Queues are FIFO:} A priority queue is inherently \emph{not} FIFO. Duplicate priorities require explicit secondary sequence keys if stability is needed.
+    \item \textbf{Confusing Priority Queue with Binary Heap:} A priority queue is an abstract data type (ADT); a binary heap is a concrete implementation.
+    \item \textbf{C++ STL Default Comparator Direction:} \texttt{std::priority\_queue<int>} is a max-heap. Creating a min-heap requires \texttt{greater<int>}.
+\end{enumerate}
+
+\section{Likely Recruitment Examination Questions}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{7cm} X}
+\toprule
+\textbf{Question} & \textbf{Key Answer} \\
+\midrule
+What is a circular queue? & A FIFO queue where the last array slot wraps to the first via modulo arithmetic. \\
+Why is it better than a linear array queue? & It eliminates false overflow by recycling vacated slots without shifting. \\
+What is the index wrapping formula? & $(\text{index} + 1) \bmod N$. \\
+Overflow condition in conventional circular queue? & $(\texttt{rear} + 1) \bmod N == \texttt{front}$. \\
+What is a priority queue? & An ADT that serves elements based on priority rather than arrival order. \\
+Difference between FIFO and priority processing? & FIFO follows chronological arrival; priority queue follows importance/urgency. \\
+What does a max-priority queue return first? & The element possessing the maximum priority key. \\
+What does a min-priority queue return first? & The element possessing the minimum priority key. \\
+Standard implementation of a priority queue? & A binary heap (complete binary tree in array). \\
+Insertion complexity in binary-heap priority queue? & $O(\log n)$ worst-case. \\
+Extraction complexity from max-heap? & $O(\log n)$ worst-case. \\
+Complexity of inspecting highest-priority key? & $O(1)$ at root index. \\
+Does C++ priority\_queue preserve arrival order? & No, stability is not guaranteed for equal priorities. \\
+How to prevent starvation in priority scheduling? & Use the aging technique to progressively increase waiting tasks' priority. \\
+Which priority queue is used in Dijkstra's algorithm? & Min-priority queue (extracts vertex with smallest tentative distance). \\
+Difference between priority queue and heap? & Priority queue is the interface (ADT); binary heap is the data structure. \\
+\bottomrule
+\end{tabularx}
+\caption{Rapid-fire recruitment examination questions and answers.}
+\end{table}
+
+\section{Final Quick-Revision Sheet}
+
+\subsection{Circular Queue Summary}
+\begin{itemize}
+    \item \textbf{FIFO Semantics:} Strictly preserves chronological arrival order.
+    \item \textbf{Index Advancement:} $\text{next} = (i + 1) \bmod N$.
+    \item \textbf{Empty Condition:} $\texttt{front} == \texttt{rear} == -1$ (or $\texttt{count} == 0$).
+    \item \textbf{Full Condition:} $(\texttt{rear} + 1) \bmod N == \texttt{front}$ (or $\texttt{count} == N$).
+    \item \textbf{Complexities:} Enqueue: $O(1)$; Dequeue: $O(1)$; Peek: $O(1)$; Space: $O(N)$ static buffer.
+\end{itemize}
+
+\subsection{Priority Queue Summary}
+\begin{itemize}
+    \item \textbf{Priority Semantics:} Elements dequeued by priority key, not arrival chronology.
+    \item \textbf{Max-PQ:} Highest key first; \textbf{Min-PQ:} Lowest key first.
+    \item \textbf{Binary Heap Complexity:} Insert: $O(\log n)$; Extract: $O(\log n)$; Peek: $O(1)$; Build Heap: $O(n)$.
+    \item \textbf{C++ Declarations:}
+    \begin{itemize}
+        \item Max-heap: \texttt{priority\_queue<int> pq;}
+        \item Min-heap: \texttt{priority\_queue<int, vector<int>, greater<int>> minPQ;}
+    \end{itemize}
+    \item \textbf{Stability:} Requires explicit tie-breaking sequence counter.
+\end{itemize}
+
+\begin{quote}
+\textbf{Final Architectural Takeaway:} A circular queue optimizes storage reuse while strictly maintaining FIFO chronological arrival order. A priority queue optimizes dynamic selection according to urgency or importance, leveraging binary heaps for logarithmic operational efficiency.
+\end{quote}

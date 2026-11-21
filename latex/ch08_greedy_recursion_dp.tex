@@ -1,0 +1,3494 @@
+\chapter{Algorithms --- Greedy Algorithms, Recursion, and Dynamic Programming}
+\label{ch:greedy_recursion_dp}
+
+These three topics are fundamental to algorithm design and frequently appear in technical recruitment examinations. They are especially important because many questions test not merely whether an algorithm can be implemented, but \textbf{why it works, when it is applicable, and how its time and space complexities are derived}.
+
+This chapter provides rigorous, exhaustive coverage of definitions, design principles, step-by-step execution traces, pseudocode, production-ready C++ implementations, mathematical complexity analysis, correctness proofs, and common examination pitfalls.
+
+
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section I: Greedy Algorithms}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+
+\section{What Is a Greedy Algorithm?}
+
+A \textbf{greedy algorithm} constructs a solution step by step by selecting the option that appears best at the current stage.
+
+Once a choice is made, the algorithm generally does not reconsider or undo that choice. The objective is to make locally optimal choices that lead to a globally optimal solution.
+
+A greedy algorithm is typically appropriate when a problem has the \textbf{greedy-choice property} and \textbf{optimal substructure}.
+
+\subsubsection{Real-life example}
+
+Suppose you need to schedule as many non-overlapping meetings as possible in a single meeting room.
+
+A greedy strategy is to select the meeting that finishes earliest, then select the next meeting that starts after the previous selection finishes.
+
+This strategy maximizes the number of meetings under the standard activity-selection assumptions.
+
+The important point is that choosing the meeting that finishes earliest leaves as much remaining time as possible for subsequent meetings.
+
+However, not every locally optimal choice leads to a globally optimal solution. The correctness of a greedy strategy must be established for the particular problem.
+
+\subsection{1.1 Main characteristics}
+
+Greedy algorithms generally have the following characteristics:
+
+\begin{enumerate}
+    \item \textbf{Local choice:} Select the currently most promising option according to a specified rule.
+    \item \textbf{Irrevocable decisions:} Once a choice is made, the algorithm typically retains it.
+    \item \textbf{Feasibility:} Choices must respect the constraints of the problem.
+    \item \textbf{Optimal substructure:} An optimal solution can be formed using optimal solutions to appropriate smaller subproblems.
+    \item \textbf{Greedy-choice property:} There exists an optimal solution that includes the locally selected choice.
+\end{enumerate}
+
+The last property is particularly important. Optimal substructure alone is not sufficient to establish that a greedy algorithm works.
+
+\subsection{1.2 Greedy-choice property versus optimal substructure}
+
+These concepts are often confused in examinations.
+
+\textbf{Greedy-choice property:} A locally optimal choice can be included in at least one globally optimal solution without preventing optimal completion.
+
+\textbf{Optimal substructure:} An optimal solution to a problem can be constructed from optimal solutions to smaller, appropriately defined subproblems.
+
+For example, both the Fractional Knapsack problem and the 0/1 Knapsack problem have useful optimal-substructure formulations. However, the ratio-based greedy algorithm is optimal for Fractional Knapsack and is not generally optimal for 0/1 Knapsack.
+
+This distinction is a common examination question.
+
+\subsection{1.3 General greedy algorithm template}
+
+\begin{lstlisting}[style=pseudocode]
+GREEDY(problem):
+    solution = empty
+
+    while solution is incomplete:
+        candidate = select_best_available_candidate()
+
+        if candidate keeps solution feasible:
+            add candidate to solution
+
+    return solution
+\end{lstlisting}
+
+This is a conceptual template, not a complete algorithm. The selection rule, feasibility condition, and stopping condition must be defined for each problem.
+
+\subsection{1.4 How to prove a greedy algorithm is correct}
+
+Several proof techniques are frequently used.
+
+\subsubsection{Exchange argument}
+
+Show that any optimal solution can be modified to include the greedy choice without making the solution worse.
+
+This is commonly used to prove Activity Selection and Minimum Spanning Tree algorithms.
+
+\subsubsection{Stays-ahead argument}
+
+Show that after each step, the greedy solution is at least as good as a competing solution according to a carefully defined measure.
+
+This technique is useful when comparing progress across a sequence of choices.
+
+\subsubsection{Cut property}
+
+For a weighted, undirected graph, a minimum-weight edge crossing a suitable cut is safe for constructing a Minimum Spanning Tree when the cut respects the edges already chosen. This is a core correctness principle for Prim's and Kruskal's algorithms.
+
+\textbf{Exam principle:} To justify a greedy algorithm, prove more than the fact that it makes the smallest or largest choice. Establish why that choice cannot prevent an optimal complete solution.
+
+\section{Activity Selection Problem}
+
+\subsection{2.1 Problem definition}
+
+Given a set of activities, each with a start time $s_i$ and finish time $f_i$, select the maximum number of activities that do not overlap.
+
+Assume that an activity beginning exactly when another ends is permitted. Thus, an activity is compatible with the last selected activity if:
+
+
+\[
+s_i\geq f_{\text{last}}
+\]
+
+
+Each activity occupies one resource, such as a meeting room, and cannot overlap another selected activity.
+
+\subsection{2.2 Greedy strategy}
+
+Select the available activity with the \textbf{earliest finish time}.
+
+Then repeatedly select the earliest-finishing activity whose start time is at or after the finish time of the last selected activity.
+
+The algorithm is:
+
+\begin{enumerate}
+    \item Sort activities by finish time in ascending order.
+    \item Select the first activity.
+    \item Consider the remaining activities in sorted order.
+    \item Select an activity if it does not overlap the last selected activity.
+    \item Continue until every activity has been considered.
+\end{enumerate}
+
+\subsection{2.3 Step-by-step example}
+
+Consider these activities:
+
+\begin{table}[htbp]
+\centering
+\caption{Activity Selection Input Dataset}
+\label{tab:activity_selection_data}
+\begin{tabular}{ccc}
+\toprule
+\textbf{Activity} & \textbf{Start Time ($s_i$)} & \textbf{Finish Time ($f_i$)} \\
+\midrule
+A & 1 & 4 \\
+B & 3 & 5 \\
+C & 0 & 6 \\
+D & 5 & 7 \\
+E & 3 & 9 \\
+F & 5 & 9 \\
+G & 6 & 10 \\
+H & 8 & 11 \\
+I & 8 & 12 \\
+J & 2 & 14 \\
+K & 12 & 16 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The activities are already ordered by finish time.
+
+\textbf{Step 1:} Select A, which finishes at time 4.
+
+\textbf{Step 2:} Consider B. It starts at 3, which is before 4, so reject it.
+
+\textbf{Step 3:} Consider C. It starts at 0, so reject it.
+
+\textbf{Step 4:} Consider D. It starts at 5, which is at or after 4, so select D. Its finish time is 7.
+
+\textbf{Step 5:} Consider E, F, and G. Their start times are before 7, so reject them.
+
+\textbf{Step 6:} Consider H. It starts at 8, so select H. Its finish time is 11.
+
+\textbf{Step 7:} Reject I because it starts at 8, before 11.
+
+\textbf{Step 8:} Reject J because it starts at 2.
+
+\textbf{Step 9:} Select K because it starts at 12, after H finishes.
+
+The selected activities are:
+
+
+\[
+\boxed{A,\ D,\ H,\ K}
+\]
+
+
+Four compatible activities have been selected.
+
+\subsection{2.4 C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <algorithm>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct Activity {
+    int start;
+    int finish;
+    int id;
+};
+
+vector<Activity> activitySelection(vector<Activity> activities) {
+    sort(activities.begin(), activities.end(),
+         [](const Activity& a, const Activity& b) {
+             if (a.finish != b.finish) {
+                 return a.finish < b.finish;
+             }
+             return a.start < b.start;
+         });
+
+    vector<Activity> selected;
+
+    for (const Activity& activity : activities) {
+        if (selected.empty() ||
+            activity.start >= selected.back().finish) {
+            selected.push_back(activity);
+        }
+    }
+
+    return selected;
+}
+
+int main() {
+    vector<Activity> activities = {
+        {1, 4, 1}, {3, 5, 2}, {0, 6, 3},
+        {5, 7, 4}, {3, 9, 5}, {5, 9, 6},
+        {6, 10, 7}, {8, 11, 8}, {8, 12, 9},
+        {2, 14, 10}, {12, 16, 11}
+    };
+
+    vector<Activity> selected = activitySelection(activities);
+
+    cout << "Selected activities:\n";
+
+    for (const Activity& activity : selected) {
+        cout << "Activity " << activity.id
+             << ": " << activity.start
+             << "-" << activity.finish << '\n';
+    }
+
+    cout << "Total: " << selected.size() << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsubsection{Complexity}
+
+Sorting takes $O(n\log n)$, and scanning the activities takes $O(n)$.
+
+Therefore, the total time complexity is:
+
+
+\[
+\boxed{O(n\log n)}
+\]
+
+
+If the activities are already sorted by finish time, the selection phase takes $O(n)$.
+
+\subsection{2.5 Why does the greedy strategy work?}
+
+The earliest-finishing compatible activity leaves the largest possible amount of time for subsequent activities.
+
+Any optimal solution that begins with a different activity can replace that first activity with the earliest-finishing one. The replacement cannot make any subsequent selected activity incompatible, because the greedy activity finishes no later than the replaced activity.
+
+This exchange argument establishes that there is an optimal solution beginning with the greedy choice. The remaining problem is an activity-selection problem on the time after the chosen activity finishes, so the method can be applied repeatedly.
+
+\textbf{Important variation:} If activities have different profits or weights and the goal is to maximize total value rather than the number of activities, this simple greedy rule is not generally optimal. Weighted Interval Scheduling is commonly solved using Dynamic Programming.
+
+\section{Fractional Knapsack Problem}
+
+\subsection{3.1 Problem definition}
+
+Given a knapsack with capacity $W$, each item has a weight $w_i$ and value $v_i$. The objective is to maximize the total value without exceeding capacity.
+
+In the \textbf{Fractional Knapsack problem}, an item may be divided into fractions. If an item weighs 10 kg and has value 100, taking half the item gives weight 5 kg and value 50.
+
+This divisibility property makes a greedy strategy optimal.
+
+\subsection{3.2 Greedy strategy}
+
+Calculate each item's value per unit of weight:
+
+
+\[
+\boxed{r_i=\frac{v_i}{w_i}}
+\]
+
+
+Sort items by this ratio in descending order.
+
+Then:
+
+\begin{enumerate}
+    \item Take as much as possible of the item with the highest ratio.
+    \item If the remaining capacity is too small for the whole item, take the fraction that fits.
+    \item Continue with the next highest ratio until the knapsack is full or all useful items are exhausted.
+\end{enumerate}
+
+\subsection{3.3 Worked example}
+
+Knapsack capacity:
+
+
+\[
+W=50
+\]
+
+
+Items:
+
+\begin{table}[htbp]
+\centering
+\caption{Fractional Knapsack Item Set ($W = 50$)}
+\label{tab:fractional_knapsack_data}
+\begin{tabular}{cccc}
+\toprule
+\textbf{Item} & \textbf{Weight ($w_i$)} & \textbf{Value ($v_i$)} & \textbf{Value per Unit Weight ($r_i = v_i/w_i$)} \\
+\midrule
+A & 10 & 60 & 6.0 \\
+B & 20 & 100 & 5.0 \\
+C & 30 & 120 & 4.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The ratio order is A, B, C.
+
+\textbf{Take item A fully.}
+
+Weight used: 10.
+
+Value: 60.
+
+Capacity remaining: 40.
+
+\textbf{Take item B fully.}
+
+Weight used: 30.
+
+Total value: 160.
+
+Capacity remaining: 20.
+
+\textbf{Take two-thirds of item C.}
+
+The remaining capacity is 20, while C weighs 30.
+
+Fraction taken:
+
+
+\[
+\frac{20}{30}=\frac23
+\]
+
+
+Value obtained from C:
+
+
+\[
+120\times\frac23=80
+\]
+
+
+Total value:
+
+
+\[
+60+100+80=\boxed{240}
+\]
+
+
+The optimal value is 240.
+
+\subsection{3.4 C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <algorithm>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct Item {
+    double weight;
+    double value;
+};
+
+double fractionalKnapsack(vector<Item> items, double capacity) {
+    sort(items.begin(), items.end(),
+         [](const Item& a, const Item& b) {
+             return a.value / a.weight > b.value / b.weight;
+         });
+
+    double totalValue = 0.0;
+
+    for (const Item& item : items) {
+        if (capacity <= 0) {
+            break;
+        }
+
+        double takenWeight = min(capacity, item.weight);
+
+        totalValue += takenWeight * item.value / item.weight;
+        capacity -= takenWeight;
+    }
+
+    return totalValue;
+}
+
+int main() {
+    vector<Item> items = {
+        {10, 60}, {20, 100}, {30, 120}
+    };
+
+    cout << fractionalKnapsack(items, 50) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+240
+\end{lstlisting}
+
+This implementation assumes strictly positive item weights. Items with zero weight require separate treatment because their value-to-weight ratio is undefined.
+
+\subsubsection{Complexity}
+
+Sorting items takes $O(n\log n)$; scanning them takes $O(n)$.
+
+
+\[
+\boxed{O(n\log n)}
+\]
+
+
+\subsection{3.5 Why does the greedy strategy work?}
+
+The item with the highest value per unit of weight provides the most value for every unit of capacity consumed.
+
+If a proposed solution uses some capacity on an item with a lower ratio while an item with a higher ratio remains available, replacing some weight from the lower-ratio item with the higher-ratio item does not decrease the total value.
+
+Repeated exchanges produce a solution that fills capacity in descending ratio order.
+
+The argument depends on being able to take fractions of items.
+
+\section{Why Greedy Fails for the 0/1 Knapsack Problem}
+
+In the \textbf{0/1 Knapsack problem}, each item must be taken completely or excluded completely. Fractions are not allowed.
+
+The problem is often confused with Fractional Knapsack, but the difference changes the optimal algorithm.
+
+\subsection{4.1 Counterexample}
+
+Suppose the capacity is:
+
+
+\[
+W=50
+\]
+
+
+The items are:
+
+\begin{table}[htbp]
+\centering
+\caption{0/1 Knapsack Counterexample Items ($W = 50$)}
+\label{tab:knapsack_counterexample}
+\begin{tabular}{cccc}
+\toprule
+\textbf{Item} & \textbf{Weight ($w_i$)} & \textbf{Value ($v_i$)} & \textbf{Value-to-Weight Ratio} \\
+\midrule
+A & 10 & 60 & 6.0 \\
+B & 20 & 100 & 5.0 \\
+C & 30 & 120 & 4.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The ratio-based greedy method selects A and B:
+
+\begin{itemize}
+    \item Weight: $10+20=30$.
+    \item Value: $60+100=160$.
+    \item Remaining capacity: 20, which is insufficient for C.
+\end{itemize}
+
+However, selecting B and C gives:
+
+\begin{itemize}
+    \item Weight: $20+30=50$.
+    \item Value: $100+120=220$.
+\end{itemize}
+
+Therefore:
+
+
+\[
+\boxed{\text{Optimal 0/1 value}=220}
+\]
+
+
+The greedy ratio approach obtains only 160, so it is not optimal.
+
+\subsubsection{Exam conclusion}
+
+\begin{itemize}
+    \item Fractional Knapsack: greedy by value-to-weight ratio is optimal.
+    \item 0/1 Knapsack: ratio-based greedy is not generally optimal.
+    \item 0/1 Knapsack: Dynamic Programming is a standard solution for integer capacities.
+\end{itemize}
+
+The 0/1 version can also be solved using branch-and-bound, backtracking, or other approaches, but a simple ratio-greedy strategy does not guarantee the optimum.
+
+\section{Coin Change Problem}
+
+\subsection{5.1 Problem definition}
+
+Given a set of coin denominations and a target amount, determine the coins needed to produce that amount.
+
+One common version asks for the minimum number of coins.
+
+The greedy approach repeatedly chooses the largest coin that does not exceed the remaining amount.
+
+However, \textbf{greedy coin selection is not optimal for arbitrary denomination systems}.
+
+\subsection{5.2 Example where greedy works}
+
+Suppose the available denominations are:
+
+
+\[
+\\{1,5,10,25\\}
+\]
+
+
+and the target amount is 63.
+
+A greedy solution chooses:
+
+\begin{itemize}
+    \item Two 25-unit coins: remaining amount 13.
+    \item One 10-unit coin: remaining amount 3.
+    \item Three 1-unit coins: remaining amount 0.
+\end{itemize}
+
+Total:
+
+
+\[
+2+1+3=\boxed{6\text{ coins}}
+\]
+
+
+For this denomination system, the greedy result is optimal for the example.
+
+\subsection{5.3 Counterexample where greedy fails}
+
+Consider denominations:
+
+
+\[
+\\{1,3,4\\}
+\]
+
+
+and target:
+
+
+\[
+T=6
+\]
+
+
+The greedy method selects:
+
+\begin{itemize}
+    \item One 4-unit coin: remaining 2.
+    \item Two 1-unit coins.
+\end{itemize}
+
+Total:
+
+
+\[
+\boxed{3\text{ coins}}
+\]
+
+
+But the optimal solution is:
+
+
+\[
+3+3=6
+\]
+
+
+which uses only:
+
+
+\[
+\boxed{2\text{ coins}}
+\]
+
+
+Therefore, greedy selection is not optimal for this denomination system.
+
+\subsection{5.4 Complexity}
+
+If the denominations are sorted and there are $m$ coin types, the basic greedy method can run in $O(m)$ time after sorting, or $O(m\log m)$ if sorting is required.
+
+The algorithm is simple and efficient, but its correctness depends on the denomination system.
+
+\textbf{Exam distinction:} A greedy algorithm can be fast and still be wrong if the problem lacks the greedy-choice property.
+
+\section{Minimum Spanning Tree: Kruskal's Algorithm}
+
+\subsection{6.1 What is a Minimum Spanning Tree?}
+
+Given a connected, weighted, undirected graph, a \textbf{Minimum Spanning Tree (MST)} is a spanning tree with the minimum possible total edge weight.
+
+A spanning tree connects every vertex, contains no cycles, and has exactly $V-1$ edges.
+
+For example, a network engineer might need to connect several offices with the minimum total cable length while ensuring every office remains connected.
+
+Two classic greedy algorithms solve the MST problem:
+
+\begin{itemize}
+    \item Kruskal's algorithm.
+    \item Prim's algorithm.
+\end{itemize}
+
+\subsection{6.2 Kruskal's greedy strategy}
+
+Kruskal's algorithm processes edges in ascending order of weight, adding an edge if it does not create a cycle.
+
+Algorithm:
+
+\begin{enumerate}
+    \item Sort edges by increasing weight.
+    \item Initialize the MST with no edges.
+    \item Examine edges in sorted order.
+    \item Add an edge if its endpoints are in different connected components.
+    \item Stop after selecting $V-1$ edges.
+\end{enumerate}
+
+A Disjoint Set Union (DSU), also called Union-Find, efficiently tracks connected components.
+
+\subsection{6.3 Worked example}
+
+Consider this graph:
+
+\begin{table}[htbp]
+\centering
+\caption{Graph Edges and Weights for Kruskal's MST}
+\label{tab:kruskal_edges}
+\begin{tabular}{cc}
+\toprule
+\textbf{Edge} & \textbf{Weight} \\
+\midrule
+A--B & 1 \\
+B--C & 2 \\
+A--C & 3 \\
+B--D & 4 \\
+C--D & 5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Sort the edges:
+
+\texttt{A--B (1), B--C (2), A--C (3), B--D (4), C--D (5)}
+
+\textbf{Step 1:} Select A--B, weight 1.
+
+The MST has one edge.
+
+\textbf{Step 2:} Select B--C, weight 2.
+
+The MST now connects A, B, and C.
+
+\textbf{Step 3:} Examine A--C, weight 3.
+
+A and C are already connected through A--B--C. Adding A--C would create a cycle, so reject it.
+
+\textbf{Step 4:} Select B--D, weight 4.
+
+All four vertices are connected, and the MST has $V-1=3$ edges.
+
+Total weight:
+
+
+\[
+1+2+4=\boxed{7}
+\]
+
+
+\subsection{6.4 Complexity}
+
+Sorting the edges takes:
+
+
+\[
+O(E\log E)
+\]
+
+
+With an efficient DSU implementation, the remaining component operations take approximately linear time with a very small amortized cost per operation.
+
+Therefore, the overall time complexity is:
+
+
+\[
+\boxed{O(E\log E)}
+\]
+
+
+Since the number of edges in a simple graph is at most $O(V^2)$, sorting is often expressed as $O(E\log V)$ for connected simple graphs.
+
+\textbf{Why is Kruskal greedy?} It selects the least-weight edge that can safely be added without forming a cycle. The cut property provides the basis for the correctness argument.
+
+\section{Minimum Spanning Tree: Prim's Algorithm}
+
+Prim's algorithm also constructs a minimum spanning tree, but its greedy choice differs from Kruskal's.
+
+\subsection{7.1 Greedy strategy}
+
+Start from any vertex and repeatedly add the minimum-weight edge connecting a vertex already in the tree to a vertex outside the tree.
+
+Algorithm:
+
+\begin{enumerate}
+    \item Choose an initial vertex.
+    \item Mark it as part of the growing tree.
+    \item Consider edges connecting the tree to outside vertices.
+    \item Select the least-weight such edge.
+    \item Add the new vertex and edge.
+    \item Repeat until all vertices are included.
+\end{enumerate}
+
+\subsection{7.2 Kruskal versus Prim}
+
+\begin{table}[htbp]
+\centering
+\caption{Detailed Comparison between Kruskal's and Prim's MST Algorithms}
+\label{tab:kruskal_vs_prim}
+\begin{tabularx}{\textwidth}{p{3.5cm} X X}
+\toprule
+\textbf{Evaluation Basis} & \textbf{Kruskal's Algorithm} & \textbf{Prim's Algorithm} \\
+\midrule
+\textbf{Main Decision} & Add smallest weight edge not creating cycle & Add smallest weight edge crossing cut to outside \\
+\textbf{Starting Point} & No specific start vertex; global edge sorting & Starts from an arbitrary root vertex \\
+\textbf{Growth Pattern} & Forest of trees merging into single MST & Grows single connected tree continuously \\
+\textbf{Data Structures} & Edge sorting plus Disjoint Set Union (DSU) & Min-priority queue (heap) plus adjacency list \\
+\textbf{Complexity} & $O(E \log E)$ & $O(E \log V)$ (binary heap) / $O(V^2)$ (matrix) \\
+\textbf{Suitable Graph} & Sparse graphs ($E \ll V^2$) & Dense graphs ($E \approx V^2$) with matrix; sparse with heap \\
+\textbf{Output} & Minimum Spanning Tree & Minimum Spanning Tree \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Both algorithms are greedy and produce a minimum spanning tree under the standard assumptions of a connected weighted undirected graph. If the graph is disconnected, their forest-producing counterparts yield a minimum spanning forest.
+
+\section{Dijkstra's Shortest-Path Algorithm}
+
+Dijkstra's algorithm finds shortest paths from a chosen source to the other reachable vertices in a weighted graph with \textbf{nonnegative edge weights}.
+
+It uses a greedy strategy: at each step, it finalizes the unprocessed vertex with the smallest known tentative distance.
+
+\subsection{8.1 Algorithm}
+
+\begin{enumerate}
+    \item Set the source distance to 0.
+    \item Set all other tentative distances to infinity.
+    \item Select the unprocessed vertex with the smallest tentative distance.
+    \item For every outgoing edge, check whether travelling through the selected vertex improves the neighbor's distance.
+    \item Update distances and predecessor pointers when a shorter route is found.
+    \item Continue until the priority queue is empty or the required target has been finalized.
+\end{enumerate}
+
+The relaxation operation is:
+
+
+\[
+\boxed{\text{if }dist[u]+w(u,v)<dist[v]}
+\]
+
+
+then update:
+
+
+\[
+dist[v]=dist[u]+w(u,v)
+\]
+
+
+\subsection{8.2 Worked example}
+
+Consider the graph with these edge weights:
+
+\begin{table}[htbp]
+\centering
+\caption{Directed Graph Edge Weights for Dijkstra's Algorithm}
+\label{tab:dijkstra_edges}
+\begin{tabular}{cc}
+\toprule
+\textbf{Directed Edge} & \textbf{Weight} \\
+\midrule
+A $\to$ B & 4 \\
+A $\to$ C & 1 \\
+C $\to$ B & 2 \\
+B $\to$ D & 1 \\
+C $\to$ D & 5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Find the shortest distance from A to D.
+
+Initially:
+
+
+\[
+dist(A)=0
+\]
+
+
+All other distances are infinity.
+
+From A:
+
+\begin{itemize}
+    \item B gets tentative distance 4.
+    \item C gets tentative distance 1.
+\end{itemize}
+
+The next vertex with the smallest tentative distance is C.
+
+Through C:
+
+\begin{itemize}
+    \item B improves from 4 to $1+2=3$.
+    \item D gets tentative distance $1+5=6$.
+\end{itemize}
+
+The next vertex is B, with distance 3.
+
+Through B:
+
+\- D improves from 6 to $3+1=4$.
+
+D is then reached with distance 4.
+
+The shortest path is:
+
+
+\[
+\boxed{A\rightarrow C\rightarrow B\rightarrow D}
+\]
+
+
+Total weight:
+
+
+\[
+1+2+1=\boxed{4}
+\]
+
+
+\subsection{8.3 Complexity}
+
+With an adjacency list and a binary heap:
+
+
+\[
+\boxed{O((V+E)\log V)}
+\]
+
+
+is a common bound for a lazy-priority-queue implementation on a graph with a standard number of vertices and edges.
+
+With an adjacency matrix and a simple array-based minimum selection, the complexity is:
+
+
+\[
+\boxed{O(V^2)}
+\]
+
+
+\subsection{8.4 Important limitation}
+
+Dijkstra's algorithm assumes nonnegative edge weights. Negative edges can invalidate its greedy finalization rule.
+
+For graphs containing negative edge weights, Bellman--Ford is a common alternative for single-source shortest paths, provided there is no reachable negative cycle that makes the path cost unbounded below.
+
+\textbf{Exam comparison:}
+
+\begin{itemize}
+    \item BFS: shortest paths by number of edges in an unweighted graph.
+    \item Dijkstra: shortest paths with nonnegative edge weights.
+    \item Bellman--Ford: supports negative edge weights and can detect reachable negative cycles.
+    \item Prim and Kruskal: minimum spanning trees, not shortest paths from a source.
+\end{itemize}
+
+\section{Huffman Coding}
+
+Huffman Coding is a lossless compression technique that constructs a variable-length, prefix-free code from symbol frequencies.
+
+Symbols that appear more frequently generally receive shorter codes, while less frequent symbols receive longer codes.
+
+\subsection{9.1 Greedy strategy}
+
+Repeatedly combine the two nodes with the smallest frequencies.
+
+Algorithm:
+
+\begin{enumerate}
+    \item Create a leaf node for each symbol, with its frequency as its weight.
+    \item Insert all nodes into a min-priority queue.
+    \item Remove the two nodes with the smallest weights.
+    \item Create a parent node whose weight is their sum.
+    \item Insert the new parent into the priority queue.
+    \item Continue until only one tree remains.
+\end{enumerate}
+
+The resulting tree defines the symbol codes: for example, left edges may represent \texttt{0}, and right edges may represent \texttt{1}.
+
+\subsection{9.2 Worked example}
+
+Suppose the symbols have these frequencies:
+
+\begin{table}[htbp]
+\centering
+\caption{Symbol Frequency Table for Huffman Coding}
+\label{tab:huffman_symbols}
+\begin{tabular}{cc}
+\toprule
+\textbf{Symbol} & \textbf{Frequency} \\
+\midrule
+A & 5 \\
+B & 9 \\
+C & 12 \\
+D & 13 \\
+E & 16 \\
+F & 45 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The two smallest frequencies are 5 and 9.
+
+Combine them:
+
+
+\[
+5+9=14
+\]
+
+
+The frequency list becomes:
+
+\texttt{12, 13, 14, 16, 45}
+
+Combine 12 and 13:
+
+
+\[
+12+13=25
+\]
+
+
+The remaining weights become:
+
+\texttt{14, 16, 25, 45}
+
+Combine 14 and 16:
+
+
+\[
+14+16=30
+\]
+
+
+The remaining weights are:
+
+\texttt{25, 30, 45}
+
+Combine 25 and 30:
+
+
+\[
+25+30=55
+\]
+
+
+Finally, combine 45 and 55:
+
+
+\[
+45+55=100
+\]
+
+
+A single tree remains.
+
+The exact binary code assigned to each symbol depends on the left/right conventions and tie-breaking rules, but the construction repeatedly combines the two lowest frequencies.
+
+\subsection{9.3 Complexity}
+
+Building the tree using a min-priority queue takes:
+
+
+\[
+\boxed{O(n\log n)}
+\]
+
+
+for $n$ distinct symbols.
+
+\textbf{Why is it greedy?} At every step, it combines the two least frequent remaining nodes. Huffman's correctness follows from the fact that an optimal prefix-code tree can be chosen with the two least frequent symbols as deepest siblings, after which they can be combined into one reduced subproblem.
+
+\section{Job Sequencing with Deadlines}
+
+In the standard \textbf{Job Sequencing with Deadlines} problem, each job:
+
+\begin{itemize}
+    \item Takes one unit of time.
+    \item Has a deadline.
+    \item Provides a profit only if it is completed by its deadline.
+\end{itemize}
+
+The objective is to maximize total profit.
+
+\subsection{10.1 Greedy strategy}
+
+Sort jobs in descending order of profit.
+
+For each job, assign it to the latest available time slot that does not exceed its deadline.
+
+Placing a job as late as possible leaves earlier slots available for jobs with tighter deadlines.
+
+\subsection{10.2 Worked example}
+
+Consider the following jobs:
+
+\begin{table}[htbp]
+\centering
+\caption{Job Set with Deadlines and Profits}
+\label{tab:job_sequencing}
+\begin{tabular}{ccc}
+\toprule
+\textbf{Job ID} & \textbf{Deadline} & \textbf{Profit} \\
+\midrule
+A & 2 & 100 \\
+B & 1 & 19 \\
+C & 2 & 27 \\
+D & 1 & 25 \\
+E & 3 & 15 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Order by profit:
+
+\texttt{A, C, D, B, E}
+
+There are three available time slots because the maximum deadline is 3.
+
+\textbf{Schedule A:} Put A in slot 2, the latest slot at or before its deadline.
+
+Slots:
+
+\texttt{[empty, A, empty]}
+
+\textbf{Schedule C:} Its deadline is 2. Slot 2 is occupied, so put C in slot 1.
+
+Slots:
+
+\texttt{[C, A, empty]}
+
+\textbf{Schedule D:} Its deadline is 1, but slot 1 is occupied. Reject it.
+
+\textbf{Schedule B:} Its deadline is 1, which is also occupied. Reject it.
+
+\textbf{Schedule E:} Put E in slot 3.
+
+Final schedule:
+
+\texttt{[C, A, E]}
+
+Total profit:
+
+
+\[
+27+100+15=\boxed{142}
+\]
+
+
+\subsection{10.3 Complexity}
+
+Sorting takes $O(n\log n)$.
+
+If each job scans backward through the time slots to locate an available slot, the scheduling phase may take $O(nD)$, where $D$ is the maximum deadline. A simple implementation with $D=O(n)$ can therefore have $O(n^2)$ overall time.
+
+Disjoint Set Union can optimize the search for the latest free slot, reducing the scheduling overhead substantially.
+
+\textbf{Important assumption:} The standard greedy algorithm described here applies to unit-duration jobs with deadlines and profit. More general jobs with arbitrary durations require different scheduling methods.
+
+\section{Summary of Greedy Algorithms}
+
+\begin{table}[htbp]
+\centering
+\caption{Master Summary of Canonical Greedy Algorithms}
+\label{tab:greedy_summary}
+\begin{tabularx}{\textwidth}{p{3.8cm} X p{4.5cm}}
+\toprule
+\textbf{Problem} & \textbf{Greedy Choice Strategy} & \textbf{Time Complexity} \\
+\midrule
+Activity Selection & Earliest finish time of compatible activity & $O(n \log n)$ ($O(n)$ if pre-sorted) \\
+Fractional Knapsack & Highest value-to-weight ratio ($v_i/w_i$) first & $O(n \log n)$ \\
+Kruskal's MST & Lowest weight edge connecting disjoint sets & $O(E \log E)$ \\
+Prim's MST & Lowest weight edge crossing cut boundary & $O(E \log V)$ (heap) / $O(V^2)$ (matrix) \\
+Dijkstra's Shortest Path & Lowest tentative distance node & $O((V+E)\log V)$ (heap) \\
+Huffman Coding & Merge two lowest frequency trees & $O(n \log n)$ \\
+Job Sequencing & Highest profit job placed in latest free slot & $O(n^2)$ standard / $O(n \log n)$ with DSU \\
+Coin Change & Largest denomination coin first & Optimal only for canonical coin systems \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Greedy algorithms can be simple and efficient, but correctness depends on the problem's properties and the proof for the specific greedy choice.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section II: Recursion and Recurrence Relations}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+
+\section{What Is Recursion?}
+
+\textbf{Recursion} is a programming technique in which a function calls itself to solve a problem by reducing it to smaller instances of the same problem.
+
+A recursive solution consists of two essential parts:
+
+\begin{enumerate}
+    \item \textbf{Base case:} A condition under which the function returns without making another recursive call.
+    \item \textbf{Recursive case:} A rule that reduces the problem and calls the function again.
+\end{enumerate}
+
+Without a correct base case or guaranteed progress toward it, recursion may continue indefinitely until the program runs out of call-stack space or otherwise fails.
+
+\subsubsection{Example}
+
+The factorial of a nonnegative integer $n$ is defined as:
+
+
+\[
+n!= \begin{cases} 1, & n=0\\\ n(n-1)!, & n>0 \end{cases}
+\]
+
+
+For example:
+
+
+\[
+5!=5\times4\times3\times2\times1=120
+\]
+
+
+The recursive definition expresses the factorial of a number in terms of the factorial of a smaller number.
+
+\subsection{12.1 How a recursive function executes}
+
+Consider:
+
+\begin{lstlisting}[style=cppstyle]
+int factorial(int n) {
+    if (n == 0) {
+        return 1;
+    }
+
+    return n * factorial(n - 1);
+}
+\end{lstlisting}
+
+When \texttt{factorial(4)} is called:
+
+\begin{enumerate}
+    \item \texttt{factorial(4)} calls \texttt{factorial(3)}.
+    \item \texttt{factorial(3)} calls \texttt{factorial(2)}.
+    \item \texttt{factorial(2)} calls \texttt{factorial(1)}.
+    \item \texttt{factorial(1)} calls \texttt{factorial(0)}.
+    \item \texttt{factorial(0)} returns 1.
+    \item The waiting calls complete in reverse order.
+\end{enumerate}
+
+The returns are:
+
+
+\[
+factorial(1)=1\times1=1
+\]
+
+
+
+\[
+factorial(2)=2\times1=2
+\]
+
+
+
+\[
+factorial(3)=3\times2=6
+\]
+
+
+
+\[
+factorial(4)=4\times6=\boxed{24}
+\]
+
+
+Each active function call has its own execution context, commonly represented by a stack frame on the program's call stack.
+
+\subsection{12.2 The call stack}
+
+The call stack tracks active function calls, including information such as local variables, parameters, and return locations.
+
+With recursion, new calls are placed above the calling functions. When a call returns, its frame is removed and control resumes in the calling function.
+
+This naturally follows LIFO order: the most recently invoked unfinished function returns first.
+
+\subsubsection{Why can deep recursion fail?}
+
+If recursion goes too deep, the call stack can be exhausted. This can cause a stack overflow or other runtime failure, depending on the execution environment.
+
+A recursive algorithm should therefore be evaluated for:
+
+\begin{itemize}
+    \item Maximum recursion depth.
+    \item Correct base conditions.
+    \item Guaranteed progress toward the base condition.
+    \item Repeated computations.
+    \item Whether an iterative implementation would be more suitable.
+\end{itemize}
+
+\section{Types of Recursion}
+
+\subsection{13.1 Direct recursion}
+
+A function calls itself directly.
+
+\begin{lstlisting}[style=cppstyle]
+void countdown(int n) {
+    if (n <= 0) {
+        return;
+    }
+
+    cout << n << " ";
+    countdown(n - 1);
+}
+\end{lstlisting}
+
+Calling \texttt{countdown(5)} prints:
+
+\begin{lstlisting}[style=pseudocode]
+5 4 3 2 1
+\end{lstlisting}
+
+\subsection{13.2 Indirect or mutual recursion}
+
+Two or more functions call one another, eventually returning to a function that was already involved in the chain.
+
+For example:
+
+\begin{lstlisting}[style=cppstyle]
+bool isEven(int n);
+
+bool isOdd(int n) {
+    if (n == 0) return false;
+    return isEven(n - 1);
+}
+
+bool isEven(int n) {
+    if (n == 0) return true;
+    return isOdd(n - 1);
+}
+\end{lstlisting}
+
+This example demonstrates mutual recursion for nonnegative integers. A production implementation should validate the input domain.
+
+\subsection{13.3 Tail recursion}
+
+In \textbf{tail recursion}, the recursive call is the final operation performed by the function.
+
+\begin{lstlisting}[style=cppstyle]
+int sumTail(int n, int accumulator = 0) {
+    if (n == 0) {
+        return accumulator;
+    }
+
+    return sumTail(n - 1, accumulator + n);
+}
+\end{lstlisting}
+
+The recursive call to \texttt{sumTail} is the final action.
+
+Some compilers can optimize tail calls in suitable circumstances, but C++ does not guarantee tail-call optimization. Therefore, a recursive tail call should not automatically be assumed to use constant stack space.
+
+\subsection{13.4 Non-tail recursion}
+
+A recursive function is non-tail recursive when additional work remains after the recursive call returns.
+
+Factorial is a classic example:
+
+\begin{lstlisting}[style=cppstyle]
+return n * factorial(n - 1);
+\end{lstlisting}
+
+After the recursive call completes, multiplication is still required.
+
+The caller must retain information about the pending multiplication until the call returns.
+
+\subsection{13.5 Linear recursion}
+
+Each function call makes at most one recursive call.
+
+Factorial, GCD using Euclid's algorithm, and recursive binary search are examples.
+
+\subsection{13.6 Tree recursion}
+
+Each function call makes more than one recursive call.
+
+Naive Fibonacci is a common example:
+
+\begin{lstlisting}[style=cppstyle]
+int fibonacci(int n) {
+    if (n <= 1) {
+        return n;
+    }
+
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+\end{lstlisting}
+
+This creates a branching recursion tree and repeats many calculations.
+
+For example, both \texttt{fibonacci(5)} and \texttt{fibonacci(4)} eventually call \texttt{fibonacci(3)}, so the same subproblems are calculated repeatedly.
+
+This leads directly to the motivation for Dynamic Programming.
+
+\section{Factorial Using Recursion}
+
+\subsection{14.1 Algorithm}
+
+\begin{lstlisting}[style=cppstyle]
+FACTORIAL(n):
+    if n == 0:
+        return 1
+
+    return n * FACTORIAL(n - 1)
+\end{lstlisting}
+
+A negative factorial is not defined in the usual nonnegative-integer factorial problem. A correct program should reject negative inputs rather than recurse indefinitely.
+
+\subsection{14.2 C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+unsigned long long factorial(int n) {
+    if (n < 0) {
+        throw invalid_argument("n must be nonnegative");
+    }
+
+    if (n == 0 || n == 1) {
+        return 1;
+    }
+
+    return static_cast<unsigned long long>(n) * factorial(n - 1);
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    try {
+        cout << factorial(n) << '\n';
+    } catch (const invalid_argument& e) {
+        cout << e.what() << '\n';
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+This implementation requires the appropriate \texttt{<stdexcept>} header for \texttt{invalid\_argument}. The numeric return type also has a limited range, so large factorials will overflow even though the mathematical result is defined.
+
+\subsection{14.3 Complexity analysis}
+
+For each input value $n$, the algorithm makes a sequence of $n$ recursive calls until reaching the base case.
+
+The recurrence is:
+
+
+\[
+T(n)=T(n-1)+O(1)
+\]
+
+
+with constant-time work per call.
+
+Therefore:
+
+
+\[
+\boxed{T(n)=O(n)}
+\]
+
+
+The maximum number of simultaneously active calls grows linearly with $n$, so the auxiliary call-stack space is:
+
+
+\[
+\boxed{O(n)}
+\]
+
+
+An iterative factorial would use $O(1)$ auxiliary space.
+
+\section{Fibonacci Sequence: Recursion and Its Cost}
+
+The Fibonacci sequence is defined as:
+
+
+\[
+F(0)=0,\qquad F(1)=1
+\]
+
+
+and for $n\geq2$:
+
+
+\[
+\boxed{F(n)=F(n-1)+F(n-2)}
+\]
+
+
+The first values are:
+
+\texttt{0, 1, 1, 2, 3, 5, 8, 13, 21, ...}
+
+\subsection{15.1 Naive recursive implementation}
+
+\begin{lstlisting}[style=cppstyle]
+long long fibonacci(int n) {
+    if (n <= 1) {
+        return n;
+    }
+
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+\end{lstlisting}
+
+This implementation repeatedly calculates the same values.
+
+For example, \texttt{fibonacci(5)} calls \texttt{fibonacci(4)} and \texttt{fibonacci(3)}, and the computation of \texttt{fibonacci(4)} itself calls \texttt{fibonacci(3)} again.
+
+The repeated call to \texttt{fibonacci(3)} illustrates overlapping subproblems.
+
+\subsubsection{Complexity}
+
+The recurrence is:
+
+
+\[
+T(n)=T(n-1)+T(n-2)+O(1)
+\]
+
+
+The running time grows exponentially. A commonly quoted upper bound is:
+
+
+\[
+\boxed{O(2^n)}
+\]
+
+
+More precisely, the growth is $\Theta(\varphi^n)$, where $\varphi=(1+\sqrt5)/2$, under the standard unit-cost model.
+
+The maximum recursion depth is $O(n)$, so auxiliary stack space is $O(n)$.
+
+\subsection{15.2 Why is naive Fibonacci inefficient?}
+
+A large amount of work is repeated because the same Fibonacci values are calculated many times.
+
+For example, the value of $F(3)$ is needed when evaluating $F(4)$, but it is also needed separately when evaluating $F(5)$.
+
+The naive recursive method does not remember completed results.
+
+Dynamic Programming solves this by storing already computed Fibonacci values and reusing them.
+
+This leads to memoization and tabulation.
+
+\section{Greatest Common Divisor Using Recursion}
+
+Euclid's algorithm finds the greatest common divisor (GCD) of two integers.
+
+Its key identity is:
+
+
+\[
+\boxed{\gcd(a,b)=\gcd(b,a\bmod b)}
+\]
+
+
+provided $b\neq0$. The base case is:
+
+
+\[
+\boxed{\gcd(a,0)=|a|}
+\]
+
+
+\subsection{16.1 Step-by-step example}
+
+Find:
+
+
+\[
+\gcd(48,18)
+\]
+
+
+First:
+
+
+\[
+48\bmod18=12
+\]
+
+
+Therefore:
+
+
+\[
+\gcd(48,18)=\gcd(18,12)
+\]
+
+
+Next:
+
+
+\[
+18\bmod12=6
+\]
+
+
+So:
+
+
+\[
+\gcd(18,12)=\gcd(12,6)
+\]
+
+
+Finally:
+
+
+\[
+12\bmod6=0
+\]
+
+
+Therefore:
+
+
+\[
+\gcd(12,6)=\gcd(6,0)=\boxed{6}
+\]
+
+
+\subsection{16.2 C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+long long gcdRecursive(long long a, long long b) {
+    if (b == 0) {
+        return llabs(a);
+    }
+
+    return gcdRecursive(b, a % b);
+}
+
+int main() {
+    long long a, b;
+    cin >> a >> b;
+
+    cout << gcdRecursive(a, b) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsubsection{Complexity}
+
+Euclid's algorithm reduces the size of the arguments rapidly.
+
+Its time complexity is:
+
+
+\[
+\boxed{O(\log(\min(|a|,|b|)+1))}
+\]
+
+
+for ordinary nontrivial inputs, stated asymptotically as $O(\log \min(|a|,|b|))$ when both arguments are positive.
+
+The recursive call-stack space is logarithmic in the size of the arguments.
+
+\textbf{Exam point:} Euclid's algorithm is much more efficient than testing every possible divisor from 1 up to the smaller input.
+
+\section{Recursive Binary Search}
+
+Binary Search can be implemented recursively because each step reduces the problem to a smaller search interval.
+
+\subsection{17.1 C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int binarySearchRecursive(
+    const vector<int>& a,
+    int target,
+    int low,
+    int high
+) {
+    if (low > high) {
+        return -1;
+    }
+
+    int mid = low + (high - low) / 2;
+
+    if (a[mid] == target) {
+        return mid;
+    }
+
+    if (target < a[mid]) {
+        return binarySearchRecursive(
+            a, target, low, mid - 1
+        );
+    }
+
+    return binarySearchRecursive(
+        a, target, mid + 1, high
+    );
+}
+
+int main() {
+    vector<int> a = {2, 5, 8, 12, 16, 23, 38, 56};
+
+    cout << binarySearchRecursive(
+        a, 23, 0, static_cast<int>(a.size()) - 1
+    ) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+5
+\end{lstlisting}
+
+The vector is sorted in ascending order, as required by binary search.
+
+\subsubsection{Complexity}
+
+The search interval is approximately halved in each call:
+
+
+\[
+T(n)=T(n/2)+O(1)
+\]
+
+
+Therefore:
+
+
+\[
+\boxed{T(n)=O(\log n)}
+\]
+
+
+The maximum number of simultaneously active recursive calls is also $O(\log n)$, so auxiliary space is $O(\log n)$.
+
+The iterative implementation achieves the same time complexity with $O(1)$ auxiliary space.
+
+\section{Tower of Hanoi}
+
+The \textbf{Tower of Hanoi} is a classical recursion problem involving three rods and $n$ disks of different sizes.
+
+Initially, all disks are stacked on one rod in decreasing size order, with the largest at the bottom.
+
+The goal is to move the entire stack to another rod, obeying two rules:
+
+\begin{enumerate}
+    \item Move only one disk at a time.
+    \item Never place a larger disk on top of a smaller disk.
+\end{enumerate}
+
+\subsection{18.1 Recursive strategy}
+
+To move $n$ disks from source rod A to destination rod C using auxiliary rod B:
+
+\begin{enumerate}
+    \item Move $n-1$ disks from A to B, using C.
+    \item Move the largest disk from A to C.
+    \item Move $n-1$ disks from B to C, using A.
+\end{enumerate}
+
+This produces the recurrence:
+
+
+\[
+\boxed{T(n)=2T(n-1)+1}
+\]
+
+
+with:
+
+
+\[
+T(0)=0
+\]
+
+
+Solving the recurrence gives:
+
+
+\[
+\boxed{T(n)=2^n-1}
+\]
+
+
+This is the minimum number of moves needed.
+
+\subsection{18.2 Example for three disks}
+
+The minimum number of moves is:
+
+
+\[
+2^3-1=7
+\]
+
+
+\subsubsection{C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+void towerOfHanoi(int n, char source,
+                  char auxiliary, char destination) {
+    if (n == 0) {
+        return;
+    }
+
+    towerOfHanoi(n - 1, source, destination, auxiliary);
+
+    cout << "Move disk " << n
+         << " from " << source
+         << " to " << destination << '\n';
+
+    towerOfHanoi(n - 1, auxiliary, source, destination);
+}
+
+int main() {
+    int n = 3;
+
+    towerOfHanoi(n, 'A', 'B', 'C');
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsubsection{Complexity}
+
+\begin{itemize}
+    \item Time: $O(2^n)$.
+    \item Auxiliary stack space: $O(n)$.
+\end{itemize}
+
+\textbf{Exam point:} The recursive depth is linear, even though the total number of operations is exponential.
+
+This distinction is essential when analyzing recursive algorithms: total work and maximum call-stack depth are not the same quantity.
+
+\section{Recurrence Relations and Complexity Analysis}
+
+A \textbf{recurrence relation} expresses the running time of a recursive algorithm in terms of smaller input sizes.
+
+For example, if an algorithm divides an input into two halves, recursively processes both halves, and spends linear time merging the results, its recurrence may be:
+
+
+\[
+\boxed{T(n)=2T(n/2)+O(n)}
+\]
+
+
+The recurrence describes the algorithm's structure. Solving it gives the asymptotic time complexity.
+
+\subsection{19.1 Common recurrence patterns}
+
+\begin{table}[htbp]
+\centering
+\caption{Common Recurrence Relations and Asymptotic Complexity}
+\label{tab:recurrence_patterns}
+\begin{tabularx}{\textwidth}{p{4.8cm} X p{3.2cm}}
+\toprule
+\textbf{Recurrence Relation} & \textbf{Algorithmic Paradigm / Example} & \textbf{Time Complexity} \\
+\midrule
+$T(n) = T(n-1) + O(1)$ & Factorial recursion, linear countdown & $O(n)$ \\
+$T(n) = T(n-1) + O(n)$ & Selection Sort recursive, worst Quick Sort & $O(n^2)$ \\
+$T(n) = T(n/2) + O(1)$ & Binary Search, divide by two & $O(\log n)$ \\
+$T(n) = 2T(n/2) + O(n)$ & Merge Sort & $O(n \log n)$ \\
+$T(n) = 2T(n-1) + O(1)$ & Tower of Hanoi & $O(2^n)$ \\
+$T(n) = T(n-1) + T(n-2) + O(1)$ & Naive Fibonacci recursion & $\Theta(\varphi^n)$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The table assumes the usual base cases and input-size interpretation.
+
+\subsection{19.2 Master Theorem}
+
+The Master Theorem is a method for solving many divide-and-conquer recurrences of the form:
+
+
+\[
+\boxed{T(n)=aT(n/b)+f(n)}
+\]
+
+
+where:
+
+\begin{itemize}
+    \item $a\geq1$ is the number of recursive subproblems.
+    \item $b>1$ is the factor by which the input size is reduced.
+    \item $f(n)$ is the non-recursive work at each call.
+\end{itemize}
+
+Define:
+
+
+\[
+c=\log_b a
+\]
+
+
+The standard three cases are:
+
+\subsubsection{Case 1: Recursive work dominates}
+
+If:
+
+
+\[
+f(n)=O(n^{c-\varepsilon})
+\]
+
+
+for some $\varepsilon>0$, then:
+
+
+\[
+\boxed{T(n)=\Theta(n^c)}
+\]
+
+
+\subsubsection{Case 2: Recursive and non-recursive work are balanced}
+
+If:
+
+
+\[
+f(n)=\Theta(n^c\log^k n)
+\]
+
+
+for a constant $k\geq0$, then:
+
+
+\[
+\boxed{T(n)=\Theta(n^c\log^{k+1}n)}
+\]
+
+
+\subsubsection{Case 3: Non-recursive work dominates}
+
+If:
+
+
+\[
+f(n)=\Omega(n^{c+\varepsilon})
+\]
+
+
+for some $\varepsilon>0$, together with the required regularity condition, then:
+
+
+\[
+\boxed{T(n)=\Theta(f(n))}
+\]
+
+
+The regularity condition typically requires that the recursive contribution be a fixed fraction smaller than $f(n)$ for sufficiently large $n$.
+
+The theorem does not apply directly to every recurrence. For example, $T(n)=T(n-1)+O(1)$ and naive Fibonacci's recurrence are not in the standard divide-by-$b$ form.
+
+\subsection{19.3 Worked Master Theorem problem}
+
+\textbf{Question:} Solve the recurrence for Merge Sort:
+
+
+\[
+T(n)=2T(n/2)+O(n)
+\]
+
+
+Identify:
+
+
+\[
+a=2,\qquad b=2,\qquad f(n)=O(n)
+\]
+
+
+Calculate:
+
+
+\[
+c=\log_2 2=1
+\]
+
+
+Thus:
+
+
+\[
+n^c=n
+\]
+
+
+The non-recursive work has the same order as $n^c$, so the second case applies.
+
+Therefore:
+
+
+\[
+\boxed{T(n)=\Theta(n\log n)}
+\]
+
+
+\subsection{19.4 When should the Master Theorem be used?}
+
+It is appropriate when the recurrence follows the required divide-and-conquer form, such as:
+
+
+\[
+T(n)=aT(n/b)+f(n)
+\]
+
+
+It is not a universal method for every recursive function. For recurrences with irregular subproblem sizes, unequal branching, or dependencies on multiple previous terms, other techniques such as recursion trees, substitution, or characteristic equations may be necessary.
+
+\section{Advantages and Disadvantages of Recursion}
+
+\subsubsection{Advantages}
+
+\begin{itemize}
+    \item Expresses divide-and-conquer algorithms naturally.
+    \item Makes tree and graph traversals straightforward.
+    \item Can produce concise solutions for mathematical definitions.
+    \item Supports backtracking and recursive decomposition.
+    \item Can simplify algorithms such as Merge Sort and Quick Sort.
+\end{itemize}
+
+\subsubsection{Disadvantages}
+
+\begin{itemize}
+    \item Uses additional call-stack space.
+    \item Can fail with excessive recursion depth.
+    \item Can repeat the same computation many times.
+    \item May have higher function-call overhead than an iterative solution.
+    \item Requires careful base cases and progress toward termination.
+\end{itemize}
+
+\textbf{Practical rule:} Recursion is a design technique, not an automatic performance improvement. When a recursive solution repeatedly computes overlapping subproblems, memoization or Dynamic Programming may be necessary.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section III: Dynamic Programming}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+
+\section{What Is Dynamic Programming?}
+
+\textbf{Dynamic Programming (DP)} is an algorithm-design technique that solves a problem by dividing it into smaller subproblems and storing their results so that each subproblem does not need to be solved repeatedly.
+
+It is especially useful when a problem has:
+
+\begin{enumerate}
+    \item \textbf{Optimal substructure:} The optimal solution can be constructed from optimal solutions to appropriately defined smaller subproblems.
+    \item \textbf{Overlapping subproblems:} The same subproblems occur repeatedly during the computation.
+\end{enumerate}
+
+Many recursive problems have these properties. Dynamic Programming improves efficiency by recording the results of subproblems and reusing them.
+
+\subsubsection{Practical example}
+
+Suppose a program needs to calculate the Fibonacci sequence up to $F(100)$.
+
+A naive recursive solution repeatedly calculates the same smaller Fibonacci values and has exponential running time.
+
+Dynamic Programming computes each Fibonacci value once and stores it. The same problem can then be solved in linear time.
+
+The main idea is not simply to use recursion. It is to \textbf{avoid redundant work by preserving the results of smaller computations}.
+
+\section{Two Main Approaches to Dynamic Programming}
+
+Dynamic Programming is commonly implemented using either memoization or tabulation.
+
+\subsection{22.1 Memoization: Top-down DP}
+
+Memoization starts with the original problem and solves smaller subproblems recursively.
+
+Whenever a subproblem is solved, its result is stored. If the same subproblem is encountered again, the stored result is returned instead of recalculating it.
+
+\subsubsection{Typical procedure}
+
+\begin{enumerate}
+    \item Define a recursive function.
+    \item Identify the base cases.
+    \item Before solving a subproblem, check whether its answer is already stored.
+    \item If stored, return the saved answer.
+    \item Otherwise, compute the answer recursively, save it, and return it.
+\end{enumerate}
+
+\subsubsection{Advantages}
+
+\begin{itemize}
+    \item Often resembles the natural recursive definition of the problem.
+    \item Computes only the subproblems that are actually reached.
+    \item Can be easier to implement when the state space is large but sparsely used.
+\end{itemize}
+
+\subsubsection{Disadvantages}
+
+\begin{itemize}
+    \item Uses recursion-stack space.
+    \item May encounter stack-depth limitations.
+    \item Has some overhead for checking and updating the memoization table.
+\end{itemize}
+
+\subsection{22.2 Tabulation: Bottom-up DP}
+
+Tabulation solves smaller subproblems first, storing results in a table that is filled in a valid dependency order.
+
+Instead of recursively calling itself, the algorithm builds up the answer through iteration.
+
+\subsubsection{Typical procedure}
+
+\begin{enumerate}
+    \item Identify the smallest subproblems.
+    \item Initialize the table with their known answers.
+    \item Determine which previously computed states are needed for each new state.
+    \item Fill the table in a valid order.
+    \item Return the entry representing the original problem.
+\end{enumerate}
+
+\subsubsection{Advantages}
+
+\begin{itemize}
+    \item Avoids recursive call-stack overhead.
+    \item Often provides predictable evaluation order.
+    \item Can enable space optimization when only a few previous states are required.
+\end{itemize}
+
+\subsubsection{Disadvantages}
+
+\begin{itemize}
+    \item May calculate states that are not needed for a particular query.
+    \item Requires careful selection of the table dimensions and iteration order.
+    \item Can be less intuitive when the recurrence has complicated dependencies.
+\end{itemize}
+
+\subsection{22.3 Memoization versus tabulation}
+
+\begin{table}[htbp]
+\centering
+\caption{Systematic Comparison: Memoization vs. Tabulation}
+\label{tab:memoization_vs_tabulation}
+\begin{tabularx}{\textwidth}{p{3.2cm} X X}
+\toprule
+\textbf{Dimension} & \textbf{Memoization (Top-Down)} & \textbf{Tabulation (Bottom-Up)} \\
+\midrule
+\textbf{Direction} & Top-down from target state & Bottom-up from base cases \\
+\textbf{Implementation} & Recursion + memo cache & Iterative loops + DP table \\
+\textbf{Evaluation Order} & Evaluates states on-demand as needed & Evaluates states in topological order \\
+\textbf{Call Stack} & Uses system recursion call stack & No recursion stack; iterative memory only \\
+\textbf{Unneeded States} & Skips states unreachable from target & Computes all planned states in table \\
+\textbf{State Optimization} & Difficult to compress memory & Easy to reduce dimension (e.g. 2 variables) \\
+\textbf{Common Example} & Memoized Fibonacci, recursive LCS & 1D Knapsack, Matrix Tabulation \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Both approaches implement Dynamic Programming. Neither is universally better; the appropriate choice depends on the problem's state space, dependencies, and implementation constraints.
+
+\section{A General Workflow for Designing a DP Algorithm}
+
+For examination questions, use the following sequence.
+
+\subsection{Step 1: Define the state}
+
+Specify exactly what each DP entry represents.
+
+For example:
+
+
+\[
+dp[i]=F(i)
+\]
+
+
+means that the entry \texttt{dp[i]} stores the $i$-th Fibonacci number.
+
+In a knapsack problem, a state might be:
+
+
+\[
+dp[i][w]
+\]
+
+
+representing the maximum value achievable using the first $i$ items with capacity $w$.
+
+A well-defined state makes the recurrence easier to derive and verify.
+
+\subsection{Step 2: Identify the recurrence}
+
+Express the answer to a larger state in terms of smaller states.
+
+For Fibonacci:
+
+
+\[
+dp[n]=dp[n-1]+dp[n-2]
+\]
+
+
+For a 0/1 Knapsack state, compare the cases in which an item is excluded or included.
+
+\subsection{Step 3: Define base cases}
+
+Base cases are the smallest states whose answers are known directly.
+
+Incorrect base cases are one of the most common causes of DP errors.
+
+\subsection{Step 4: Determine the transition order}
+
+Ensure that every state is calculated only after the states it depends on have been computed.
+
+For example, if \texttt{dp[i]} depends on \texttt{dp[i-1]} and \texttt{dp[i-2]}, calculate the states in increasing order of $i$.
+
+\subsection{Step 5: Calculate time and space complexity}
+
+Determine:
+
+\begin{itemize}
+    \item Number of states.
+    \item Cost of computing each state.
+    \item Total number of transitions.
+    \item Memory required to store the state information.
+\end{itemize}
+
+A common estimate is:
+
+
+\[
+\boxed{ \text{Total time} \approx \text{Number of states} \times \text{Work per state} }
+\]
+
+
+This estimate assumes that each state can be computed from previously available states without additional hidden costs.
+
+\subsection{Step 6: Check the result}
+
+Validate that the recurrence handles:
+
+\begin{itemize}
+    \item Minimum input sizes.
+    \item Impossible or unreachable states.
+    \item Boundary conditions.
+    \item Integer overflow, when applicable.
+    \item The exact quantity requested by the problem.
+\end{itemize}
+
+\section{Dynamic Programming Example 1: Fibonacci Numbers}
+
+\subsection{24.1 Recursive recurrence}
+
+The Fibonacci sequence follows:
+
+
+\[
+F(0)=0,\qquad F(1)=1
+\]
+
+
+
+\[
+F(n)=F(n-1)+F(n-2)
+\]
+
+
+Naive recursion is inefficient because the same values are repeatedly calculated.
+
+\subsection{24.2 Top-down DP using memoization}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include <vector>
+using namespace std;
+
+long long fibonacciMemo(int n, vector<long long>& memo) {
+    if (n <= 1) {
+        return n;
+    }
+
+    if (memo[n] != -1) {
+        return memo[n];
+    }
+
+    memo[n] = fibonacciMemo(n - 1, memo)
+            + fibonacciMemo(n - 2, memo);
+
+    return memo[n];
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    if (n < 0) {
+        cout << "n must be nonnegative\n";
+        return 0;
+    }
+
+    vector<long long> memo(n + 1, -1);
+
+    cout << fibonacciMemo(n, memo) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+This example assumes the requested Fibonacci value fits in \texttt{long long}. Larger values require a suitable arbitrary-precision representation.
+
+\subsubsection{Complexity}
+
+Each state from $0$ to $n$ is calculated at most once.
+
+\begin{itemize}
+    \item Time: $O(n)$.
+    \item Memoization space: $O(n)$.
+    \item Recursion-stack space: $O(n)$.
+\end{itemize}
+
+The overall auxiliary space is $O(n)$.
+
+\subsection{24.3 Bottom-up DP using tabulation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+using namespace std;
+
+long long fibonacciDP(int n) {
+    if (n <= 1) {
+        return n;
+    }
+
+    long long previous2 = 0;
+    long long previous1 = 1;
+
+    for (int i = 2; i <= n; i++) {
+        long long current = previous1 + previous2;
+
+        previous2 = previous1;
+        previous1 = current;
+    }
+
+    return previous1;
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    if (n < 0) {
+        cout << "n must be nonnegative\n";
+        return 0;
+    }
+
+    cout << fibonacciDP(n) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+This version stores only the two previous Fibonacci values because those are the only states needed to calculate the next one.
+
+\subsubsection{Complexity}
+
+\begin{itemize}
+    \item Time: $O(n)$.
+    \item Auxiliary space: $O(1)$.
+\end{itemize}
+
+This demonstrates \textbf{space optimization} in Dynamic Programming.
+
+\subsection{24.4 Comparison of Fibonacci approaches}
+
+\begin{table}[htbp]
+\centering
+\caption{Performance Comparison of Fibonacci Algorithms}
+\label{tab:fibonacci_comparison}
+\begin{tabularx}{\textwidth}{p{5.5cm} c c}
+\toprule
+\textbf{Algorithmic Approach} & \textbf{Time Complexity} & \textbf{Auxiliary Space} \\
+\midrule
+Naive Tree Recursion & $\Theta(\varphi^n) \approx 1.618^n$ (Exponential) & $O(n)$ Call Stack \\
+Top-Down DP (Memoization) & $O(n)$ & $O(n)$ Cache + Stack \\
+Bottom-Up DP (Full Array) & $O(n)$ & $O(n)$ Table \\
+Bottom-Up DP (Two Variables) & $O(n)$ & $O(1)$ Space Optimized \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The key reason DP is faster is that each Fibonacci value is calculated once rather than repeatedly.
+
+\section{Dynamic Programming Example 2: 0/1 Knapsack}
+
+\subsection{25.1 Problem definition}
+
+The 0/1 Knapsack problem asks us to choose items with given weights and values so that their total weight does not exceed a capacity $W$, while maximizing total value.
+
+Each item can either be selected once or not selected. Fractions are not permitted.
+
+This is a classic Dynamic Programming problem because the optimal decision depends on smaller subproblems involving fewer items and smaller capacities.
+
+\subsection{25.2 Define the state}
+
+Let:
+
+
+\[
+\boxed{dp[i][w]}
+\]
+
+
+represent the maximum achievable value using the first $i$ items with a knapsack capacity of $w$.
+
+Suppose item $i$ has weight $wt_i$ and value $val_i$.
+
+There are two possible decisions.
+
+\subsubsection{Case 1: Exclude the item}
+
+The value remains:
+
+
+\[
+dp[i-1][w]
+\]
+
+
+\subsubsection{Case 2: Include the item}
+
+The item can be selected only if:
+
+
+\[
+wt_i\leq w
+\]
+
+
+The resulting value is:
+
+
+\[
+val_i+dp[i-1][w-wt_i]
+\]
+
+
+Therefore, for a feasible item:
+
+
+\[
+\boxed{ dp[i][w]= \max\left( dp[i-1][w], val_i+dp[i-1][w-wt_i] \right) }
+\]
+
+
+If the item is too heavy, the state is:
+
+
+\[
+\boxed{dp[i][w]=dp[i-1][w]}
+\]
+
+
+Base cases:
+
+
+\[
+dp[0][w]=0
+\]
+
+
+and:
+
+
+\[
+dp[i][0]=0
+\]
+
+
+With no items or zero capacity, the maximum achievable value is zero.
+
+\subsection{25.3 Worked example}
+
+Suppose the capacity is:
+
+
+\[
+W=5
+\]
+
+
+The items are:
+
+\begin{table}[htbp]
+\centering
+\caption{0/1 Knapsack DP Example Items ($W = 5$)}
+\label{tab:knapsack_dp_items}
+\begin{tabular}{ccc}
+\toprule
+\textbf{Item ($i$)} & \textbf{Weight ($wt_i$)} & \textbf{Value ($val_i$)} \\
+\midrule
+1 & 2 & 12 \\
+2 & 1 & 10 \\
+3 & 3 & 20 \\
+4 & 2 & 15 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Consider the combinations:
+
+\begin{itemize}
+    \item Items 1 and 2: weight $3$, value $22$.
+    \item Items 1 and 4: weight $4$, value $27$.
+    \item Items 2, 3, and 4: weight $6$, which exceeds capacity.
+    \item Items 2 and 3: weight $4$, value $30$.
+    \item Items 1 and 3: weight $5$, value $32$.
+\end{itemize}
+
+The combination of items 1 and 3 has value 32, which is the maximum.
+
+Therefore:
+
+
+\[
+\boxed{\text{Optimal value}=32}
+\]
+
+
+\subsection{25.4 C++ implementation with one-dimensional DP}
+
+The full two-dimensional table can be compressed to a one-dimensional array.
+
+\begin{lstlisting}[style=cppstyle]
+#include <algorithm>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int knapsack01(
+    const vector<int>& weights,
+    const vector<int>& values,
+    int capacity
+) {
+    int n = static_cast<int>(weights.size());
+    vector<int> dp(capacity + 1, 0);
+
+    for (int i = 0; i < n; i++) {
+        // Iterate downward to ensure each item is used once.
+        for (int w = capacity; w >= weights[i]; w--) {
+            dp[w] = max(
+                dp[w],
+                values[i] + dp[w - weights[i]]
+            );
+        }
+    }
+
+    return dp[capacity];
+}
+
+int main() {
+    vector<int> weights = {2, 1, 3, 2};
+    vector<int> values = {12, 10, 20, 15};
+
+    cout << knapsack01(weights, values, 5) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+32
+\end{lstlisting}
+
+\subsubsection{Why iterate downward?}
+
+This is a critical implementation detail.
+
+The state \texttt{dp[w]} represents the best value achievable at capacity \texttt{w}.
+
+When processing one item, iterating downward ensures that the value from the preceding item iteration is used, rather than a value updated earlier in the same iteration. Therefore, the current item cannot be selected multiple times.
+
+If the inner loop iterates upward, the newly updated values may be reused during the same item iteration. That produces the recurrence for \textbf{unbounded Knapsack}, where an item can be taken multiple times, rather than 0/1 Knapsack.
+
+\subsection{25.5 Complexity}
+
+With $n$ items and integer capacity $W$:
+
+\begin{itemize}
+    \item Time: $O(nW)$.
+    \item Auxiliary space: $O(W)$ for the one-dimensional implementation.
+    \item Full two-dimensional table space: $O(nW)$.
+\end{itemize}
+
+The $O(nW)$ time is called \textbf{pseudo-polynomial}, not polynomial in the length of the input representation in general. The numerical value of $W$ can be exponentially larger than the number of bits needed to represent $W$.
+
+\textbf{Exam distinction:} 0/1 Knapsack DP is a standard solution when capacity is reasonably bounded. For large numeric capacities, other methods or approximations may be necessary.
+
+\section{Dynamic Programming Example 3: Coin Change with Minimum Coins}
+
+This problem differs from the earlier greedy coin-change example.
+
+Given a set of coin denominations and an amount $A$, find the minimum number of coins required to make the amount, assuming unlimited availability of each denomination.
+
+\subsection{26.1 Define the state}
+
+Let:
+
+
+\[
+dp[x]
+\]
+
+
+be the minimum number of coins required to make amount $x$.
+
+Base case:
+
+
+\[
+dp[0]=0
+\]
+
+
+For each positive amount $x$, consider every coin denomination $c$ such that $c\leq x$.
+
+If $x-c$ can be formed, then choosing coin $c$ gives:
+
+
+\[
+dp[x-c]+1
+\]
+
+
+Therefore:
+
+
+\[
+\boxed{ dp[x]=1+\min_{\substack{c\leq x\\ c\text{ is a coin}}}dp[x-c] }
+\]
+
+
+If no denomination can form the amount, the state remains unreachable.
+
+\subsection{26.2 Example}
+
+Coins:
+
+
+\[
+\\{1,3,4\\}
+\]
+
+
+Amount:
+
+
+\[
+A=6
+\]
+
+
+The minimum counts begin:
+
+\begin{table}[htbp]
+\centering
+\caption{DP State Table for Coin Change ($\{1, 3, 4\}$, Target 6)}
+\label{tab:coin_change_dp}
+\begin{tabular}{ccc}
+\toprule
+\textbf{Target Amount ($x$)} & \textbf{Minimum Coins ($dp[x]$)} & \textbf{Optimal Coin Selection} \\
+\midrule
+0 & 0 & Empty selection \\
+1 & 1 & $1$ \\
+2 & 2 & $1 + 1$ \\
+3 & 1 & $3$ \\
+4 & 1 & $4$ \\
+5 & 2 & $4 + 1$ \\
+6 & 2 & $3 + 3$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The optimal answer is:
+
+
+\[
+\boxed{2\text{ coins}}
+\]
+
+
+This example also demonstrates why taking the largest coin greedily is not always optimal: greedy selects $4+1+1$, which uses three coins.
+
+\subsection{26.3 C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <algorithm>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int minimumCoins(const vector<int>& coins, int amount) {
+    const int INF = amount + 1;
+
+    vector<int> dp(amount + 1, INF);
+    dp[0] = 0;
+
+    for (int x = 1; x <= amount; x++) {
+        for (int coin : coins) {
+            if (coin <= x && dp[x - coin] != INF) {
+                dp[x] = min(dp[x], dp[x - coin] + 1);
+            }
+        }
+    }
+
+    return dp[amount] == INF ? -1 : dp[amount];
+}
+
+int main() {
+    vector<int> coins = {1, 3, 4};
+
+    cout << minimumCoins(coins, 6) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+2
+\end{lstlisting}
+
+This implementation assumes all coin denominations are positive integers.
+
+\subsection{26.4 Complexity}
+
+Let $m$ be the number of coin denominations and $A$ the target amount.
+
+\begin{itemize}
+    \item Time: $O(Am)$.
+    \item Auxiliary space: $O(A)$.
+\end{itemize}
+
+If the target cannot be represented, the function returns \texttt{-1}.
+
+\textbf{Exam distinction:} The recurrence is similar to 0/1 Knapsack in spirit, but unlimited reuse of coin denominations is allowed. This changes the state transitions and implementation details.
+
+\section{Dynamic Programming Example 4: Longest Common Subsequence (LCS)}
+
+\subsection{27.1 Problem definition}
+
+The \textbf{Longest Common Subsequence} problem asks for the longest sequence of elements that appears in the same relative order in two sequences, though the elements need not be adjacent.
+
+For example:
+
+\begin{lstlisting}[style=pseudocode]
+String A: ABCDGH
+String B: AEDFHR
+\end{lstlisting}
+
+One common subsequence is \texttt{ADH}.
+
+The characters appear in the same order in both strings, so the subsequence has length 3.
+
+A subsequence differs from a substring: a subsequence may skip elements, whereas a substring must consist of consecutive characters.
+
+\subsection{27.2 Define the DP state}
+
+Let:
+
+
+\[
+dp[i][j]
+\]
+
+
+represent the length of the LCS of the first $i$ characters of string A and the first $j$ characters of string B.
+
+Base cases:
+
+
+\[
+dp[0][j]=0
+\]
+
+
+
+\[
+dp[i][0]=0
+\]
+
+
+If either prefix is empty, the longest common subsequence has length zero.
+
+\subsubsection{Case 1: Matching characters}
+
+If:
+
+
+\[
+A[i-1]=B[j-1]
+\]
+
+
+then:
+
+
+\[
+\boxed{dp[i][j]=1+dp[i-1][j-1]}
+\]
+
+
+The matching character extends a common subsequence of the preceding prefixes.
+
+\subsubsection{Case 2: Different characters}
+
+If:
+
+
+\[
+A[i-1]\neq B[j-1]
+\]
+
+
+then:
+
+
+\[
+\boxed{dp[i][j]=\max(dp[i-1][j],dp[i][j-1])}
+\]
+
+
+We compare the solutions obtained by excluding the final character from one sequence or the other.
+
+\subsection{27.3 C++ implementation}
+
+\begin{lstlisting}[style=cppstyle]
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int lcsLength(const string& a, const string& b) {
+    int m = static_cast<int>(a.size());
+    int n = static_cast<int>(b.size());
+
+    vector<vector<int>> dp(
+        m + 1,
+        vector<int>(n + 1, 0)
+    );
+
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (a[i - 1] == b[j - 1]) {
+                dp[i][j] = 1 + dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = max(
+                    dp[i - 1][j],
+                    dp[i][j - 1]
+                );
+            }
+        }
+    }
+
+    return dp[m][n];
+}
+
+int main() {
+    string a = "ABCBDAB";
+    string b = "BDCABA";
+
+    cout << lcsLength(a, b) << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+Output:
+
+\begin{lstlisting}[style=pseudocode]
+4
+\end{lstlisting}
+
+The strings have an LCS of length four. For example, \texttt{BCBA} is a valid common subsequence.
+
+\subsection{27.4 Complexity}
+
+For strings of lengths $m$ and $n$:
+
+\begin{itemize}
+    \item Time: $O(mn)$.
+    \item Space: $O(mn)$.
+\end{itemize}
+
+If only the length is required, the memory can be reduced to $O(\min(m,n))$ using two rows, because each state depends only on the previous row and the current row's previous entry.
+
+If the actual subsequence must be reconstructed, the implementation usually needs to retain sufficient information to trace the decisions, or recompute portions of the table.
+
+\textbf{Exam comparison:} LCS can be solved by naive recursion, but the repeated subproblems make Dynamic Programming substantially more efficient.
+
+\section{Dynamic Programming Example 5: Weighted Interval Scheduling}
+
+This problem illustrates a situation where a greedy strategy based only on finish time does not necessarily maximize total profit.
+
+\subsection{28.1 Problem definition}
+
+Given intervals with start times, finish times, and associated profits, select a set of mutually compatible intervals that maximizes total profit.
+
+Unlike the ordinary Activity Selection problem, each interval has a different value.
+
+\subsection{28.2 Why does the simple greedy method fail?}
+
+Suppose the intervals are:
+
+\begin{table}[htbp]
+\centering
+\caption{Weighted Interval Scheduling Example Dataset}
+\label{tab:weighted_intervals}
+\begin{tabular}{cccc}
+\toprule
+\textbf{Interval} & \textbf{Start Time} & \textbf{Finish Time} & \textbf{Profit ($v_i$)} \\
+\midrule
+A & 1 & 10 & 100 \\
+B & 1 & 4 & 40 \\
+C & 4 & 7 & 40 \\
+D & 7 & 10 & 40 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A finish-time greedy algorithm chooses B, C, and D, earning:
+
+
+\[
+40+40+40=120
+\]
+
+
+In this example, that happens to outperform selecting A, but it demonstrates how weights change the objective. The ordinary earliest-finish rule is not itself an optimality proof for the weighted variant.
+
+To give a clear counterexample, change A's profit to 200. The finish-time greedy selection still returns B, C, and D with total profit 120, whereas selecting A alone gives 200.
+
+Thus, when the objective is total profit, a different algorithm is needed.
+
+\subsection{28.3 DP state and recurrence}
+
+Sort intervals by finish time.
+
+Let $p(j)$ be the index of the last interval that finishes at or before the start time of interval $j$.
+
+Let:
+
+
+\[
+dp[j]
+\]
+
+
+be the maximum profit obtainable from the first $j$ sorted intervals.
+
+There are two possibilities:
+
+\textbf{Exclude interval }$j$\textbf{:}
+
+
+\[
+dp[j-1]
+\]
+
+
+\textbf{Include interval }$j$\textbf{:}
+
+
+\[
+profit_j+dp[p(j)]
+\]
+
+
+Therefore:
+
+
+\[
+\boxed{ dp[j]=\max(dp[j-1],profit_j+dp[p(j)]) }
+\]
+
+
+The base case is:
+
+
+\[
+dp[0]=0
+\]
+
+
+The function $p(j)$ can be computed using binary search once the intervals are sorted by finish time.
+
+\subsection{28.4 Complexity}
+
+\begin{itemize}
+    \item Sorting intervals: $O(n\log n)$.
+    \item Computing compatible predecessors by binary search: $O(n\log n)$.
+    \item Filling the DP table: $O(n)$.
+\end{itemize}
+
+Total:
+
+
+\[
+\boxed{O(n\log n)}
+\]
+
+
+Auxiliary space is $O(n)$.
+
+\textbf{Exam takeaway:} Greedy algorithms are effective when a locally optimal choice has a correctness guarantee. When selection decisions interact through profits and compatibility constraints, Dynamic Programming may be required to compare alternatives systematically.
+
+\section{Matrix Chain Multiplication}
+
+Matrix Chain Multiplication is a classic Dynamic Programming problem. The objective is to find the best parenthesization of a sequence of matrix multiplications so that the number of scalar multiplications is minimized.
+
+The order of the matrices cannot be changed, because matrix multiplication is not generally commutative. However, the order of parenthesization can be changed because matrix multiplication is associative.
+
+For example:
+
+
+\[
+(AB)C=A(BC)
+\]
+
+
+when the matrix dimensions are compatible, but the number of scalar multiplications can differ.
+
+\subsection{29.1 Worked example}
+
+Suppose the dimensions are:
+
+\begin{itemize}
+    \item $A_1: 10\times30$
+    \item $A_2: 30\times5$
+    \item $A_3: 5\times60$
+\end{itemize}
+
+There are two parenthesizations.
+
+\subsubsection{\textbf{Option 1: }$(A_1A_2)A_3$}
+
+First multiply $A_1$ and $A_2$:
+
+
+\[
+10\times30\times5=1500
+\]
+
+
+The resulting matrix has dimensions $10\times5$.
+
+Then multiply the result by $A_3$:
+
+
+\[
+10\times5\times60=3000
+\]
+
+
+Total cost:
+
+
+\[
+1500+3000=\boxed{4500}
+\]
+
+
+\subsubsection{\textbf{Option 2: }$A_1(A_2A_3)$}
+
+First multiply $A_2$ and $A_3$:
+
+
+\[
+30\times5\times60=9000
+\]
+
+
+The resulting matrix has dimensions $30\times60$.
+
+Then multiply it by $A_1$:
+
+
+\[
+10\times30\times60=18000
+\]
+
+
+Total:
+
+
+\[
+9000+18000=\boxed{27000}
+\]
+
+
+Therefore, the first parenthesization is much cheaper:
+
+
+\[
+\boxed{4500\text{ scalar multiplications}}
+\]
+
+
+The order of matrices stays the same. Only the grouping changes.
+
+\subsection{29.2 DP recurrence}
+
+Suppose matrix $A_i$ has dimensions:
+
+
+\[
+p_{i-1}\times p_i
+\]
+
+
+Let $m[i][j]$ represent the minimum number of scalar multiplications required to calculate:
+
+
+\[
+A_iA_{i+1}\cdots A_j
+\]
+
+
+The base case is:
+
+
+\[
+m[i][i]=0
+\]
+
+
+A single matrix requires no multiplication.
+
+For $i<j$, try every possible split $k$ between $i$ and $j-1$:
+
+
+\[
+\boxed{ m[i][j]= \min_{i\leq k<j} \left( m[i][k]+m[k+1][j]+p_{i-1}p_kp_j \right) }
+\]
+
+
+The first two terms are the costs of solving the two subchains. The final term is the cost of multiplying the resulting matrices.
+
+\subsection{29.3 Complexity}
+
+For $n$ matrices:
+
+\begin{itemize}
+    \item Time: $O(n^3)$.
+    \item Space: $O(n^2)$.
+\end{itemize}
+
+The DP table contains $O(n^2)$ subproblems, and evaluating a state may examine $O(n)$ split positions.
+
+\textbf{Exam point:} Matrix Chain Multiplication is a classic example of optimal substructure and overlapping subproblems. It is not solved optimally by simply choosing the next multiplication with the smallest immediate cost.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section IV: Comparative Analysis and Selection Framework}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+
+These three concepts are related, but they are not interchangeable. Understanding their differences is especially important for conceptual MCQs and algorithm-selection questions.
+
+\section{Comparative Matrix: Greedy vs. Recursion vs. Dynamic Programming}
+
+\begin{table}[htbp]
+\centering
+\caption{Comprehensive Comparison: Greedy vs. Recursion vs. Dynamic Programming}
+\label{tab:master_paradigms}
+\begin{tabularx}{\textwidth}{p{2.8cm} X X X}
+\toprule
+\textbf{Evaluation Dimension} & \textbf{Greedy Algorithms} & \textbf{Recursion} & \textbf{Dynamic Programming} \\
+\midrule
+\textbf{Core Strategy} & Make irrevocable locally optimal choices & Reduce problem to smaller identical instances & Store and reuse solutions to overlapping subproblems \\
+\textbf{Decision Reconsideration} & Never reconsiders prior decisions & Explores recursive branching paths & Considers all valid transitions via recurrence \\
+\textbf{Subproblem Overlap} & Subproblems do not need to overlap & Recalculates subproblems unless cached & Explicitly exploits overlapping subproblems \\
+\textbf{Key Prerequisites} & Greedy-choice property + optimal substructure & Well-defined base case + terminating reduction & Optimal substructure + overlapping subproblems \\
+\textbf{Implementation} & Sorting + iterative scans & Recursive function calls & Top-down memoization or bottom-up tabulation \\
+\textbf{Canonical Examples} & Activity Selection, Kruskal, Dijkstra & Factorial, Tower of Hanoi & 0/1 Knapsack, LCS, Matrix Chain \\
+\textbf{Primary Limitation} & May produce suboptimal local traps & Risk of call stack overflow & High memory/state space requirements \\
+\textbf{Memory Footprint} & Usually $O(1)$ or $O(n)$ auxiliary & $O(\text{depth})$ system stack frames & Cache array or multidimensional DP table \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection{Important relationship}
+
+A recursive algorithm can be implemented using Dynamic Programming if it contains overlapping subproblems whose results can be reused.
+
+Dynamic Programming can be implemented iteratively without recursion.
+
+A greedy algorithm may itself use sorting, a priority queue, or another data structure. The defining characteristic is the greedy selection strategy, not the particular data structure.
+
+\section{How to Decide Which Technique to Use}
+
+Consider the question:
+
+\textbf{"How can I find the minimum or maximum cost under a set of constraints?"}
+
+The fact that a problem asks for an optimum does not automatically mean Greedy or Dynamic Programming is appropriate.
+
+Use the following reasoning.
+
+\subsubsection{Case 1: A local choice is provably safe}
+
+Use a greedy algorithm when a choice can be made irrevocably without preventing an optimal solution.
+
+Examples:
+
+\begin{itemize}
+    \item Fractional Knapsack.
+    \item Ordinary Activity Selection.
+    \item Minimum Spanning Tree.
+    \item Dijkstra's shortest-path algorithm with nonnegative edge weights.
+\end{itemize}
+
+\subsubsection{Case 2: The problem naturally reduces to smaller instances}
+
+Use recursion when the problem can be defined in terms of smaller instances and the resulting depth and running time are acceptable.
+
+Examples:
+
+\begin{itemize}
+    \item Factorial.
+    \item Binary search.
+    \item Tree traversal.
+    \item Tower of Hanoi.
+\end{itemize}
+
+Recursion alone does not prevent duplicate work. Naive Fibonacci is a classic example of a recursive algorithm with severe repeated computation.
+
+\subsubsection{Case 3: The same subproblems recur}
+
+Use Dynamic Programming when the problem has overlapping subproblems and the relevant answers can be stored and reused.
+
+Examples:
+
+\begin{itemize}
+    \item Fibonacci.
+    \item 0/1 Knapsack.
+    \item Coin Change.
+    \item Longest Common Subsequence.
+    \item Matrix Chain Multiplication.
+    \item Weighted Interval Scheduling.
+\end{itemize}
+
+A DP formulation typically explores multiple alternatives and uses a recurrence to select the best result.
+
+\subsubsection{A practical checklist}
+
+Before implementing a solution, ask:
+
+\begin{enumerate}
+    \item What exactly does the problem want to maximize, minimize, count, or decide?
+    \item Can I define the solution using smaller subproblems?
+    \item Do the smaller subproblems repeat?
+    \item Is a locally optimal choice provably safe?
+    \item What is the state, recurrence, and base case?
+    \item How many states exist, and how much work does each state require?
+    \item Can the memory requirement be reduced without losing needed information?
+\end{enumerate}
+
+This checklist helps identify the algorithmic structure rather than choosing a technique solely because it is familiar.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section V: Critical Examination Traps and Pitfalls}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+
+\section{Examination Traps: Greedy Algorithms}
+
+\textbf{1. Assuming greedy always gives the optimum.}
+
+It does not. Ratio-based greedy is optimal for Fractional Knapsack but not for general 0/1 Knapsack.
+
+\textbf{2. Confusing Activity Selection with Weighted Interval Scheduling.}
+
+Selecting the earliest-finishing interval is optimal for maximizing the number of compatible intervals. It is not generally optimal when each interval has a different profit and the objective is maximum total profit.
+
+\textbf{3. Forgetting Dijkstra's constraint.}
+
+Standard Dijkstra's algorithm relies on nonnegative edge weights. It is not generally correct when negative-weight edges are present.
+
+\textbf{4. Confusing minimum spanning trees with shortest paths.}
+
+Prim's and Kruskal's algorithms minimize the total weight of a spanning tree. Dijkstra's algorithm minimizes path costs from a source. These are different optimization objectives.
+
+\textbf{5. Assuming any locally optimal coin choice works.}
+
+Greedy coin selection may fail for arbitrary denomination systems, as demonstrated by the denominations $\\{1,3,4\\}$ and target 6.
+
+\section{Examination Traps: Recursion}
+
+\textbf{1. Missing the base case.} Without a terminating condition, recursion may continue indefinitely.
+
+\textbf{2. Not making progress.} A recursive call must reduce the problem in a way that eventually reaches the base case.
+
+\textbf{3. Confusing recursion depth with total work.} Tower of Hanoi has $O(2^n)$ time but $O(n)$ maximum recursive depth.
+
+\textbf{4. Ignoring overlapping subproblems.} Naive Fibonacci is exponential because it repeatedly calculates the same values.
+
+\textbf{5. Assuming tail recursion is always optimized.} C++ does not guarantee tail-call elimination.
+
+\textbf{6. Forgetting numeric limits.} Mathematical factorial and Fibonacci values grow rapidly; ordinary integer types hold only a finite range.
+
+\section{Examination Traps: Dynamic Programming}
+
+\textbf{1. Defining a vague state.} The state must precisely describe the subproblem whose answer is being stored.
+
+\textbf{2. Using an incorrect base case.} An incorrect initialization can affect every state that depends on it.
+
+\textbf{3. Filling the table in the wrong order.} A DP state must be calculated after its dependencies, unless the implementation specifically handles otherwise.
+
+\textbf{4. Using the wrong loop direction in Knapsack.} In one-dimensional 0/1 Knapsack, process capacity in descending order. Ascending order can accidentally allow an item to be reused.
+
+\textbf{5. Confusing polynomial and pseudo-polynomial complexity.} $O(nW)$ for Knapsack depends on the numeric capacity $W$, not just its encoded input length.
+
+\textbf{6. Assuming every recursive problem requires DP.} Recursion is useful even when subproblems do not overlap, as in ordinary tree traversal or Tower of Hanoi.
+
+\textbf{7. Assuming every optimization problem requires DP.} Some problems have a valid greedy strategy that is simpler and more efficient.
+
+\textbf{8. Confusing the optimal value with the selected solution.} A DP table may return the optimal profit or length, but reconstructing the actual chosen items or sequence may require additional bookkeeping or backtracking through the table.
+
+
+\newpage
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section VI: Formulas, Viva Q\&A, and Quick Revision}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+
+\section{Master Complexity and Formula Reference Sheet}
+
+\begin{table}[htbp]
+\centering
+\caption{Master Algorithmic Complexity Reference Sheet}
+\label{tab:master_complexity_sheet}
+\begin{tabularx}{\textwidth}{p{4.2cm} p{3.2cm} p{3.2cm} X}
+\toprule
+\textbf{Algorithm / Problem} & \textbf{Time Complexity} & \textbf{Auxiliary Space} & \textbf{Key Design Characteristic} \\
+\midrule
+Factorial (Recursive) & $O(n)$ & $O(n)$ Stack & One recursive frame per decrement \\
+Fibonacci (Naive) & $\Theta(\varphi^n)$ Exponential & $O(n)$ Stack & Redundant overlapping call tree \\
+Fibonacci (Memoized) & $O(n)$ & $O(n)$ Cache + Stack & Cache hits eliminate redundant work \\
+Fibonacci (2 Variables) & $O(n)$ & $O(1)$ Optimized & Bottom-up sliding state window \\
+Binary Search (Recursive) & $O(\log n)$ & $O(\log n)$ Stack & Logarithmic search space bisection \\
+Binary Search (Iterative) & $O(\log n)$ & $O(1)$ Optimal & In-place two-pointer interval halving \\
+Tower of Hanoi & $O(2^n)$ & $O(n)$ Stack & Recurrence $T(n) = 2T(n-1) + 1$ \\
+Activity Selection & $O(n \log n)$ & $O(1)$ to $O(n)$ & Greedy sort by earliest finish time \\
+Fractional Knapsack & $O(n \log n)$ & $O(1)$ to $O(n)$ & Greedy sort by value-to-weight ratio \\
+Kruskal's MST & $O(E \log E)$ & $O(V + E)$ DSU & Edge sorting with Union-Find disjoint sets \\
+Dijkstra's Algorithm & $O((V+E)\log V)$ & $O(V + E)$ Adjacency & Min-heap; strictly nonnegative edge weights \\
+0/1 Knapsack DP & $O(nW)$ & $O(W)$ Optimized & Pseudo-polynomial; reverse inner loop \\
+Coin Change (Min Coins) & $O(Am)$ & $O(A)$ Table & Amount $A$, $m$ coin denominations \\
+Longest Common Subseq. & $O(mn)$ & $O(mn)$ or $O(\min(m,n))$ & 2D grid character matching recurrence \\
+Matrix Chain Mult. & $O(n^3)$ & $O(n^2)$ Table & Catalan bracketings, parenthesization DP \\
+Weighted Interval Sched. & $O(n \log n)$ & $O(n)$ Array & Predecessor search $p(j)$ + 1D DP \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The table assumes the standard implementations described in this chapter. In particular, graph algorithms' storage figures include graph representation when indicated, and DP space can vary if only an optimal value is required instead of reconstructing the solution.
+
+
+\section{Likely Viva Questions: Greedy Algorithms}
+
+\begin{quote}
+\textbf{Question 1: What are the two important properties associated with greedy optimization algorithms?}\\[4pt]
+Answer: The greedy-choice property and optimal substructure.
+\end{quote}
+\begin{quote}
+\textbf{Question 2: Which Knapsack problem is optimally solved using the value-to-weight ratio greedy strategy?}\\[4pt]
+Answer: Fractional Knapsack.
+\end{quote}
+\begin{quote}
+\textbf{Question 3: Why is a ratio-based greedy algorithm not generally optimal for 0/1 Knapsack?}\\[4pt]
+Answer: Items cannot be divided. A locally attractive item may prevent selecting a combination of other items with a higher total value.
+\end{quote}
+\begin{quote}
+\textbf{Question 4: Which edge does Kruskal's algorithm consider first?}\\[4pt]
+Answer: The minimum-weight edge, provided adding it does not form a cycle in the selected forest.
+\end{quote}
+\begin{quote}
+\textbf{Question 5: What is the key greedy decision in Prim's algorithm?}\\[4pt]
+Answer: Add a minimum-weight edge connecting the current tree to a vertex outside it.
+\end{quote}
+\begin{quote}
+\textbf{Question 6: Under what conditions is Dijkstra's algorithm appropriate?}\\[4pt]
+Answer: For shortest paths in a weighted graph with nonnegative edge weights.
+\end{quote}
+\begin{quote}
+\textbf{Question 7: What is the greedy strategy used by Huffman Coding?}\\[4pt]
+Answer: Repeatedly combine the two nodes with the smallest frequencies.
+\end{quote}
+\begin{quote}
+\textbf{Question 8: Does a greedy coin-change algorithm always minimize the number of coins?}\\[4pt]
+Answer: No. Its correctness depends on the denomination system.
+\end{quote}
+\section{Likely Viva Questions: Recursion}
+
+\begin{quote}
+\textbf{Question 9: What are the two essential parts of a recursive function?}\\[4pt]
+Answer: A base case and a recursive case.
+\end{quote}
+\begin{quote}
+\textbf{Question 10: What causes excessive recursion depth?}\\[4pt]
+Answer: A large number of active recursive calls, potentially exhausting call-stack space.
+\end{quote}
+\begin{quote}
+\textbf{Question 11: What is the recurrence relation for factorial?}\\[4pt]
+Answer: 
+\[
+T(n)=T(n-1)+O(1)
+\]
+
+\end{quote}
+\begin{quote}
+\textbf{Question 12: What is the minimum number of moves for Tower of Hanoi with }$n$\textbf{ disks?}\\[4pt]
+Answer: 
+\[
+2^n-1
+\]
+
+\end{quote}
+\begin{quote}
+\textbf{Question 13: What is the time complexity of naive recursive Fibonacci?}\\[4pt]
+Answer: Exponential, with $\Theta(\varphi^n)$ growth under the usual model.
+\end{quote}
+\begin{quote}
+\textbf{Question 14: What is tail recursion?}\\[4pt]
+Answer: Recursion in which the recursive call is the final operation performed by the function.
+\end{quote}
+\begin{quote}
+\textbf{Question 15: What are the time and auxiliary-space complexities of recursive binary search?}\\[4pt]
+Answer: $O(\log n)$ time and $O(\log n)$ call-stack space.
+\end{quote}
+\section{Likely Viva Questions: Dynamic Programming}
+
+\begin{quote}
+\textbf{Question 16: What are the two main properties commonly used to identify DP problems?}\\[4pt]
+Answer: Optimal substructure and overlapping subproblems.
+\end{quote}
+\begin{quote}
+\textbf{Question 17: What is memoization?}\\[4pt]
+Answer: A top-down approach that caches answers to previously solved subproblems.
+\end{quote}
+\begin{quote}
+\textbf{Question 18: What is tabulation?}\\[4pt]
+Answer: A bottom-up approach that fills a table in a valid dependency order.
+\end{quote}
+\begin{quote}
+\textbf{Question 19: Why is DP Fibonacci faster than naive recursive Fibonacci?}\\[4pt]
+Answer: It computes each required Fibonacci state once and reuses the stored result.
+\end{quote}
+\begin{quote}
+\textbf{Question 20: What is the time complexity of the 0/1 Knapsack DP using a one-dimensional table?}\\[4pt]
+Answer: $O(nW)$, where $n$ is the number of items and $W$ is the capacity.
+\end{quote}
+\begin{quote}
+\textbf{Question 21: Why is }$O(nW)$\textbf{ called pseudo-polynomial?}\\[4pt]
+Answer: It depends on the numerical value $W$, which may be exponentially larger than the number of bits used to represent $W$.
+\end{quote}
+\begin{quote}
+\textbf{Question 22: What is the time complexity of the standard LCS DP algorithm?}\\[4pt]
+Answer: $O(mn)$, where $m$ and $n$ are the lengths of the two sequences.
+\end{quote}
+\begin{quote}
+\textbf{Question 23: What is the main difference between memoization and tabulation?}\\[4pt]
+Answer: Memoization is top-down and solves states as needed; tabulation is bottom-up and fills states in a planned order.
+\end{quote}
+\begin{quote}
+\textbf{Question 24: Does every problem that can be solved recursively require Dynamic Programming?}\\[4pt]
+Answer: No. DP is especially useful when subproblems overlap and their results can be reused.
+\end{quote}
+\section{Final Revision Summary}
+
+The essential distinctions to remember are:
+
+\begin{itemize}
+    \item \textbf{Greedy:} Makes locally optimal choices. Correctness depends on a valid greedy-choice argument. Examples include Activity Selection, Fractional Knapsack, Kruskal's MST, Prim's MST, Dijkstra under nonnegative weights, and Huffman Coding.
+    \item \textbf{Recursion:} Solves a problem through smaller instances of itself. It requires a base case and a reduction that guarantees termination. Its performance depends on the recurrence and the number of repeated calculations.
+    \item \textbf{Dynamic Programming:} Stores and reuses answers to overlapping subproblems. It can be implemented using top-down memoization or bottom-up tabulation.
+\end{itemize}
+
+When solving an examination question, identify the problem's state or decision structure first, then select the appropriate algorithmic method. Write the recurrence or greedy rule explicitly, justify why it is correct, and derive time and space complexity from the actual operations.
+
+For a final practice session, prioritize four comparisons: \textbf{Fractional versus 0/1 Knapsack, naive recursion versus memoized Fibonacci, greedy Activity Selection versus Weighted Interval Scheduling, and recursive versus iterative Binary Search.} These examples demonstrate the essential differences between the three paradigms.

@@ -1,0 +1,679 @@
+\chapter{Data Structures --- Trees, Binary Trees, and B+ Trees}
+\label{ch:trees_binary_and_bplus}
+
+This chapter covers tree terminology, fundamental tree properties, binary trees, binary search trees, balanced trees, heaps, B-trees, B+ trees, and the mathematical calculations commonly encountered in technical recruitment examinations.
+
+Special attention is given to \textbf{calculating the maximum and minimum number of keys in a B+ tree from its order and height}, as the formulation strictly depends on the architectural definitions employed in the question.
+
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section I: Fundamentals of Trees}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{What is a Tree?}
+
+A \textbf{tree} is a hierarchical, non-linear data structure consisting of nodes connected by directed or undirected edges. In a rooted tree, exactly one node is designated as the \textbf{root}, and every other node has exactly one parent.
+
+From a graph-theoretic perspective, a tree is a \textbf{connected, acyclic undirected graph}. This implies that between any two nodes there exists exactly one simple path, and no closed cycles exist.
+
+Trees are indispensable when modeling hierarchical or branching relationships, such as file system folder structures, organizational hierarchies, database indexing (B/B+ trees), Document Object Models (DOM), and compiler abstract syntax trees (AST).
+
+\subsection{Basic Terminology}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l p{7.5cm} X}
+\toprule
+\textbf{Term} & \textbf{Formal Definition} & \textbf{Example} \\
+\midrule
+Node             & An individual data element in the tree                      & A directory or file \\
+Root             & The topmost node, possessing no parent                      & The root directory (\texttt{/}) \\
+Edge             & A directed/undirected link connecting two nodes             & Parent-child relationship \\
+Parent           & The immediate predecessor of a node                         & Directory containing a subdirectory \\
+Child            & A node directly succeeding another node                     & Subdirectory inside a folder \\
+Siblings         & Nodes sharing the identical parent                          & Files in the same directory \\
+Leaf Node        & An external node having zero children                       & An empty file / leaf directory \\
+Internal Node    & A non-leaf node possessing at least one child               & A folder containing items \\
+Ancestor         & Any node along the upward path from a node to the root      & Parent, grandparent, etc. \\
+Descendant       & Any node situated in the subtree below a given node         & Child, grandchild, etc. \\
+Degree of a Node & Total number of children belonging to the node              & Node with 3 children has degree 3 \\
+Degree of a Tree & The maximum degree of any node within the tree              & A binary tree has degree $\leq 2$ \\
+Path             & A continuous sequence of connected nodes                    & Root-to-leaf traversal \\
+Path Length      & Number of edges traversed along the path                    & 4 edges = path length 4 \\
+Depth of a Node  & Number of edges from the root to that node                  & Root depth is $0$ \\
+Height of a Node & Number of edges on the longest downward path to a leaf      & A leaf node has height $0$ \\
+Height of a Tree & The height of its root node (maximum depth among all nodes) & Edge count on longest path \\
+\bottomrule
+\end{tabularx}
+\caption{Fundamental tree terminology and definitions.}
+\end{table}
+
+\begin{quote}
+\textbf{Standard Height Convention:} Throughout this text, \textbf{height is measured in edges}. Consequently, a single-node tree has height $0$, and a tree of height $h$ contains $h + 1$ levels (levels $0, 1, \dots, h$).
+\end{quote}
+
+\subsection{Fundamental Mathematical Properties of Trees}
+
+\subsubsection{Property 1: Number of Edges}
+A tree containing $n$ nodes has exactly:
+\[
+\boxed{E = n - 1}
+\]
+where $E$ is the total edge count.
+\begin{itemize}
+    \item $1$ node $\implies 0$ edges.
+    \item $10$ nodes $\implies 9$ edges.
+    \item $100$ nodes $\implies 99$ edges.
+\end{itemize}
+\textbf{Proof:} The root node has zero incoming edges. Each of the remaining $n - 1$ non-root nodes possesses exactly one incoming edge from its unique parent. Hence, total edges $= n - 1$.
+
+\subsubsection{Property 2: Unique Simple Path}
+Between any two arbitrary nodes in a tree, there exists \textbf{exactly one simple path}. If two distinct paths connected the same pair, their union would form a cycle, violating the acyclic definition.
+
+\subsubsection{Property 3: Invariance of Edge Count to Topology}
+A tree with $n$ nodes contains $n - 1$ edges \emph{regardless} of whether it is perfectly balanced or degenerate (skewed into a linked list). Structural topology governs tree height and query complexity, but never the edge count.
+
+\subsubsection{Property 4: Edge Addition}
+Adding an edge between any two existing nodes in a tree creates exactly one cycle.
+
+\subsubsection{Property 5: Edge Removal}
+Removing any single edge from a tree partitions it into exactly two disconnected components (subtrees).
+
+\section{General Tree Mathematics}
+
+For general trees where internal nodes can have up to $m$ children ($m$-ary trees):
+
+\subsection{Maximum Nodes at Level $i$}
+In a rooted tree of maximum degree $m$, the maximum node capacity at level $i$ (with root at level $0$) is:
+\[
+\boxed{N_i \leq m^i}
+\]
+Level $0$ has $m^0 = 1$ node; Level $1$ has $m^1 = m$; Level $2$ has $m^2$; Level $i$ has $m^i$.
+
+\subsection{Maximum Total Nodes for Height $h$}
+Summing the geometric progression from level $0$ to level $h$:
+\[
+N_{\max} = 1 + m + m^2 + \dots + m^h = \boxed{\frac{m^{h+1} - 1}{m - 1}} \quad (m > 1)
+\]
+For example, for a ternary tree ($m = 3$) of height $h = 3$:
+\[
+N_{\max} = \frac{3^{3+1} - 1}{3 - 1} = \frac{81 - 1}{2} = 40 \text{ nodes}
+\]
+
+\subsection{Minimum Possible Height for $n$ Nodes}
+To minimize height, all levels must be packed maximally. Solving $n \leq \frac{m^{h+1}-1}{m-1}$ for $h$:
+\[
+\boxed{h_{\min} = \left\lceil \log_m\big(n(m - 1) + 1\big) \right\rceil - 1}
+\]
+For a binary tree ($m = 2$) with $n = 100$:
+\[
+h_{\min} = \lceil \log_2(101) \rceil - 1 = 7 - 1 = 6 \text{ edges}
+\]
+
+\subsection{Maximum Possible Height for $n$ Nodes}
+Without structural balancing, a tree can degenerate into a linear chain:
+\[
+\boxed{h_{\max} = n - 1}
+\]
+
+\section{Traversing a Tree}
+
+Tree traversal systematically visits every node in a defined sequence. The four standard traversal methods are:
+
+\subsection{Preorder Traversal (Root $\to$ Left $\to$ Right)}
+\begin{lstlisting}[style=pseudocode]
+PREORDER(node):
+    if node is not null:
+        visit(node)
+        PREORDER(node.left)
+        PREORDER(node.right)
+\end{lstlisting}
+Used for tree cloning, serialization, and prefix expression evaluation.
+
+\subsection{Inorder Traversal (Left $\to$ Root $\to$ Right)}
+\begin{lstlisting}[style=pseudocode]
+INORDER(node):
+    if node is not null:
+        INORDER(node.left)
+        visit(node)
+        INORDER(node.right)
+\end{lstlisting}
+\textbf{Key Rule:} In a Binary Search Tree (BST), an inorder traversal visits keys in \textbf{strictly ascending sorted order}.
+
+\subsection{Postorder Traversal (Left $\to$ Right $\to$ Root)}
+\begin{lstlisting}[style=pseudocode]
+POSTORDER(node):
+    if node is not null:
+        POSTORDER(node.left)
+        POSTORDER(node.right)
+        visit(node)
+\end{lstlisting}
+Used for bottom-up node deallocation (deleting a tree) and postfix (Reverse Polish) expression evaluation.
+
+\subsection{Level-Order Traversal (Breadth-First)}
+Visits nodes level-by-level from left to right using a FIFO queue. Used in BFS, tree serialization, and finding shortest root-to-leaf paths.
+
+\textbf{Traversal Complexity:} All four traversals visit every node exactly once:
+\[
+\text{Time Complexity} = O(n)
+\]
+Auxiliary space is $O(h)$ for recursive call stacks ($O(n)$ worst-case) and $O(n)$ for level-order queue storage.
+
+\begin{center}
+\vspace{1em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section II: Binary Trees}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{What Is a Binary Tree?}
+
+A \textbf{binary tree} is a rooted tree where every node has \textbf{at most two children}, distinguished as the \textbf{left child} and \textbf{right child}. A left child is distinct from a right child even if a parent has only one child.
+
+\subsection{Types of Binary Trees}
+
+\begin{enumerate}
+    \item \textbf{Full Binary Tree (Strict / Proper):} Every node has either $0$ or exactly $2$ children. No node has $1$ child.
+    \[
+    L = I + 1, \quad n = 2I + 1, \quad I = \frac{n - 1}{2}, \quad L = \frac{n + 1}{2}
+    \]
+    A full binary tree \textbf{must always possess an odd number of nodes}.
+    \item \textbf{Complete Binary Tree:} All levels are completely full except possibly the last level, which is filled strictly from left to right without gaps. Used in binary heaps.
+    \item \textbf{Perfect Binary Tree:} All internal nodes have $2$ children and all leaves reside at the identical depth. For height $h$:
+    \[
+    n = 2^{h+1} - 1, \quad L = 2^h, \quad I = 2^h - 1
+    \]
+    \item \textbf{Balanced Binary Tree:} A binary tree whose height is bounded to $O(\log n)$ to guarantee efficient operations (e.g., AVL, Red-Black).
+    \item \textbf{Skewed (Degenerate) Binary Tree:} Every internal node has exactly $1$ child, forming a linear list of height $h = n - 1$.
+\end{enumerate}
+
+\subsection{Full vs Complete vs Perfect Comparison}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X X}
+\toprule
+\textbf{Property} & \textbf{Full Binary Tree} & \textbf{Complete Binary Tree} & \textbf{Perfect Binary Tree} \\
+\midrule
+Internal node degree    & Exactly 2 children        & May have 1 child (at most one) & Exactly 2 children \\
+All levels filled       & Not necessarily           & All except possibly last      & Completely filled \\
+Last level layout       & No restriction            & Left-to-right without gaps    & Full left-to-right \\
+All leaves equal depth  & Not necessarily           & Not necessarily               & Yes \\
+Total node parity       & Always odd ($2I+1$)       & Odd or Even                   & Always odd ($2^{h+1}-1$) \\
+Node count at height $h$& Varies                    & $2^h \dots 2^{h+1}-1$         & Exactly $2^{h+1}-1$ \\
+\bottomrule
+\end{tabularx}
+\caption{Detailed comparison between Full, Complete, and Perfect binary trees.}
+\end{table}
+
+\section{Important Binary Tree Formulas}
+
+Assuming height $h$ is measured in edges and root is at level $0$:
+
+\subsection{Fundamental Extremum Bounds}
+\begin{itemize}
+    \item \textbf{Max nodes at level $i$:} $N_i^{\max} = 2^i$.
+    \item \textbf{Max total nodes for height $h$:} $N_{\max} = 2^{h+1} - 1$.
+    \item \textbf{Max leaves for height $h$:} $L_{\max} = 2^h$.
+    \item \textbf{Min nodes for height $h$:} $N_{\min} = h + 1$ (skewed tree).
+    \item \textbf{Min height for $n$ nodes:} $h_{\min} = \lceil \log_2(n + 1) \rceil - 1$.
+\end{itemize}
+
+\subsection{Theorem: Leaves vs Two-Child Nodes ($n_0 = n_2 + 1$)}
+In \textbf{any} nonempty binary tree (not just full binary trees), let $n_0$ be leaves, $n_1$ be single-child nodes, and $n_2$ be two-child nodes:
+\[
+\boxed{n_0 = n_2 + 1}
+\]
+\textbf{Derivation:}
+The total number of nodes is $n = n_0 + n_1 + n_2$.
+The total number of edges is $E = n - 1 = n_1 + 2n_2$.
+Substituting $n$:
+\[
+(n_0 + n_1 + n_2) - 1 = n_1 + 2n_2 \implies n_0 - 1 = n_2 \implies \boxed{n_0 = n_2 + 1}
+\]
+
+\subsection{Number of Null Child Pointers}
+A binary tree with $n$ nodes has $2n$ total pointer fields. Exactly $n - 1$ fields point to child nodes (edges). Hence:
+\[
+\boxed{\text{Null Pointers} = 2n - (n - 1) = n + 1}
+\]
+
+\section{Array Representation of a Binary Tree}
+
+\subsection{Zero-Based Indexing Formulas}
+Root at index $0$:
+\[
+\text{Left}(i) = 2i + 1, \quad \text{Right}(i) = 2i + 2, \quad \text{Parent}(i) = \left\lfloor \frac{i - 1}{2} \right\rfloor
+\]
+
+\subsection{One-Based Indexing Formulas}
+Root at position $1$:
+\[
+\text{Left}(i) = 2i, \quad \text{Right}(i) = 2i + 1, \quad \text{Parent}(i) = \left\lfloor \frac{i}{2} \right\rfloor
+\]
+
+\section{Number of Structurally Different Binary Trees}
+
+For $n$ unlabeled nodes, the number of distinct binary tree shapes is given by the \textbf{Catalan Number} $C_n$:
+\[
+\boxed{C_n = \frac{1}{n+1} \binom{2n}{n} = \frac{(2n)!}{(n+1)! \, n!}}
+\]
+Values: $C_0=1, \; C_1=1, \; C_2=2, \; C_3=5, \; C_4=14, \; C_5=42, \; C_6=132$.
+This also equals the number of distinct Binary Search Trees (BSTs) that can be formed from $n$ distinct keys.
+
+\begin{center}
+\vspace{1em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section III: Binary Search Trees \& Balanced Trees}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Binary Search Tree (BST)}
+
+A \textbf{Binary Search Tree} enforces the search ordering property:
+\[
+\text{All keys in Left Subtree} < \text{Parent Key} < \text{All keys in Right Subtree}
+\]
+
+\subsection{Time Complexity}
+Search, insertion, and deletion operate in $O(h)$ time:
+\begin{itemize}
+    \item Balanced BST: $h = O(\log n) \implies O(\log n)$ operations.
+    \item Skewed BST: $h = O(n) \implies O(n)$ worst-case operations.
+\end{itemize}
+
+\subsection{BST Node Deletion: Three Cases}
+\begin{enumerate}
+    \item \textbf{Node is a Leaf:} Directly unlink and delete ($O(1)$).
+    \item \textbf{Node has One Child:} Bypass node, linking parent directly to child ($O(1)$).
+    \item \textbf{Node has Two Children:} Replace value with its \textbf{Inorder Successor} (smallest node in right subtree) or \textbf{Inorder Predecessor} (largest in left subtree), then recursively delete that successor/predecessor node ($O(h)$).
+\end{enumerate}
+
+\section{AVL Tree (Adelson-Velsky and Landis)}
+
+An \textbf{AVL tree} is a strictly height-balanced BST where every node satisfies:
+\[
+\boxed{\text{Balance Factor (BF)} = h(\text{Left Subtree}) - h(\text{Right Subtree}) \in \{-1, \; 0, \; +1\}}
+\]
+If $|BF| \geq 2$, the tree is rebalanced using rotations:
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Imbalance Case} & \textbf{Triggering Insertion Location} & \textbf{Rebalancing Rotation} \\
+\midrule
+LL (Left-Left)   & Inserted in left subtree of left child   & Single Right Rotation \\
+RR (Right-Right) & Inserted in right subtree of right child & Single Left Rotation \\
+LR (Left-Right)  & Inserted in right subtree of left child  & Left Rotation on child, then Right on parent \\
+RL (Right-Left)  & Inserted in left subtree of right child  & Right Rotation on child, then Left on parent \\
+\bottomrule
+\end{tabularx}
+\caption{The four AVL tree imbalance scenarios and rotation solutions.}
+\end{table}
+
+\subsection{Minimum Nodes in an AVL Tree of Height $h$}
+Let $N(h)$ be the minimum node count for an AVL tree of height $h$:
+\[
+\boxed{N(h) = 1 + N(h - 1) + N(h - 2)}, \quad N(-1) = 0, \; N(0) = 1
+\]
+This recurrence connects to the Fibonacci sequence:
+\[
+\boxed{N(h) = F_{h+3} - 1} \quad (F_0=0, F_1=1, F_2=1, F_3=2, \dots)
+\]
+\begin{center}
+\small
+\begin{tabular}{ccccccccc}
+\toprule
+$h$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\
+\midrule
+$N(h)$ & 1 & 2 & 4 & 7 & 12 & 20 & 33 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Red-Black Tree}
+
+A \textbf{Red-Black tree} is a self-balancing BST with node colors (Red/Black) ensuring:
+\begin{enumerate}
+    \item Every node is either Red or Black.
+    \item The root is always Black.
+    \item All external NIL leaves are Black.
+    \item If a node is Red, both of its children must be Black (no two consecutive Reds).
+    \item Every path from a node to descendant NIL leaves contains identical Black nodes (equal Black-height).
+\end{enumerate}
+
+\subsection{Height Bound}
+For $n$ internal nodes, the height $h$ in edges satisfies:
+\[
+\boxed{h \leq 2 \log_2(n + 1)}
+\]
+
+\subsection{AVL vs Red-Black Tree Comparison}
+\begin{itemize}
+    \item \textbf{AVL:} More rigidly balanced. Faster lookups ($O(\log n)$ with smaller constant factors). Best for lookup-heavy workloads.
+    \item \textbf{Red-Black:} More relaxed balance (height up to $2 \log_2 n$). Fewer rotations during insert/delete. Best for write-intensive workloads (used in C++ \texttt{std::map}, Java \texttt{TreeMap}, Linux CFS).
+\end{itemize}
+
+\begin{center}
+\vspace{1em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section IV: B-Trees and B+ Trees}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{B-Tree}
+
+A \textbf{B-tree} is a balanced, multiway search tree optimized for systems with block-based storage (disk pages, SSD blocks).
+
+\subsection{Order $m$ Specification}
+Let order $m$ denote the \textbf{maximum number of children} an internal node can have:
+\begin{itemize}
+    \item Maximum children per internal node: $m$.
+    \item Maximum keys per node: $m - 1$.
+    \item Minimum children in non-root internal node: $\lceil m/2 \rceil$.
+    \item Minimum keys in non-root internal node: $\lceil m/2 \rceil - 1$.
+    \item Root node: Has at least $2$ children (if non-leaf) and at least $1$ key.
+    \item All leaf nodes reside at the exact same depth.
+\end{itemize}
+
+\section{What Is a B+ Tree?}
+
+A \textbf{B+ tree} is a balanced multiway search tree where:
+\begin{enumerate}
+    \item \textbf{All actual data records or record pointers reside exclusively in leaf nodes.}
+    \item Internal nodes store only \textbf{separator (routing) keys} and child pointers.
+    \item All leaf nodes are linked sequentially in a \textbf{doubly linked list}, facilitating $O(1)$ contiguous range scans.
+\end{enumerate}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Feature} & \textbf{B-Tree} & \textbf{B+ Tree} \\
+\midrule
+Data Storage Location     & Internal nodes AND leaf nodes           & Leaf nodes exclusively \\
+Internal Node Contents    & Keys, child pointers, AND data pointers & Separator routing keys and child pointers \\
+Leaf Node Linking         & Leaves not linked together              & Leaves linked in sequential linked list \\
+Range Queries             & Requires full tree inorder traversal    & Extremely fast sequential leaf scan \\
+Redundant Keys            & Every key appears exactly once          & Keys in internal nodes duplicate leaf keys \\
+Tree Height for same data & Taller (fewer keys fit per internal node)& Shorter (higher fanout per page) \\
+Application               & File systems, search engines            & Database indexing (InnoDB, PostgreSQL, SQLite) \\
+\bottomrule
+\end{tabularx}
+\caption{Structural comparison between B-Tree and B+ Tree architectures.}
+\end{table}
+
+\section{Critical B+ Tree Calculation: Maximum Number of Keys}
+
+\subsection{Standard Convention Formulation}
+Assuming:
+\begin{itemize}
+    \item Order $m$ = maximum children per internal node.
+    \item Each internal node holds at most $m - 1$ separator keys.
+    \item Each leaf holds at most $m - 1$ data records.
+    \item Height $h$ = edge count from root to leaf (root at level $0$, leaves at level $h$).
+\end{itemize}
+
+The maximum number of leaf nodes at level $h$ is $m^h$. Therefore, the maximum number of data records is:
+\[
+\boxed{N_{\max} = (m - 1) m^h}
+\]
+
+\subsubsection{Example: Order $m=4$, Height $h=3$ Edges}
+\begin{align*}
+\text{Max leaf nodes} &= 4^3 = 64 \\
+\text{Max data entries per leaf} &= 4 - 1 = 3 \\
+\boxed{N_{\max}} &= 64 \times 3 = \mathbf{192 \text{ records}}
+\end{align*}
+
+\subsection{When Height Means Levels ($H$)}
+If height is defined as total levels $H$ (where $h = H - 1$):
+\[
+\boxed{N_{\max} = (m - 1) m^{H - 1}}
+\]
+For $m=4, H=3$ levels: $N_{\max} = 3 \times 4^2 = 48$ records.
+
+\section{Maximum Key Entries Across All B+ Tree Nodes}
+
+If an exam question asks for \textbf{all physical key entries} stored across both internal and leaf nodes:
+\begin{align*}
+\text{Internal Nodes} &= \sum_{i=0}^{h-1} m^i = \frac{m^h - 1}{m - 1} \\
+\text{Internal Separator Keys} &= (m - 1) \left( \frac{m^h - 1}{m - 1} \right) = m^h - 1 \\
+\text{Leaf Data Keys} &= (m - 1) m^h \\
+\text{Total Physical Key Slots} &= (m^h - 1) + (m - 1) m^h = \boxed{m^{h+1} - 1}
+\end{align*}
+For $m=4, h=3$: $K_{\text{total}} = 4^4 - 1 = 255$ key slots ($192$ data records $+$ $63$ internal separators).
+
+\section{Minimum Number of Keys in a B+ Tree}
+
+Let $a = \lceil m/2 \rceil$ be the minimum child capacity of non-root internal nodes, and $q = \lceil (m - 1)/2 \rceil$ be the minimum entry capacity of non-root leaves.
+
+For height $h \geq 1$, the root has at least $2$ children, and subsequent internal nodes have at least $a$ children.
+\[
+\text{Min Leaf Nodes} = L_{\min} = 2 a^{h - 1} = 2 \left\lceil \frac{m}{2} \right\rceil^{h - 1}
+\]
+\[
+\boxed{N_{\min} = L_{\min} \times q = 2 \left\lceil \frac{m}{2} \right\rceil^{h - 1} \left\lceil \frac{m - 1}{2} \right\rceil}
+\]
+For $m=4, h=3$:
+\begin{itemize}
+    \item $a = \lceil 4/2 \rceil = 2$, $q = \lceil 3/2 \rceil = 2$.
+    \item $L_{\min} = 2 \times 2^{3-1} = 8$ leaves.
+    \item $\boxed{N_{\min} = 8 \times 2 = 16 \text{ records}}$.
+\end{itemize}
+
+\section{B-Tree Key-Count Calculations}
+
+In a B-tree of order $m$ and height $h$ edges, every node (internal and leaf) holds actual data keys:
+\[
+\boxed{K_{\max} = m^{h+1} - 1}
+\]
+\[
+\boxed{K_{\min} = 2 \left\lceil \frac{m}{2} \right\rceil^h - 1}
+\]
+For $m=4, h=3$:
+\[
+K_{\max} = 4^4 - 1 = 255, \quad K_{\min} = 2(2^3) - 1 = 15 \text{ keys}
+\]
+
+\begin{center}
+\vspace{1em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section V: Other Important Tree Structures}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{Trie (Prefix Tree)}
+A tree structure used for fast string retrieval by sharing common prefixes.
+\begin{itemize}
+    \item \textbf{Height:} $h \leq L$, where $L$ is the length of the longest string.
+    \item \textbf{Lookup Complexity:} $O(L)$ time, completely independent of the number of words $n$.
+    \item \textbf{Max Nodes for alphabet $\sigma$ and length $L$:}
+    \[
+    N_{\max} = \frac{\sigma^{L+1} - 1}{\sigma - 1}
+    \]
+\end{itemize}
+
+\section{Expression Trees}
+Binary trees where leaves are operands and internal nodes are operators ($+,-,\times,\div$).
+\begin{itemize}
+    \item Preorder Traversal yields \textbf{Prefix notation}.
+    \item Inorder Traversal yields \textbf{Infix notation}.
+    \item Postorder Traversal yields \textbf{Postfix notation}.
+    \item If all operators are binary: $L = I + 1 \implies \mathbf{n = 2I + 1}$.
+\end{itemize}
+
+\section{Huffman Coding Tree}
+A full binary tree used for variable-length prefix-free data compression:
+\begin{itemize}
+    \item Internal Nodes: $I = L - 1$; Total Nodes: $n = 2L - 1$.
+    \item Weighted Path Length (Cost): $C = \sum_{i=1}^L f_i d_i$, where $f_i$ is frequency and $d_i$ is tree depth.
+\end{itemize}
+
+\section{Segment Tree}
+Stores interval information (range sums, minimums, maximums):
+\begin{itemize}
+    \item Full binary tree with $n$ leaves has exactly $\mathbf{2n - 1}$ logical nodes.
+    \item Standard array allocation size is bounded by $\mathbf{4n}$.
+    \item Build: $O(n)$; Range Query: $O(\log n)$; Point Update: $O(\log n)$.
+\end{itemize}
+
+\begin{center}
+\vspace{1em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section VI: Master Complexity Comparison}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X X}
+\toprule
+\textbf{Tree Data Structure} & \textbf{Search Complexity} & \textbf{Insert Complexity} & \textbf{Delete Complexity} \\
+\midrule
+Ordinary Binary Tree & $O(n)$              & $O(n)$              & $O(n)$ \\
+Ordinary BST         & $O(h)$ ($O(n)$ max)& $O(h)$              & $O(h)$ \\
+Balanced BST (AVL)   & $O(\log n)$         & $O(\log n)$         & $O(\log n)$ \\
+Red-Black Tree       & $O(\log n)$         & $O(\log n)$         & $O(\log n)$ \\
+Binary Heap          & $O(n)$ arbitrary    & $O(\log n)$         & $O(\log n)$ extract root \\
+B-Tree               & $O(\log n)$         & $O(\log n)$         & $O(\log n)$ \\
+B+ Tree              & $O(\log n)$         & $O(\log n)$         & $O(\log n)$ \\
+Trie (Prefix Tree)   & $O(L)$ key length   & $O(L)$              & $O(L)$ \\
+Segment Tree         & $O(\log n)$ range   & Static build $O(n)$ & Point update $O(\log n)$ \\
+Huffman Tree         & Static tree         & Build $O(n \log n)$ & Decode $O(L)$ \\
+\bottomrule
+\end{tabularx}
+\caption{Master operational time complexity across tree architectures.}
+\end{table}
+
+\begin{center}
+\vspace{1em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section VII: Solved Mathematical Problems}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\begin{quote}
+\textbf{Problem 1: Nodes in Perfect Binary Tree of Height 6}\\
+$n = 2^{6+1} - 1 = 2^7 - 1 = \mathbf{127 \text{ nodes}}$. Leaves $L = 2^6 = \mathbf{64}$. Internal $I = 64 - 1 = \mathbf{63}$.
+\end{quote}
+
+\begin{quote}
+\textbf{Problem 2: Full Binary Tree with 25 Leaves}\\
+$I = L - 1 = 25 - 1 = \mathbf{24 \text{ internal nodes}}$. Total $n = 24 + 25 = \mathbf{49 \text{ nodes}}$.
+\end{quote}
+
+\begin{quote}
+\textbf{Problem 3: Minimum and Maximum Height for 40 Nodes}\\
+$h_{\min} = \lceil \log_2(41) \rceil - 1 = 6 - 1 = \mathbf{5 \text{ edges}}$. $h_{\max} = n - 1 = \mathbf{39 \text{ edges}}$.
+\end{quote}
+
+\begin{quote}
+\textbf{Problem 4: Leaves from Two-Child Node Count ($n=50, n_2=18$)}\\
+$n_0 = n_2 + 1 = 18 + 1 = \mathbf{19 \text{ leaves}}$. Single child nodes $n_1 = 50 - 19 - 18 = \mathbf{13}$.
+\end{quote}
+
+\begin{quote}
+\textbf{Problem 5: Can a Full Binary Tree Have Exactly 100 Nodes?}\\
+No. A full binary tree has $n = 2I + 1$, which is strictly \textbf{odd}. Since $100$ is even, it is impossible.
+\end{quote}
+
+\begin{quote}
+\textbf{Problem 6: Distinct BST Structures for 4 Keys}\\
+$C_4 = \frac{1}{5} \binom{8}{4} = \frac{70}{5} = \mathbf{14 \text{ distinct BSTs}}$.
+\end{quote}
+
+\begin{quote}
+\textbf{Problem 7: B+ Tree Capacity ($m=4$, Height 4 edges, 3 records/leaf)}\\
+$L_{\max} = 4^4 = 256$ leaves. $\mathbf{N_{\max}} = 256 \times 3 = \mathbf{768 \text{ data records}}$.
+\end{quote}
+
+\begin{quote}
+\textbf{Problem 8: B-Tree Keys ($m=6$, Height 2 edges)}\\
+$K_{\max} = 6^{2+1} - 1 = 216 - 1 = \mathbf{215 \text{ keys}}$.\\
+$K_{\min} = 2 \lceil 6/2 \rceil^2 - 1 = 2(3^2) - 1 = \mathbf{17 \text{ keys}}$.
+\end{quote}
+
+\begin{quote}
+\textbf{Problem 9: Feasible Height for 18-Node AVL Tree}\\
+$N(4) = 12, N(5) = 20$. Since $18 < 20$, height $5$ is impossible. Max feasible height is $\mathbf{h = 4}$.
+\end{quote}
+
+\begin{quote}
+\textbf{Problem 10: Segment Tree Nodes for Array of Size 75}\\
+$N = 2(75) - 1 = \mathbf{149 \text{ logical nodes}}$ (buffer bound $\approx 4 \times 75 = 300$).
+\end{quote}
+
+\begin{center}
+\vspace{1em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section VIII: Master Formula Cheat-Sheet}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Tree Concept} & \textbf{Master Formula} \\
+\midrule
+Edge count for $n$ nodes & $E = n - 1$ \\
+Max nodes at level $i$ & $m^i$ (general) $\;/\; 2^i$ (binary) \\
+Max nodes for height $h$ & $\frac{m^{h+1}-1}{m-1}$ (general) $\;/\; 2^{h+1}-1$ (binary) \\
+Min height for $n$ nodes & $\lceil \log_m(n(m-1)+1) \rceil - 1$ \\
+Full binary tree leaves & $L = I + 1$ \\
+Full binary tree total nodes & $n = 2I + 1$ (always odd) \\
+Leaf vs 2-child relation & $n_0 = n_2 + 1$ (holds for \textbf{all} binary trees) \\
+Null child pointers & $n + 1$ \\
+Number of binary tree shapes & $C_n = \frac{1}{n+1} \binom{2n}{n}$ (Catalan Number) \\
+AVL min nodes recurrence & $N(h) = 1 + N(h-1) + N(h-2) = F_{h+3}-1$ \\
+Red-Black height upper bound & $h \leq 2 \log_2(n+1)$ \\
+B+ Tree max data records & $(m - 1) m^h$ \\
+B+ Tree max physical key slots & $m^{h+1} - 1$ \\
+B+ Tree min data records ($h \geq 1$) & $2 \lceil m/2 \rceil^{h-1} \lceil (m-1)/2 \rceil$ \\
+B-Tree max keys & $m^{h+1} - 1$ \\
+B-Tree min keys ($h \geq 1$) & $2 \lceil m/2 \rceil^h - 1$ \\
+Binary Heap height & $h = \lfloor \log_2 n \rfloor$ \\
+Segment Tree logical nodes & $2n - 1$ \\
+\bottomrule
+\end{tabularx}
+\caption{Comprehensive master mathematical formula sheet for recruitment examinations.}
+\end{table}
+
+\begin{center}
+\vspace{1em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section IX: Common Examination Traps}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\begin{enumerate}
+    \item \textbf{Edges vs Levels:} Height in edges ($h$) has $h + 1$ levels. If an exam defines height as levels $H$, replace $h$ with $H - 1$.
+    \item \textbf{Full vs Complete:} Full means every node has $0$ or $2$ children. Complete means levels are fully packed with the last level filled left-to-right.
+    \item \textbf{Even Node Count Rule:} A full binary tree \emph{cannot} have an even number of nodes.
+    \item \textbf{BST Ordering vs Heap Ordering:} In a BST, left $<$ parent $<$ right (horizontal order). In a heap, parent $\geq$ children (vertical order, with no left/right constraint).
+    \item \textbf{B+ Tree Separators vs Data Records:} Internal keys in a B+ tree are routing separators and duplicate leaf keys. Total physical key slots ($m^{h+1}-1$) exceeds unique data records ($(m-1)m^h$).
+    \item \textbf{B+ Tree Order Ambiguity:} Always check whether order $m$ denotes maximum children ($m$ children, $m-1$ keys) or maximum keys ($2d$ keys, $2d+1$ children).
+    \item \textbf{Arbitrary Key Search in Heap:} Searching for an arbitrary key in a binary heap takes $O(n)$, not $O(\log n)$.
+\end{enumerate}
+
+\begin{quote}
+\textbf{Final Architectural Takeaway:} Tree structures balance operational time by exploiting geometric branching. Binary trees, AVL trees, and Red-Black trees optimize memory-resident logarithmic searches, while B-trees and B+ trees optimize disk and page block I/O by minimizing tree height through massive branching fanout.
+\end{quote}

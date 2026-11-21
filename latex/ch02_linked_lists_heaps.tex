@@ -1,0 +1,1023 @@
+\chapter{Data Structures --- Linked Lists and Heaps}
+\label{ch:linked_lists_and_heaps}
+
+This chapter covers three major linked-list structures---singly linked lists, doubly linked lists, and circular linked lists---followed by heaps, with particular emphasis on step-by-step max-heap construction, insertion, deletion, and complexity analysis.
+
+The explanations and implementations are aimed at Bangladesh government IT recruitment examinations, including Assistant Programmer, AD (ICT), Assistant Network Engineer, Assistant Maintenance Engineer, and Assistant Database Administrator positions.
+
+\begin{center}
+\vspace{0.5em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section I: Linked Lists}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{What is a Linked List?}
+
+A \textbf{linked list} is a linear data structure consisting of a sequence of nodes. Each node stores data and one or more links (pointers) to other nodes.
+
+Unlike an array, whose elements are conventionally stored in contiguous memory locations, the nodes of a linked list can occupy different memory locations across the heap. Pointers connect them into a coherent logical sequence.
+
+A node in a singly linked list contains two fields:
+\begin{itemize}
+    \item \textbf{Data:} The value stored in the node.
+    \item \textbf{Next pointer:} The memory address of the next node in the sequence.
+\end{itemize}
+
+For example, consider a list containing $10$, $20$, and $30$. The first node stores $10$ and points to the node containing $20$; the second points to the node containing $30$; the final node's next pointer is \texttt{NULL} (or \texttt{nullptr}) in a conventional, non-circular singly linked list:
+\[
+\text{Head} \longrightarrow [10 \mid \bullet] \longrightarrow [20 \mid \bullet] \longrightarrow [30 \mid \text{nullptr}]
+\]
+
+\subsection{Important Terminology}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Term} & \textbf{Meaning} \\
+\midrule
+Node                      & An individual unit containing data and pointer/link fields \\
+Head                      & A pointer or reference addressing the first node in the list \\
+Tail                      & A pointer or reference addressing the last node, if maintained \\
+Link                      & A pointer or reference connecting one node to another \\
+\texttt{NULL} / \texttt{nullptr} & A sentinel value indicating the absence of a successor node \\
+Traversal                 & Visiting each node sequentially from head to end \\
+Insertion                 & Allocating and linking a new node into the list \\
+Deletion                  & Unlinking and deallocating an existing node \\
+Dynamic Memory Allocation & Allocating node memory at runtime as needed \\
+\bottomrule
+\end{tabularx}
+\caption{Fundamental linked list terminology.}
+\end{table}
+
+In C++, nodes are commonly created dynamically using \texttt{new} and deallocated using \texttt{delete}. In C, \texttt{malloc()} and \texttt{free()} are standard.
+
+\section{Why Use Linked Lists Instead of Arrays?}
+
+An array is usually preferable when fast indexed access ($O(1)$ random access) is important. A linked list is advantageous when the application performs frequent insertions or deletions at positions where the target node or link is already known.
+
+Consider an array containing:
+\[
+[10, \; 20, \; 30, \; 40]
+\]
+Inserting $25$ between $20$ and $30$ requires shifting all subsequent elements ($30$ and $40$) to the right, incurring $O(n)$ time.
+
+In a linked list, if a pointer to the node containing $20$ is already available, a new node containing $25$ can be inserted in $O(1)$ time by adjusting two pointers. Existing nodes remain stationary in memory. However, locating the node containing $20$ from the head may itself require an $O(n)$ linear traversal.
+
+\subsection{Array versus Linked List Comparison}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Basis} & \textbf{Array} & \textbf{Linked List} \\
+\midrule
+Memory Layout                   & Contiguous memory block                           & Scattered nodes linked via pointers \\
+Size Flexibility                & Fixed (static) or reallocation cost (dynamic)      & Fully dynamic; grows/shrinks per node \\
+Random Access                   & $O(1)$ via index arithmetic                       & $O(n)$ sequential link traversal \\
+Access to First Element         & $O(1)$                                            & $O(1)$ via \texttt{head} pointer \\
+Insert at Beginning             & $O(n)$ due to element shifting                    & $O(1)$ pointer reassignment \\
+Delete at Beginning             & $O(n)$ due to element shifting                    & $O(1)$ pointer reassignment \\
+Insert After Known Node         & $O(n)$ due to element shifting                    & $O(1)$ pointer updates \\
+Search in Unsorted Data         & $O(n)$                                            & $O(n)$ \\
+Extra Memory Overhead           & Minimal structural overhead                       & Extra memory per node for pointers \\
+Cache Locality                  & Excellent (spatial locality)                      & Generally poor (cache misses common) \\
+Binary Search Capability        & $O(\log n)$ on sorted array                       & Infeasible for $O(\log n)$ (middle node is not $O(1)$) \\
+\bottomrule
+\end{tabularx}
+\caption{Architectural comparison between Arrays and Linked Lists.}
+\end{table}
+
+\begin{quote}
+\textbf{Important Exam Distinction:} Inserting a node into a linked list takes $O(1)$ time \emph{if the predecessor pointer is already held}. Finding that position from scratch still takes $O(n)$ traversal time.
+\end{quote}
+
+\section{Singly Linked List}
+
+\subsection{Definition and Node Structure}
+
+A \textbf{singly linked list (SLL)} is a linked list in which each node contains data and exactly one pointer to the next node. Each node can directly identify its successor, but cannot directly identify its predecessor.
+
+The first node is accessed through \texttt{head}. The last node is identified by \texttt{next == nullptr}.
+
+\begin{lstlisting}[style=cppstyle]
+struct Node {
+    int data;
+    Node* next;
+
+    Node(int value) : data(value), next(nullptr) {}
+};
+\end{lstlisting}
+
+\subsubsection{Main Characteristics}
+\begin{enumerate}
+    \item Each node has exactly one link field.
+    \item Traversal proceeds strictly forward.
+    \item Nodes are inserted or removed without shifting remaining elements in memory.
+    \item Reverse traversal is not directly supported without auxiliary structures (e.g., stack) or pointer reversal.
+    \item Accessing the $k$-th element requires $O(k)$ pointer dereferences from \texttt{head}.
+\end{enumerate}
+
+\subsection{Traversing a Singly Linked List}
+
+Traversal visits every node in order from \texttt{head} until \texttt{nullptr} is reached.
+
+\begin{lstlisting}[style=cppstyle]
+void display(Node* head) {
+    Node* current = head;
+    while (current != nullptr) {
+        cout << current->data << " ";
+        current = current->next;
+    }
+    cout << '\n';
+}
+\end{lstlisting}
+
+\textbf{Complexity:} Time is $O(n)$ as all $n$ nodes are visited once; auxiliary space is $O(1)$.
+
+\subsection{Insertion Operations}
+
+\subsubsection{A. Insert at the Beginning (Front)}
+To insert value $x$ before the current head:
+\begin{enumerate}
+    \item Allocate a new node containing $x$.
+    \item Point \texttt{newNode->next} to the current \texttt{head}.
+    \item Reassign \texttt{head} to \texttt{newNode}.
+\end{enumerate}
+
+\begin{lstlisting}[style=cppstyle]
+void insertFront(Node*& head, int value) {
+    Node* newNode = new Node(value);
+    newNode->next = head;
+    head = newNode;
+}
+\end{lstlisting}
+
+\textbf{Time Complexity:} $O(1)$. If the list is initially empty (\texttt{head == nullptr}), \texttt{newNode->next} becomes \texttt{nullptr}, and \texttt{newNode} correctly becomes the head.
+
+\subsubsection{B. Insert at the End (Tail)}
+To append a node at the tail:
+\begin{enumerate}
+    \item Allocate the new node with \texttt{next = nullptr}.
+    \item If \texttt{head == nullptr}, set \texttt{head = newNode}.
+    \item Otherwise, traverse from \texttt{head} to the node where \texttt{current->next == nullptr}.
+    \item Assign \texttt{current->next = newNode}.
+\end{enumerate}
+
+\begin{lstlisting}[style=cppstyle]
+void insertEnd(Node*& head, int value) {
+    Node* newNode = new Node(value);
+    if (head == nullptr) {
+        head = newNode;
+        return;
+    }
+    Node* current = head;
+    while (current->next != nullptr) {
+        current = current->next;
+    }
+    current->next = newNode;
+}
+\end{lstlisting}
+
+\textbf{Time Complexity:} $O(n)$ when only \texttt{head} is tracked. If an explicit \texttt{tail} pointer is maintained, insertion at the end is $O(1)$.
+
+\subsubsection{C. Insert After a Specified Node}
+Suppose \texttt{current} points to the node after which the new node is to be inserted:
+\begin{enumerate}
+    \item Allocate \texttt{newNode}.
+    \item Set \texttt{newNode->next = current->next}.
+    \item Set \texttt{current->next = newNode}.
+\end{enumerate}
+
+\begin{lstlisting}[style=cppstyle]
+void insertAfter(Node* current, int value) {
+    if (current == nullptr) return;
+    Node* newNode = new Node(value);
+    newNode->next = current->next;
+    current->next = newNode;
+}
+\end{lstlisting}
+
+\begin{quote}
+\textbf{Common Exam Trap:} Always set \texttt{newNode->next} \emph{before} overwriting \texttt{current->next}. Overwriting \texttt{current->next} first breaks the link to the remainder of the list, causing memory leaks and orphaned nodes.
+\end{quote}
+
+\subsection{Deletion Operations}
+
+\subsubsection{A. Delete the First Node (Front)}
+\begin{lstlisting}[style=cppstyle]
+void deleteFront(Node*& head) {
+    if (head == nullptr) return;
+    Node* temp = head;
+    head = head->next;
+    delete temp;
+}
+\end{lstlisting}
+\textbf{Time Complexity:} $O(1)$.
+
+\subsubsection{B. Delete a Node Containing a Target Value}
+Deleting a value requires maintaining two pointers: \texttt{current} (the node being examined) and \texttt{previous} (the node preceding \texttt{current}).
+
+\begin{lstlisting}[style=cppstyle]
+void deleteValue(Node*& head, int value) {
+    Node* current = head;
+    Node* previous = nullptr;
+
+    while (current != nullptr && current->data != value) {
+        previous = current;
+        current = current->next;
+    }
+
+    if (current == nullptr) return; // Value not found
+
+    if (previous == nullptr) {
+        head = current->next; // Target is head
+    } else {
+        previous->next = current->next; // Bypass current
+    }
+    delete current;
+}
+\end{lstlisting}
+
+\textbf{Time Complexity:} $O(n)$ worst-case to locate the element.
+
+\subsection{Advantages and Disadvantages of Singly Linked Lists}
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Dynamic sizing without pre-allocation overhead.
+    \item $O(1)$ insertion and deletion at the front.
+    \item No need to shift memory elements upon modification.
+    \item Simpler pointer management and lower memory overhead than doubly linked lists.
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Unidirectional traversal only.
+    \item No $O(1)$ random access.
+    \item Deleting an arbitrary known node requires locating its predecessor ($O(n)$ search).
+    \item Extra pointer memory per node ($4$ or $8$ bytes).
+    \item Unfriendly to CPU cache lines due to non-contiguous heap allocations.
+\end{itemize}
+
+\subsection{Applications}
+\begin{itemize}
+    \item Implementing dynamic stacks and queues.
+    \item Representing adjacency lists in graph algorithms.
+    \item Separate chaining collision resolution in hash tables.
+    \item Polynomial manipulation and arbitrary-precision arithmetic.
+\end{itemize}
+
+\section{Doubly Linked List}
+
+\subsection{Definition and Node Structure}
+
+A \textbf{doubly linked list (DLL)} is a linked list in which each node contains:
+\begin{enumerate}
+    \item Data payload.
+    \item A pointer to the previous node (\texttt{prev}).
+    \item A pointer to the next node (\texttt{next}).
+\end{enumerate}
+
+The first node has \texttt{prev == nullptr}, and the last node has \texttt{next == nullptr}.
+
+\begin{lstlisting}[style=cppstyle]
+struct DNode {
+    int data;
+    DNode* prev;
+    DNode* next;
+
+    DNode(int value) : data(value), prev(nullptr), next(nullptr) {}
+};
+\end{lstlisting}
+
+\subsection{Singly versus Doubly Linked Lists}
+
+\textbf{Advantages of DLL over SLL:}
+\begin{itemize}
+    \item Supports bidirectional traversal (forward and backward).
+    \item Deletion of a known node is $O(1)$ because the predecessor is accessible directly via \texttt{node->prev}.
+    \item Inserting before a known node is $O(1)$.
+\end{itemize}
+
+\textbf{Disadvantages of DLL:}
+\begin{itemize}
+    \item Requires two pointer fields per node, increasing memory overhead.
+    \item Every insertion and deletion requires updating up to four pointers, increasing code complexity and bug potential.
+\end{itemize}
+
+\subsection{Insertion Operations}
+
+\subsubsection{A. Insert at the Beginning}
+\begin{lstlisting}[style=cppstyle]
+void insertFront(DNode*& head, int value) {
+    DNode* newNode = new DNode(value);
+    newNode->next = head;
+    if (head != nullptr) {
+        head->prev = newNode;
+    }
+    head = newNode;
+}
+\end{lstlisting}
+\textbf{Time Complexity:} $O(1)$.
+
+\subsubsection{B. Insert After a Known Node}
+\begin{lstlisting}[style=cppstyle]
+void insertAfter(DNode* current, int value) {
+    if (current == nullptr) return;
+    DNode* newNode = new DNode(value);
+
+    newNode->next = current->next;
+    newNode->prev = current;
+
+    if (current->next != nullptr) {
+        current->next->prev = newNode;
+    }
+    current->next = newNode;
+}
+\end{lstlisting}
+\textbf{Time Complexity:} $O(1)$ when \texttt{current} is given.
+
+\subsection{Deletion of a Known Node}
+
+A major advantage of a DLL is unlinking a known node in $O(1)$ without needing to traverse from the head:
+
+\begin{lstlisting}[style=cppstyle]
+void deleteNode(DNode*& head, DNode* node) {
+    if (node == nullptr) return;
+
+    if (node->prev != nullptr) {
+        node->prev->next = node->next;
+    } else {
+        head = node->next; // node was head
+    }
+
+    if (node->next != nullptr) {
+        node->next->prev = node->prev;
+    }
+    delete node;
+}
+\end{lstlisting}
+\textbf{Time Complexity:} $O(1)$.
+
+\subsection{Applications of Doubly Linked Lists}
+\begin{itemize}
+    \item Web browser navigation history (Back and Forward buttons).
+    \item Undo and Redo functionality in editors.
+    \item Least Recently Used (LRU) Cache implementation (combined with a hash map).
+    \item Media player playlists with Next and Previous track navigation.
+    \item Operating system thread and process schedulers.
+\end{itemize}
+
+\section{Circular Linked List}
+
+\subsection{Definition and Principal Variants}
+
+A \textbf{circular linked list} is a linked list in which the last node links back to the first node instead of holding \texttt{nullptr}. There are two variants:
+\begin{enumerate}
+    \item \textbf{Circular Singly Linked List (CSLL):} The last node's \texttt{next} points to \texttt{head}.
+    \item \textbf{Circular Doubly Linked List (CDLL):} The last node's \texttt{next} points to \texttt{head}, and \texttt{head->prev} points to the last node.
+\end{enumerate}
+
+\subsection{Traversing a Circular Singly Linked List}
+
+Because a circular list contains no \texttt{nullptr}, a standard \texttt{while (current != nullptr)} loop will run indefinitely. Instead, use a \texttt{do-while} loop:
+
+\begin{lstlisting}[style=cppstyle]
+void displayCircular(Node* head) {
+    if (head == nullptr) return;
+    Node* current = head;
+    do {
+        cout << current->data << " ";
+        current = current->next;
+    } while (current != head);
+    cout << '\n';
+}
+\end{lstlisting}
+
+\subsection{Insertion Using a Tail Pointer}
+
+Maintaining a pointer to the \textbf{last node (\texttt{tail})} provides $O(1)$ insertion at both the head and the tail because:
+\[
+\text{Head} = \texttt{tail->next}
+\]
+
+\begin{lstlisting}[style=cppstyle]
+class CircularLinkedList {
+private:
+    struct Node {
+        int data;
+        Node* next;
+        Node(int val) : data(val), next(nullptr) {}
+    };
+    Node* tail = nullptr;
+
+public:
+    // Insert at front: O(1)
+    void insertFront(int value) {
+        Node* newNode = new Node(value);
+        if (tail == nullptr) {
+            newNode->next = newNode;
+            tail = newNode;
+            return;
+        }
+        newNode->next = tail->next;
+        tail->next = newNode;
+    }
+
+    // Insert at end: O(1)
+    void insertEnd(int value) {
+        Node* newNode = new Node(value);
+        if (tail == nullptr) {
+            newNode->next = newNode;
+            tail = newNode;
+            return;
+        }
+        newNode->next = tail->next;
+        tail->next = newNode;
+        tail = newNode; // Only difference: tail moves to newNode
+    }
+
+    // Delete front: O(1)
+    void deleteFront() {
+        if (tail == nullptr) return;
+        Node* head = tail->next;
+        if (head == tail) {
+            delete head;
+            tail = nullptr;
+            return;
+        }
+        tail->next = head->next;
+        delete head;
+    }
+
+    void display() const {
+        if (tail == nullptr) return;
+        Node* current = tail->next;
+        do {
+            cout << current->data << " ";
+            current = current->next;
+        } while (current != tail->next);
+        cout << '\n';
+    }
+
+    ~CircularLinkedList() {
+        while (tail != nullptr) deleteFront();
+    }
+};
+\end{lstlisting}
+
+\subsection{Applications of Circular Linked Lists}
+\begin{itemize}
+    \item \textbf{Round-Robin CPU Scheduling:} Processes are allocated fixed time-slices in a cyclic rotation.
+    \item \textbf{Continuous Media Streaming:} Repeating audio playlists or slideshow loops.
+    \item \textbf{Multiplayer Turn-Based Games:} Cycling through players continuously.
+\end{itemize}
+
+\section{Comparison of Linked-List Types}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X X}
+\toprule
+\textbf{Feature} & \textbf{Singly Linked List} & \textbf{Doubly Linked List} & \textbf{Circular Singly Linked List} \\
+\midrule
+Links per Node       & One (\texttt{next})         & Two (\texttt{prev}, \texttt{next}) & One (\texttt{next}) \\
+Traversal Direction  & Forward only                & Bidirectional               & Forward (cyclic) \\
+End of List          & \texttt{next == nullptr}    & \texttt{next == nullptr}    & \texttt{next == head} \\
+Insert at Head       & $O(1)$                      & $O(1)$                      & $O(1)$ (with tail pointer) \\
+Insert at End        & $O(n)$ ($O(1)$ with tail)   & $O(n)$ ($O(1)$ with tail)   & $O(1)$ (with tail pointer) \\
+Delete First Node    & $O(1)$                      & $O(1)$                      & $O(1)$ (with tail pointer) \\
+Delete Known Node    & Requires predecessor ($O(n)$) & $O(1)$ unlinking           & Requires predecessor ($O(n)$) \\
+Stopping Condition   & Reach \texttt{nullptr}      & Reach \texttt{nullptr}      & Return to starting node \\
+Pointer Overhead     & 1 pointer per node          & 2 pointers per node         & 1 pointer per node \\
+\bottomrule
+\end{tabularx}
+\caption{Comprehensive comparison of linked-list variants.}
+\end{table}
+
+\begin{center}
+\vspace{1em}
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}\\[4pt]
+{\Large\bfseries\color{primary} Section II: Heap Data Structures}\\[2pt]
+{\color{primary}\rule{0.45\textwidth}{1.2pt}}
+\vspace{0.5em}
+\end{center}
+
+\section{What is a Heap?}
+
+A \textbf{heap} is a specialized tree-based data structure that satisfies two fundamental properties:
+\begin{enumerate}
+    \item \textbf{Shape Property:} The tree is a \textbf{complete binary tree}.
+    \item \textbf{Heap Property:} The keys satisfy either the \textbf{max-heap} or \textbf{min-heap} ordering rule.
+\end{enumerate}
+
+\subsection{What is a Complete Binary Tree?}
+
+A binary tree is \textbf{complete} if:
+\begin{itemize}
+    \item Every level, except possibly the last, is completely filled with nodes.
+    \item All nodes at the last level reside as far left as possible, without gaps.
+\end{itemize}
+
+This property enables a binary heap to be represented compactly inside a contiguous 1D array without storing explicit parent or child pointers.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Binary Tree Type} & \textbf{Formal Definition} \\
+\midrule
+Complete Binary Tree & All levels full except possibly the last, which is filled strictly left-to-right \\
+Full Binary Tree     & Every internal node has exactly two children (no node has 1 child) \\
+Perfect Binary Tree  & All internal nodes have two children and all leaves reside at identical depth \\
+\bottomrule
+\end{tabularx}
+\caption{Distinguishing Complete, Full, and Perfect binary trees.}
+\end{table}
+
+\subsection{Max-Heap vs Min-Heap}
+
+\begin{itemize}
+    \item \textbf{Max-Heap:} For every node $i$ other than the root:
+    \[
+    A[\text{parent}(i)] \geq A[i]
+    \]
+    The maximum element resides perpetually at the root ($A[0]$).
+    \item \textbf{Min-Heap:} For every node $i$ other than the root:
+    \[
+    A[\text{parent}(i)] \leq A[i]
+    \]
+    The minimum element resides perpetually at the root ($A[0]$).
+\end{itemize}
+
+\subsection{Is a Heap the Same as a Binary Search Tree (BST)?}
+
+No. This is a common viva question:
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Basis} & \textbf{Binary Heap} & \textbf{Binary Search Tree (BST)} \\
+\midrule
+Ordering Rule     & Vertical ordering: Parent $\geq$ children (no left vs right rule) & Horizontal ordering: Left $<$ Root $<$ Right \\
+Root Node         & Always the global Maximum (max-heap) or Minimum (min-heap)        & Arbitrary key depending on insertion \\
+Access to Extremum & $O(1)$                                                            & $O(h)$ ($O(\log n)$ balanced, $O(n)$ skewed) \\
+Search for Arbitrary Key & $O(n)$ linear scan (no directional guarantee)                & $O(\log n)$ average / balanced \\
+Underlying Storage & Implicit 1D Array (zero pointer overhead)                         & Explicit linked nodes with left/right pointers \\
+\bottomrule
+\end{tabularx}
+\caption{Key distinctions between Binary Heap and Binary Search Tree.}
+\end{table}
+
+\section{Representing a Binary Heap Using an Array}
+
+Because a heap is a complete binary tree, parent-child relationships map directly to arithmetic indices.
+
+\subsection{Zero-Based Indexing Formulas}
+For a node located at index $i$ in a zero-indexed array ($i = 0, 1, \dots, n-1$):
+\begin{align*}
+\text{Parent}(i) &= \left\lfloor \frac{i - 1}{2} \right\rfloor \quad (\text{for } i > 0) \\
+\text{Left Child}(i) &= 2i + 1 \\
+\text{Right Child}(i) &= 2i + 2
+\end{align*}
+
+\subsection{One-Based Indexing Formulas}
+For a one-indexed array ($i = 1, 2, \dots, n$):
+\begin{align*}
+\text{Parent}(i) &= \left\lfloor \frac{i}{2} \right\rfloor \\
+\text{Left Child}(i) &= 2i \\
+\text{Right Child}(i) &= 2i + 1
+\end{align*}
+
+\subsubsection{Example Mapping}
+Consider the array $[50, 30, 40, 10, 20]$ of size $n=5$:
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{0.85\textwidth}{ccccc}
+\toprule
+\textbf{Index $i$} & \textbf{Value $A[i]$} & \textbf{Parent Index} & \textbf{Left Child ($2i+1$)} & \textbf{Right Child ($2i+2$)} \\
+\midrule
+0 & 50 & None & 1 (value 30) & 2 (value 40) \\
+1 & 30 & 0    & 3 (value 10) & 4 (value 20) \\
+2 & 40 & 0    & 5 (out of range) & 6 (out of range) \\
+3 & 10 & 1    & --- & --- \\
+4 & 20 & 1    & --- & --- \\
+\bottomrule
+\end{tabularx}
+\caption{Zero-based array index mapping of a binary heap.}
+\end{table}
+
+\section{Max-Heap Construction: Step by Step}
+
+Given an arbitrary array, two strategies exist to convert it into a valid max-heap:
+\begin{enumerate}
+    \item \textbf{Repeated Insertion:} Insert elements one by one, sifting up ($O(n \log n)$ time).
+    \item \textbf{Bottom-Up Heap Construction (Floyd's Algorithm):} Place elements into array, then call \texttt{maxHeapify} downward starting from the last non-leaf node up to the root ($O(n)$ time).
+\end{enumerate}
+
+\subsection{The Heapify (Sift-Down) Operation}
+
+\texttt{maxHeapify(A, i, n)} assumes that the subtrees rooted at $\text{left}(i)$ and $\text{right}(i)$ are valid max-heaps, but $A[i]$ may violate the heap property. It floats $A[i]$ downward by repeatedly swapping with its largest child until the property is restored.
+
+\subsection{Step-by-Step Bottom-Up Construction Trace}
+
+Given the input array:
+\[
+A = [4, \; 10, \; 3, \; 5, \; 1], \quad n = 5
+\]
+The last non-leaf node index in a zero-indexed array is:
+\[
+\text{Last non-leaf} = \left\lfloor \frac{n}{2} \right\rfloor - 1 = \left\lfloor \frac{5}{2} \right\rfloor - 1 = 1
+\]
+Leaves reside at indices $2, 3, 4$ and are trivial heaps. We only process indices $1$ down to $0$.
+
+\begin{enumerate}
+    \item \textbf{Step 1: Heapify Node at Index 1 ($A[1] = 10$)}
+    \begin{itemize}
+        \item Left child at index $3$: $A[3] = 5$.
+        \item Right child at index $4$: $A[4] = 1$.
+        \item Since $10 \geq 5$ and $10 \geq 1$, node $1$ already satisfies max-heap ordering. No swap.
+        \item Array remains: $[4, 10, 3, 5, 1]$.
+    \end{itemize}
+
+    \item \textbf{Step 2: Heapify Node at Index 0 ($A[0] = 4$)}
+    \begin{itemize}
+        \item Left child at index $1$: $A[1] = 10$.
+        \item Right child at index $2$: $A[2] = 3$.
+        \item Largest among $\{4, 10, 3\}$ is $10$ at index $1$.
+        \item Swap $A[0]$ and $A[1]$.
+        \item Array becomes: $[10, 4, 3, 5, 1]$.
+    \end{itemize}
+
+    \item \textbf{Step 3: Continue Sifting Down Displaced Node ($4$ at Index 1)}
+    \begin{itemize}
+        \item Children of index $1$ are $A[3] = 5$ and $A[4] = 1$.
+        \item Largest among $\{4, 5, 1\}$ is $5$ at index $3$.
+        \item Swap $A[1]$ and $A[3]$.
+        \item Array becomes: $[10, 5, 3, 4, 1]$.
+        \item Node $4$ is now at index $3$ (a leaf), so sift-down terminates.
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Final Valid Max-Heap:} $[10, 5, 3, 4, 1]$.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{0.85\textwidth}{cc X c}
+\toprule
+\textbf{Step} & \textbf{Index Processed} & \textbf{Action Taken} & \textbf{Array State} \\
+\midrule
+Initial & --- & Original sequence & $[4, 10, 3, 5, 1]$ \\
+1       & 1   & Checked children $\{5, 1\}$; no swap & $[4, 10, 3, 5, 1]$ \\
+2       & 0   & Swapped $4 \leftrightarrow 10$ with child & $[10, 4, 3, 5, 1]$ \\
+3       & 1   & Swapped $4 \leftrightarrow 5$ to restore leaf & $[10, 5, 3, 4, 1]$ \\
+\bottomrule
+\end{tabularx}
+\caption{Trace of bottom-up max-heap construction.}
+\end{table}
+
+\subsection{Why Does Bottom-Up Heap Construction Take $O(n)$?}
+
+A single \texttt{heapify} takes $O(\log n)$ worst-case time. However, bottom-up construction does not run for full height on all nodes:
+\begin{itemize}
+    \item Half the nodes are leaves ($h=0$), requiring $0$ operations.
+    \item A quarter of the nodes have height $1$, moving down at most $1$ step.
+    \item Only $1$ node (the root) can travel the full tree height $\lfloor \log n \rfloor$.
+\end{itemize}
+
+Summing work over all tree heights:
+\[
+T(n) = \sum_{h=0}^{\lfloor \log n \rfloor} \left\lceil \frac{n}{2^{h+1}} \right\rceil O(h) = O\left( n \sum_{h=0}^{\infty} \frac{h}{2^h} \right)
+\]
+Since the infinite series $\sum_{h=0}^{\infty} \frac{h}{2^h} = 2$, we obtain:
+\[
+T(n) = O(2n) = O(n)
+\]
+This proves that bottom-up construction runs in \textbf{linear time $O(n)$}.
+
+\section{Max-Heap Insertion}
+
+Insertion maintains both the complete binary tree shape and the max-heap ordering via \textbf{sift-up} (percolate-up).
+
+\subsection{Algorithm}
+\begin{enumerate}
+    \item Append the new value $x$ at the end of the array ($A[n]$), expanding the heap size.
+    \item Compare $x$ with its parent: $p = \lfloor (i - 1)/2 \rfloor$.
+    \item If $x > A[p]$, swap $A[i]$ and $A[p]$, and set $i = p$.
+    \item Repeat until $x \leq A[p]$ or $x$ reaches the root ($i = 0$).
+\end{enumerate}
+
+\subsection{Step-by-Step Insertion Example}
+Insert $15$ into existing max-heap $[10, 5, 3, 4, 1]$:
+\begin{enumerate}
+    \item Append $15$ at index $5$: $[10, 5, 3, 4, 1, \mathbf{15}]$.
+    \item Parent of index $5$ is $\lfloor(5-1)/2\rfloor = 2$ ($A[2] = 3$). Since $15 > 3$, swap:
+    \[
+    [10, 5, \mathbf{15}, 4, 1, \mathbf{3}]
+    \]
+    \item New parent of index $2$ is $\lfloor(2-1)/2\rfloor = 0$ ($A[0] = 10$). Since $15 > 10$, swap:
+    \[
+    [\mathbf{15}, 5, \mathbf{10}, 4, 1, 3]
+    \]
+    \item Index $0$ is the root. Insertion terminates.
+\end{enumerate}
+\textbf{Complexity:} Worst-case time is $O(\log n)$ (tree height). Auxiliary space is $O(1)$.
+
+\section{Max-Heap Deletion (Extract Maximum)}
+
+Deleting from a max-heap refers to extracting the root node containing the maximum key.
+
+\subsection{Algorithm}
+\begin{enumerate}
+    \item Save root $A[0]$ for return.
+    \item Copy the last element in the array to the root ($A[0] = A[n-1]$).
+    \item Decrement heap size by $1$ (removing the last position).
+    \item Call \texttt{maxHeapify(A, 0, n)} to sift the new root downward until the max-heap property is restored.
+\end{enumerate}
+
+\subsection{Step-by-Step Deletion Example}
+Extract max from $[15, 5, 10, 4, 1, 3]$:
+\begin{enumerate}
+    \item Save maximum: $\text{max} = 15$.
+    \item Replace root with last element $3$: $[3, 5, 10, 4, 1]$.
+    \item Children of root ($3$) are $A[1] = 5$ and $A[2] = 10$. Largest child is $10$ at index $2$.
+    \item Swap $3$ and $10$:
+    \[
+    [10, 5, \mathbf{3}, 4, 1]
+    \]
+    \item Node $3$ at index $2$ has no children ($2(2)+1 = 5 \geq 5$). Sift-down terminates.
+\end{enumerate}
+\textbf{Complexity:} $O(\log n)$ worst-case time.
+
+\subsection{Deleting an Arbitrary Key}
+To delete an arbitrary key $k$ (not necessarily the root):
+\begin{enumerate}
+    \item Search the heap array for $k$. Since a heap has no directional search property, finding $k$ takes $O(n)$ time.
+    \item Overwrite $k$ with the last element in the array and decrement the size.
+    \item Repair the heap: if the replacement is greater than its parent, sift up; if smaller than either child, sift down. Repair takes $O(\log n)$.
+    \item Total time: $O(n)$ due to linear search.
+\end{enumerate}
+
+\section{Complete C++ Implementation of a Max-Heap}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include <vector>
+#include <stdexcept>
+#include <utility>
+using namespace std;
+
+class MaxHeap {
+private:
+    vector<int> heap;
+
+    void siftUp(size_t i) {
+        while (i > 0) {
+            size_t parent = (i - 1) / 2;
+            if (heap[parent] >= heap[i]) break;
+            swap(heap[parent], heap[i]);
+            i = parent;
+        }
+    }
+
+    void siftDown(size_t i) {
+        size_t n = heap.size();
+        while (true) {
+            size_t largest = i;
+            size_t left = 2 * i + 1;
+            size_t right = 2 * i + 2;
+
+            if (left < n && heap[left] > heap[largest]) {
+                largest = left;
+            }
+            if (right < n && heap[right] > heap[largest]) {
+                largest = right;
+            }
+            if (largest == i) break;
+
+            swap(heap[i], heap[largest]);
+            i = largest;
+        }
+    }
+
+public:
+    // O(n) Bottom-Up constructor
+    explicit MaxHeap(vector<int> values) : heap(std::move(values)) {
+        for (size_t i = heap.size() / 2; i > 0; --i) {
+            siftDown(i - 1);
+        }
+    }
+
+    bool empty() const { return heap.empty(); }
+    size_t size() const { return heap.size(); }
+
+    // O(1) Max element inspection
+    int getMax() const {
+        if (heap.empty()) throw underflow_error("Heap is empty");
+        return heap[0];
+    }
+
+    // O(log n) Insertion
+    void insert(int value) {
+        heap.push_back(value);
+        siftUp(heap.size() - 1);
+    }
+
+    // O(log n) Extract Maximum
+    int extractMax() {
+        if (heap.empty()) throw underflow_error("Heap is empty");
+        int maximum = heap[0];
+        if (heap.size() == 1) {
+            heap.pop_back();
+            return maximum;
+        }
+        heap[0] = heap.back();
+        heap.pop_back();
+        siftDown(0);
+        return maximum;
+    }
+
+    void display() const {
+        for (int val : heap) cout << val << " ";
+        cout << '\n';
+    }
+};
+
+int main() {
+    MaxHeap h(vector<int>{4, 10, 3, 5, 1});
+
+    cout << "After construction: ";
+    h.display();
+
+    h.insert(15);
+    cout << "After inserting 15: ";
+    h.display();
+
+    cout << "Maximum element: " << h.getMax() << '\n';
+    cout << "Extracted maximum: " << h.extractMax() << '\n';
+
+    cout << "After deleting maximum: ";
+    h.display();
+    cout << "Heap size: " << h.size() << '\n';
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsubsection{Expected Output}
+\begin{lstlisting}[style=pseudocode]
+After construction: 10 5 3 4 1
+After inserting 15: 15 5 10 4 1 3
+Maximum element: 15
+Extracted maximum: 15
+After deleting maximum: 10 5 3 4 1
+Heap size: 5
+\end{lstlisting}
+
+\section{Heap Complexity: Complete Comparison}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Operation} & \textbf{Time Complexity} & \textbf{Algorithmic Reason} \\
+\midrule
+Find Maximum / Minimum    & $O(1)$                    & Root is always the extremum \\
+Insert Element            & $O(\log n)$ worst-case    & Sifts up tree height $\lfloor \log_2 n \rfloor$ \\
+Delete Max / Min (Root)   & $O(\log n)$ worst-case    & Sifts down tree height \\
+Heapify Single Node       & $O(\log n)$ worst-case    & Floats down subtree height \\
+Build Heap (Bottom-Up)    & $O(n)$                    & Leaf-heavy distribution of complete tree \\
+Build Heap (Insertion)    & $O(n \log n)$             & Repeated insertions \\
+Search for Arbitrary Key  & $O(n)$                    & No left/right directional ordering \\
+Heap Sort                 & $O(n \log n)$             & $n$ extractions of $O(\log n)$ cost \\
+Storage for $n$ elements  & $O(n)$                    & Compact 1D array \\
+\bottomrule
+\end{tabularx}
+\caption{Comprehensive operational complexity reference for Binary Heaps.}
+\end{table}
+
+\subsection{Binary Heap versus Priority Queue}
+A \textbf{priority queue} is an Abstract Data Type (ADT) defining operations (\texttt{push}, \texttt{top}, \texttt{pop}). A \textbf{binary heap} is the standard concrete data structure used to implement a priority queue efficiently.
+
+In C++ STL:
+\begin{lstlisting}[style=cppstyle]
+#include <queue>
+#include <vector>
+#include <functional>
+
+// Default: Max-Priority Queue
+priority_queue<int> maxPQ;
+
+// Min-Priority Queue
+priority_queue<int, vector<int>, greater<int>> minPQ;
+\end{lstlisting}
+
+\section{Heap Sort}
+
+Heap sort is an in-place, comparison-based sorting algorithm using a binary heap.
+
+\subsection{Algorithm (Ascending Order)}
+\begin{enumerate}
+    \item Build a max-heap from the input array ($O(n)$).
+    \item Swap $A[0]$ (the maximum) with the last element $A[n-1]$ in the active heap.
+    \item Reduce active heap size by $1$.
+    \item Sift down the new root ($A[0]$) across the active heap ($O(\log n)$).
+    \item Repeat steps 2--4 until active heap size is $1$.
+\end{enumerate}
+
+\subsection{Properties of Heap Sort}
+\begin{itemize}
+    \item \textbf{Time Complexity:} $O(n \log n)$ in Best, Average, and Worst cases.
+    \item \textbf{Auxiliary Space:} $O(1)$ in-place.
+    \item \textbf{Stability:} \textbf{Not stable}. Swapping elements across the heap destroys the relative order of identical keys.
+\end{itemize}
+
+\section{Common Heap Errors and Examination Traps}
+
+\begin{enumerate}
+    \item \textbf{Assuming Heap Array is Sorted:} A heap is \emph{not} a sorted array. Only parent-child vertical ordering holds.
+    \item \textbf{Confusing Heap with BST:} Left children are not necessarily smaller than right children in a heap.
+    \item \textbf{Sifting in Wrong Direction:} Insertion requires \emph{sift-up}; root deletion requires \emph{sift-down}; bottom-up construction runs \emph{sift-down} starting from the last internal node.
+    \item \textbf{Selecting Wrong Child in Sift-Down:} In a max-heap, you must swap with the \textbf{larger} of the two children. Swapping with the smaller child leaves the heap property violated.
+    \item \textbf{Starting Bottom-Up at the Wrong Index:} Begin at $\lfloor n/2 \rfloor - 1$, not at $n-1$. Leaves have no children and are already valid heaps.
+    \item \textbf{Confusing Memory Heap with Data Structure Heap:} The runtime memory heap used by \texttt{malloc} or \texttt{new} is an operating system memory management pool, entirely distinct from the binary heap data structure.
+\end{enumerate}
+
+\section{Practical Applications of Heaps}
+\begin{itemize}
+    \item \textbf{Operating System Schedulers:} Priority scheduling for CPU jobs.
+    \item \textbf{Graph Algorithms:} Dijkstra's shortest path and Prim's Minimum Spanning Tree (using a min-priority queue).
+    \item \textbf{Top-$K$ Selection Problems:} Maintaining the $k$ largest or smallest elements from a massive streaming dataset in $O(n \log k)$ time using a bounded heap.
+    \item \textbf{Discrete Event Simulation:} Processing events chronologically based on timestamps.
+    \item \textbf{Huffman Coding:} Constructing optimal prefix trees for data compression.
+\end{itemize}
+
+\section{Likely Recruitment Examination Questions}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{p{7cm} X}
+\toprule
+\textbf{Question} & \textbf{Key Answer} \\
+\midrule
+What is a linked list? & A linear sequence of nodes connected via pointers. \\
+Difference between singly and doubly linked list? & Singly has 1 pointer (\texttt{next}); doubly has 2 pointers (\texttt{prev}, \texttt{next}). \\
+How does circular linked list differ from singly? & Last node points back to the head node instead of \texttt{nullptr}. \\
+Time complexity of insertion at head? & $O(1)$ pointer update. \\
+Why does linked list not support $O(1)$ random access? & Nodes are non-contiguous; reaching index $k$ requires sequential traversal. \\
+What is a binary heap? & A complete binary tree satisfying a heap-ordering rule. \\
+What is at the root of a max-heap? & The maximum element in the heap. \\
+Formula for last non-leaf in 0-indexed heap? & $\lfloor n/2 \rfloor - 1$. \\
+Formulas for left and right children (0-based)? & Left: $2i + 1$; Right: $2i + 2$. \\
+Formula for parent index (0-based)? & $\lfloor (i - 1) / 2 \rfloor$. \\
+Complexity of bottom-up heap construction? & $O(n)$ linear time. \\
+Complexity of insertion into binary heap? & $O(\log n)$ worst-case. \\
+Complexity of deleting the root from heap? & $O(\log n)$ worst-case. \\
+Complexity of inspecting root maximum? & $O(1)$. \\
+Can arbitrary key be searched in $O(\log n)$? & No; worst-case arbitrary search is $O(n)$. \\
+Time complexity of Heap Sort? & $O(n \log n)$ in all cases (best, average, worst). \\
+Is Heap Sort stable? & No, it does not preserve relative order of duplicates. \\
+Is a max-heap a Binary Search Tree? & No; heap enforces vertical order, BST enforces horizontal order. \\
+Why does bottom-up build take $O(n)$? & Most nodes reside near the leaves and travel very small distances. \\
+\bottomrule
+\end{tabularx}
+\caption{Rapid-fire recruitment examination questions and answers.}
+\end{table}
+
+\section{Final Quick-Revision Sheet}
+
+\subsection{Linked Lists Quick Revision}
+\begin{itemize}
+    \item \textbf{Singly Linked List:} Unidirectional (\texttt{next}); $O(1)$ insert at head; $O(n)$ arbitrary search/delete.
+    \item \textbf{Doubly Linked List:} Bidirectional (\texttt{prev}, \texttt{next}); $O(1)$ delete of known node.
+    \item \textbf{Circular Linked List:} Last node links to first; $O(1)$ front and end insertion with \texttt{tail} pointer.
+    \item Traversal loop for circular list requires \texttt{do \{ ... \} while (curr != head);}.
+\end{itemize}
+
+\subsection{Max-Heaps Quick Revision}
+\begin{itemize}
+    \item Complete binary tree stored in array without pointers.
+    \item Parent $\geq$ Children; Maximum at $A[0]$.
+    \item 0-based formulas: $\text{left} = 2i + 1$, $\text{right} = 2i + 2$, $\text{parent} = \lfloor(i-1)/2\rfloor$.
+    \item Build heap bottom-up: $O(n)$.
+    \item Insert: append and sift up ($O(\log n)$).
+    \item Delete Max: replace root with last element and sift down ($O(\log n)$).
+    \item Get Max: $O(1)$.
+    \item Heap Sort: $O(n \log n)$ time, $O(1)$ auxiliary space, unstable.
+\end{itemize}
+
+\begin{quote}
+\textbf{Final Architectural Takeaway:} Linked lists optimize dynamic node insertion and deletion without shifting contiguous memory. Binary heaps leverage the structural completeness of binary trees to deliver $O(1)$ extremum access and $O(\log n)$ priority updates with zero pointer memory overhead.
+\end{quote}

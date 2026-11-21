@@ -1,0 +1,5974 @@
+<USER_REQUEST>
+Programming Chapter: "# **Programming — Problem Solving, Code Tracing, OOP and Practical IT Skills**
+
+Comprehensive examination-oriented study chapter for Bangladesh Government IT Recruitment Examinations
+
+This chapter focuses on **program analysis, output prediction, tracing, algorithmic problem solving, object-oriented programming, and practical development tools** rather than introductory programming syntax.
+
+The examples primarily use C, C++, and Java. Particular attention is given to common examination traps: operator precedence, integer division, increment/decrement side effects, recursion, loop boundaries, pointer behavior, inheritance, constructor execution order, and method dispatch.
+
+## **Chapter roadmap**
+
+1. Code-snippet output analysis: C, C++ and Java
+2. Recursion and recursive output tracing
+3. Prime numbers, numerical series and Floyd's triangle
+4. Factorial and summation of series
+5. Increment/decrement, operators and expression evaluation
+6. Matrix addition and multiplication
+7. Object-oriented programming and its four characteristics
+8. Inheritance, abstraction, encapsulation and polymorphism
+9. Static and dynamic binding
+10. Functions, methods, objects, classes, friends and constructors
+11. Overloading, overriding, constructors and destructors
+12. Branching, looping and control-flow tracing
+13. Call by value, call by reference and pointers
+14. Data types and type conversion
+15. Version control with Git
+16. Essential Bash commands
+17. Additional high-probability programming problems
+18. Model examination questions with worked solutions
+19. Common traps and a final revision sheet
+
+# **1. C/C++/Java Code Snippet Output Analysis**
+
+Output-tracing questions test whether a candidate can execute a program mentally, statement by statement. They often look simple but combine several language rules.
+
+## **1.1 Operator precedence and associativity**
+
+**Precedence** determines which operator is evaluated first. **Associativity** determines the evaluation grouping when operators have the same precedence.
+
+For example:
+
+```
+int x = 10 + 5 * 2;
+printf("%d", x);
+```
+
+Multiplication has higher precedence than addition:
+
+\\[ x=10+(5\times2)=20 \\]
+
+Output:
+
+```
+20
+```
+
+### **Important C/C++ operator precedence**
+
+From higher to lower precedence:
+
+| Operators                                                      | Meaning                             | Associativity |
+| -------------------------------------------------------------- | ----------------------------------- | ------------- |
+| `()`, `[]`, `->`, `.`                                          | Function call, array, member access | Left to right |
+| `++`, `--`, `!`, `~`, unary `+`, unary `-`, `*`, `&`, `sizeof` | Unary operators                     | Right to left |
+| `*`, `/`, `%`                                                  | Multiplication, division, modulus   | Left to right |
+| `+`, `-`                                                       | Addition, subtraction               | Left to right |
+| `<<`, `>>`                                                     | Bitwise shifts                      | Left to right |
+| `<`, `<=`, `>`, `>=`                                           | Relational                          | Left to right |
+| `==`, `!=`                                                     | Equality                            | Left to right |
+| `&`                                                            | Bitwise AND                         | Left to right |
+| `^`                                                            | Bitwise XOR                         | Left to right |
+| `\\|`                                                          | Bitwise OR                          | Left to right |
+| `&&`                                                           | Logical AND                         | Left to right |
+| `\\|\\|`                                                       | Logical OR                          | Left to right |
+| `?:`                                                           | Conditional                         | Right to left |
+| `=`, `+=`, `-=`, etc.                                          | Assignment                          | Right to left |
+| `,`                                                            | Comma operator                      | Left to right |
+
+**Important:** Precedence does not necessarily determine the order in which operands are evaluated. This distinction is particularly important in C and C++.
+
+### **Example 1: Assignment associativity**
+
+```
+int a, b, c;
+a = b = c = 5;
+
+printf("%d %d %d", a, b, c);
+```
+
+Assignment is right-associative:
+
+```
+a = (b = (c = 5))
+```
+
+Output:
+
+```
+5 5 5
+```
+
+### **Example 2: Arithmetic precedence**
+
+```
+int x = 20, y = 5, z = 2;
+printf("%d", x / y * z + 3);
+```
+
+Multiplication and division have equal precedence and are evaluated left to right:
+
+\\[ (20/5)\times2+3=4\times2+3=11 \\]
+
+Output:
+
+```
+11
+```
+
+### **Example 3: Relational and logical operators**
+
+```
+int a = 5, b = 10, c = 15;
+
+printf("%d", a < b && b < c);
+```
+
+Both comparisons are true. In C, a true logical expression evaluates to `1`.
+
+Output:
+
+```
+1
+```
+
+## **1.2 Integer division and modulus**
+
+In C, C++ and Java, division between two integer operands produces an integer result: the fractional part is discarded.
+
+```
+int a = 17, b = 5;
+
+printf("%d\n", a / b);
+printf("%d\n", a % b);
+```
+
+Output:
+
+```
+3
+2
+```
+
+Because:
+
+\\[ 17=5\times3+2 \\]
+
+### **Common trap: integer division before assignment**
+
+```
+float x = 5 / 2;
+printf("%.1f", x);
+```
+
+The expression `5 / 2` is evaluated using integer arithmetic first.
+
+Therefore:
+
+```
+2.0
+```
+
+Correct way to obtain 2.5:
+
+```
+float x = 5.0 / 2;
+```
+
+or:
+
+```
+float x = (float)5 / 2;
+```
+
+Output:
+
+```
+2.5
+```
+
+### **Negative integer division**
+
+C, C++ and Java integer division truncate toward zero.
+
+```
+printf("%d %d", -7 / 2, -7 % 2);
+```
+
+Output:
+
+```
+-3 -1
+```
+
+The quotient and remainder satisfy:
+
+\\[ a=(a/b)\times b+(a\\%b) \\]
+
+For this example:
+
+\\[ -7=(-3)\times2+(-1) \\]
+
+## **1.3 Short-circuit evaluation**
+
+Logical AND (`&&`) and logical OR (`||`) may skip evaluation of their second operand.
+
+- `A && B`: if A is false, B is not evaluated.
+- `A || B`: if A is true, B is not evaluated.
+
+### **Example 1**
+
+```
+int x = 5;
+
+if (x > 10 && ++x > 5)
+    printf("Yes");
+
+printf("%d", x);
+```
+
+The first condition is false. Therefore, the second operand is not evaluated.
+
+Output:
+
+```
+5
+```
+
+### **Example 2**
+
+```
+int x = 5;
+
+if (x == 5 || ++x > 5)
+    printf("True");
+
+printf("%d", x);
+```
+
+The first condition is true, so the second operand is skipped.
+
+Output:
+
+```
+True5
+```
+
+**Exam trap:** Short-circuit operators are different from bitwise `&` and `|`, which do not provide logical short-circuit behavior.
+
+## **1.4 Comma operator**
+
+In C and C++, the comma operator evaluates its left operand first, discards that value, and then evaluates its right operand. The value of the complete comma expression is the value of the right operand.
+
+```
+int x;
+
+x = (10, 20, 30);
+
+printf("%d", x);
+```
+
+Output:
+
+```
+30
+```
+
+Another example:
+
+```
+int a = 1, b = 2, c;
+
+c = (a++, b++, a + b);
+
+printf("%d %d %d", a, b, c);
+```
+
+Step-by-step:
+
+- Initially, `a = 1`, `b = 2`.
+- `a++` makes `a = 2`.
+- `b++` makes `b = 3`.
+- `a + b = 5`.
+
+Output:
+
+```
+2 3 5
+```
+
+Note that commas separating function arguments or variable declarations are not necessarily comma operators.
+
+## **1.5 Conditional operator**
+
+The conditional operator `?:` is a compact alternative to a simple `if-else`.
+
+```
+int a = 10, b = 20;
+
+int max = (a > b) ? a : b;
+
+printf("%d", max);
+```
+
+Output:
+
+```
+20
+```
+
+Nested conditional example:
+
+```
+int x = 10;
+
+printf("%d", x > 0 ? (x < 5 ? 1 : 2) : 3);
+```
+
+Since `x > 0` is true, the inner condition is evaluated. `x < 5` is false.
+
+Output:
+
+```
+2
+```
+
+## **1.6 C/C++ undefined behavior: a major examination trap**
+
+Not every short expression has a well-defined output.
+
+Consider:
+
+```
+int i = 5;
+printf("%d %d", i++, ++i);
+```
+
+This expression modifies `i` more than once without the required sequencing between the modifications in C and C++. Its behavior is undefined.
+
+**Correct examination approach:** Do not assign a definite output to an expression with undefined behavior.
+
+Other dangerous examples include:
+
+```
+int i = 5;
+i = i++;
+```
+
+and:
+
+```
+int a[5];
+int x = a[5];
+```
+
+The first has undefined behavior in C and C++. The second accesses an array outside its valid index range.
+
+The following expression is also problematic:
+
+```
+int i = 10;
+printf("%d", i++ + ++i);
+```
+
+It is not a valid output-tracing question with a portable, guaranteed answer.
+
+### **C++ sequencing distinction**
+
+C++17 changed the sequencing rules for certain expressions, including function-call arguments and assignment-related evaluation. However, expressions such as `i++ + ++i` still do not provide a reliable, portable result.
+
+For examination purposes, distinguish:
+
+- A well-defined expression: calculate the output.
+- An implementation-defined behavior: the implementation documents its choice.
+- An unspecified behavior: one of several permitted outcomes may occur.
+- Undefined behavior: the language imposes no requirements.
+
+# **2. Increment and Decrement Operators**
+
+Increment and decrement operators are among the most frequently tested programming concepts.
+
+- `++i`: pre-increment; increment first, then use the updated value.
+- `i++`: post-increment; use the old value, then increment.
+- `--i`: pre-decrement.
+- `i--`: post-decrement.
+
+## **2.1 Pre-increment vs post-increment**
+
+```
+int a = 5;
+int b = ++a;
+
+printf("%d %d", a, b);
+```
+
+Execution:
+
+1. `a` becomes 6.
+2. The new value 6 is assigned to `b`.
+
+Output:
+
+```
+6 6
+```
+
+Now consider:
+
+```
+int a = 5;
+int b = a++;
+
+printf("%d %d", a, b);
+```
+
+Execution:
+
+1. The old value 5 is assigned to `b`.
+2. `a` becomes 6.
+
+Output:
+
+```
+6 5
+```
+
+## **2.2 Multiple independent increments**
+
+```
+int i = 5;
+
+i++;
+++i;
+
+printf("%d", i);
+```
+
+Output:
+
+```
+7
+```
+
+Each statement is a separate full expression, so the operations are sequenced.
+
+## **2.3 Increment inside an expression**
+
+```
+int x = 5;
+int y = x++ + 10;
+
+printf("%d %d", x, y);
+```
+
+Execution:
+
+- The old value of `x`, which is 5, participates in the addition.
+- `x` is incremented to 6.
+- `y = 5 + 10 = 15`.
+
+Output:
+
+```
+6 15
+```
+
+## **2.4 Increment in loops**
+
+```
+int i;
+
+for (i = 1; i <= 5; i++)
+{
+    printf("%d ", i);
+}
+```
+
+Output:
+
+```
+1 2 3 4 5
+```
+
+A common trap:
+
+```
+int i = 1;
+
+while (i++ <= 3)
+{
+    printf("%d ", i);
+}
+```
+
+Trace:
+
+| Condition evaluation | Value tested | Value after `i++` | Printed |
+| -------------------- | ------------ | ----------------- | ------- |
+| 1st                  | 1            | 2                 | 2       |
+| 2nd                  | 2            | 3                 | 3       |
+| 3rd                  | 3            | 4                 | 4       |
+| 4th                  | 4            | 5                 | No      |
+
+Output:
+
+```
+2 3 4
+```
+
+## **2.5 Prefix and postfix with pointers**
+
+```
+int a[] = {10, 20, 30};
+int *p = a;
+
+printf("%d ", *p++);
+printf("%d ", *p);
+```
+
+`*p++` means `*(p++)` because postfix increment has higher precedence than unary dereference.
+
+- First, `*p` accesses `10`.
+- Then `p` advances to the second array element.
+- The next `*p` accesses `20`.
+
+Output:
+
+```
+10 20
+```
+
+Compare:
+
+```
+int a[] = {10, 20, 30};
+int *p = a;
+
+printf("%d ", (*p)++);
+printf("%d ", *p);
+```
+
+Here `(*p)++` increments the value pointed to by `p`.
+
+Output:
+
+```
+10 11
+```
+
+The pointer itself has not moved.
+
+# **3. Recursion and Recursive Function Output Tracing**
+
+Recursion occurs when a function calls itself directly or indirectly.
+
+Every correctly designed recursive function should have:
+
+1. **Base case:** terminates recursion.
+2. **Recursive case:** reduces the problem toward the base case.
+
+×××844222137
+
+84 factors into 2 × 2 × 3 × 7.
+
+\\(n\\)
+
+Give feedback
+
+## **3.1 Factorial using recursion**
+
+Factorial is defined as:
+
+\\[ n!=n\times(n-1)! \\]
+
+with:
+
+\\[ 0!=1 \\]
+
+C implementation:
+
+```
+int factorial(int n)
+{
+    if (n == 0)
+        return 1;
+
+    return n * factorial(n - 1);
+}
+
+int main()
+{
+    printf("%d", factorial(5));
+    return 0;
+}
+```
+
+Execution:
+
+\\[ \begin{aligned} factorial(5)&=5\times factorial(4)\\\ &=5\times4\times factorial(3)\\\ &=5\times4\times3\times factorial(2)\\\ &=5\times4\times3\times2\times factorial(1)\\\ &=5\times4\times3\times2\times1\times factorial(0)\\\ &=120 \end{aligned} \\]
+
+Output:
+
+```
+120
+```
+
+## **3.2 Understanding the call stack**
+
+Each recursive call creates a new activation record (stack frame) containing its own parameters, local variables, return address and execution state.
+
+For `factorial(4)`:
+
+**Recursive calls — stack grows**
+
+`factorial(4)`
+
+`factorial(3)`
+
+`factorial(2)`
+
+`factorial(1)`
+
+`factorial(0)` — base case returns 1
+
+The calls then return in reverse order, multiplying their stored values.
+
+## **3.3 Recursive output trap: printing before and after recursion**
+
+```
+#include <stdio.h>
+
+void fun(int n)
+{
+    if (n == 0)
+        return;
+
+    printf("%d ", n);
+    fun(n - 1);
+    printf("%d ", n);
+}
+
+int main()
+{
+    fun(3);
+    return 0;
+}
+```
+
+Trace:
+
+- `fun(3)` prints 3.
+- `fun(2)` prints 2.
+- `fun(1)` prints 1.
+- `fun(0)` returns.
+- The pending calls print 1, then 2, then 3.
+
+Output:
+
+```
+3 2 1 1 2 3
+```
+
+**Key principle:** Statements before the recursive call execute while recursion descends. Statements after the recursive call execute while recursion unwinds.
+
+## **3.4 Recursive function with a return expression**
+
+```
+int fun(int n)
+{
+    if (n <= 1)
+        return 1;
+
+    return n + fun(n - 1);
+}
+
+int main()
+{
+    printf("%d", fun(4));
+}
+```
+
+Expansion:
+
+\\[ \begin{aligned} fun(4)&=4+fun(3)\\\ &=4+3+fun(2)\\\ &=4+3+2+fun(1)\\\ &=4+3+2+1\\\ &=10 \end{aligned} \\]
+
+Output:
+
+```
+10
+```
+
+## **3.5 Recursive function with a static variable**
+
+A `static` local variable retains its value between function calls.
+
+```
+#include <stdio.h>
+
+void fun(int n)
+{
+    static int x = 0;
+
+    if (n == 0)
+        return;
+
+    x++;
+    printf("%d ", x);
+    fun(n - 1);
+}
+
+int main()
+{
+    fun(3);
+    return 0;
+}
+```
+
+Output:
+
+```
+1 2 3
+```
+
+The local variable `x` is initialized only once, not once per recursive call.
+
+Compare with a non-static local variable:
+
+```
+void fun(int n)
+{
+    int x = 0;
+
+    if (n == 0)
+        return;
+
+    x++;
+    printf("%d ", x);
+    fun(n - 1);
+}
+```
+
+Output:
+
+```
+1 1 1
+```
+
+Every call has a separate local `x`.
+
+## **3.6 Recursion with two recursive calls: Fibonacci**
+
+The Fibonacci sequence is:
+
+\\[ 0,1,1,2,3,5,8,13,\ldots \\]
+
+Definition:
+
+\\[ F(n)= \begin{cases} 0 & n=0\\\ 1 & n=1\\\ F(n-1)+F(n-2) & n\geq2 \end{cases} \\]
+
+C implementation:
+
+```
+int fib(int n)
+{
+    if (n == 0)
+        return 0;
+
+    if (n == 1)
+        return 1;
+
+    return fib(n - 1) + fib(n - 2);
+}
+```
+
+For `fib(5)`:
+
+\\[ F(5)=F(4)+F(3)=3+2=5 \\]
+
+This naïve recursive implementation repeats many calculations and has exponential time complexity, approximately \\(O(2^n)\\).
+
+## **3.7 Recursion vs iteration**
+
+| Feature         | Recursion                               | Iteration                                |
+| --------------- | --------------------------------------- | ---------------------------------------- |
+| Mechanism       | Function calls itself                   | Loop repeats statements                  |
+| Termination     | Base condition                          | Loop condition                           |
+| Memory          | Uses call stack                         | Usually uses less auxiliary memory       |
+| Performance     | Function-call overhead                  | Often faster for simple repetition       |
+| Best suited for | Trees, divide-and-conquer, backtracking | Counting, summation, repeated operations |
+| Risk            | Stack overflow                          | Infinite loop                            |
+
+### **Common recursion errors**
+
+- Missing base case.
+- Base case never reached.
+- Recursive call does not reduce the problem.
+- Incorrect return expression.
+- Excessive recursive depth causing stack overflow.
+- Forgetting that statements after a recursive call execute during unwinding.
+
+# **4. Prime Numbers, Floyd's Triangle and Numerical Series**
+
+These are common programming problems in written examinations because they test loops, conditions, nested loops, arithmetic and algorithmic reasoning.
+
+## **4.1 Prime number**
+
+A prime number is a natural number greater than 1 that has exactly two positive divisors: 1 and itself.
+
+Examples: 2, 3, 5, 7, 11, 13, 17.
+
+**Important:** 1 is neither prime nor composite. 2 is the only even prime number.
+
+### **C program to check whether a number is prime**
+
+```
+#include <stdio.h>
+
+int main()
+{
+    int n, i, isPrime = 1;
+
+    scanf("%d", &n);
+
+    if (n <= 1)
+        isPrime = 0;
+    else
+    {
+        for (i = 2; i * i <= n; i++)
+        {
+            if (n % i == 0)
+            {
+                isPrime = 0;
+                break;
+            }
+        }
+    }
+
+    if (isPrime)
+        printf("Prime");
+    else
+        printf("Not Prime");
+
+    return 0;
+}
+```
+
+### **Why check only up to the square root?**
+
+If a composite number \\(n\\) has a factor greater than \\(\sqrt n\\), it must have a corresponding factor smaller than \\(\sqrt n\\).
+
+Therefore, checking divisors up to \\(\sqrt n\\) is sufficient.
+
+Time complexity:
+
+\\[ O(\sqrt n) \\]
+
+### **Generate prime numbers from 1 to N**
+
+```
+#include <stdio.h>
+
+int main()
+{
+    int n, i, j, prime;
+
+    scanf("%d", &n);
+
+    for (i = 2; i <= n; i++)
+    {
+        prime = 1;
+
+        for (j = 2; j * j <= i; j++)
+        {
+            if (i % j == 0)
+            {
+                prime = 0;
+                break;
+            }
+        }
+
+        if (prime)
+            printf("%d ", i);
+    }
+
+    return 0;
+}
+```
+
+For input:
+
+```
+20
+```
+
+Output:
+
+```
+2 3 5 7 11 13 17 19
+```
+
+### **Sieve of Eratosthenes**
+
+For generating many prime numbers up to a large \\(N\\), the Sieve of Eratosthenes is more efficient than checking every number independently.
+
+Algorithm:
+
+1. Initially assume every integer from 2 to N is prime.
+2. Start from 2.
+3. Mark its multiples as composite.
+4. Move to the next unmarked number.
+5. Continue until \\(p^2>N\\).
+6. The remaining unmarked numbers are prime.
+
+Time complexity:
+
+\\[ O(N\log\log N) \\]
+
+## **4.2 Floyd's triangle**
+
+Floyd's triangle is a right-angled triangular arrangement of consecutive natural numbers.
+
+For \\(n=5\\):
+
+```
+1
+2 3
+4 5 6
+7 8 9 10
+11 12 13 14 15
+```
+
+C program:
+
+```
+#include <stdio.h>
+
+int main()
+{
+    int n, i, j, num = 1;
+
+    scanf("%d", &n);
+
+    for (i = 1; i <= n; i++)
+    {
+        for (j = 1; j <= i; j++)
+        {
+            printf("%d ", num);
+            num++;
+        }
+
+        printf("\n");
+    }
+
+    return 0;
+}
+```
+
+The number of elements in row \\(i\\) is \\(i\\).
+
+Total elements in \\(n\\) rows:
+
+\\[ 1+2+\cdots+n=\frac{n(n+1)}{2} \\]
+
+For five rows:
+
+\\[ \frac{5(6)}2=15 \\]
+
+## **4.3 Other common number patterns**
+
+### **Pattern A: Increasing numbers**
+
+For \\(n=4\\):
+
+```
+1
+12
+123
+1234
+```
+
+```
+int i, j, n = 4;
+
+for (i = 1; i <= n; i++)
+{
+    for (j = 1; j <= i; j++)
+        printf("%d", j);
+
+    printf("\n");
+}
+```
+
+### **Pattern B: Repeated row number**
+
+```
+1
+22
+333
+4444
+```
+
+```
+int i, j, n = 4;
+
+for (i = 1; i <= n; i++)
+{
+    for (j = 1; j <= i; j++)
+        printf("%d", i);
+
+    printf("\n");
+}
+```
+
+### **Pattern C: Inverted triangle**
+
+```
+1234
+123
+12
+1
+```
+
+```
+int i, j, n = 4;
+
+for (i = n; i >= 1; i--)
+{
+    for (j = 1; j <= i; j++)
+        printf("%d", j);
+
+    printf("\n");
+}
+```
+
+### **Pattern D: Pyramid of stars**
+
+```
+   *
+  ***
+ *****
+*******
+```
+
+```
+int i, j, n = 4;
+
+for (i = 1; i <= n; i++)
+{
+    for (j = 1; j <= n - i; j++)
+        printf(" ");
+
+    for (j = 1; j <= 2 * i - 1; j++)
+        printf("*");
+
+    printf("\n");
+}
+```
+
+## **4.4 Important numerical series**
+
+| Series          | First few terms    | Formula / rule              |
+| --------------- | ------------------ | --------------------------- |
+| Natural numbers | 1, 2, 3, 4, ...    | \\(a_n=n\\)                 |
+| Even numbers    | 2, 4, 6, 8, ...    | \\(a_n=2n\\)                |
+| Odd numbers     | 1, 3, 5, 7, ...    | \\(a_n=2n-1\\)              |
+| Squares         | 1, 4, 9, 16, ...   | \\(a_n=n^2\\)               |
+| Cubes           | 1, 8, 27, 64, ...  | \\(a_n=n^3\\)               |
+| Powers of 2     | 1, 2, 4, 8, ...    | \\(a_n=2^{n-1}\\)           |
+| Fibonacci       | 0, 1, 1, 2, 3, ... | \\(F_n=F\_{n-1}+F\_{n-2}\\) |
+| Harmonic        | 1, 1/2, 1/3, ...   | \\(a_n=1/n\\)               |
+| Alternating     | 1, -2, 3, -4, ...  | \\(a_n=(-1)^{n+1}n\\)       |
+
+### **Sum of first N natural numbers**
+
+\\[ S=\frac{n(n+1)}2 \\]
+
+```
+int n, i, sum = 0;
+
+scanf("%d", &n);
+
+for (i = 1; i <= n; i++)
+    sum += i;
+
+printf("%d", sum);
+```
+
+### **Sum of squares**
+
+\\[ S=1^2+2^2+\cdots+n^2 \\]
+
+\\[ S=\frac{n(n+1)(2n+1)}6 \\]
+
+```
+int n, i;
+long long sum = 0;
+
+scanf("%d", &n);
+
+for (i = 1; i <= n; i++)
+    sum += (long long)i * i;
+
+printf("%lld", sum);
+```
+
+### **Sum of cubes**
+
+\\[ S=1^3+2^3+\cdots+n^3 \\]
+
+\\[ S=\left(\frac{n(n+1)}2\right)^2 \\]
+
+### **Sum of even numbers**
+
+\\[ 2+4+6+\cdots+2n=n(n+1) \\]
+
+### **Sum of odd numbers**
+
+\\[ 1+3+5+\cdots+(2n-1)=n^2 \\]
+
+## **4.5 Generate Fibonacci series**
+
+```
+#include <stdio.h>
+
+int main()
+{
+    int n, i;
+    long long a = 0, b = 1, next;
+
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++)
+    {
+        printf("%lld ", a);
+
+        next = a + b;
+        a = b;
+        b = next;
+    }
+
+    return 0;
+}
+```
+
+For input `8`:
+
+```
+0 1 1 2 3 5 8 13
+```
+
+**Exam trap:** Some questions define Fibonacci as starting with `1, 1` instead of `0, 1`. Always inspect the stated initial terms.
+
+# **5. Factorial and Summation of Series**
+
+## **5.1 Factorial using iteration**
+
+```
+#include <stdio.h>
+
+int main()
+{
+    int n, i;
+    unsigned long long fact = 1;
+
+    scanf("%d", &n);
+
+    if (n < 0)
+    {
+        printf("Factorial is not defined");
+        return 0;
+    }
+
+    for (i = 1; i <= n; i++)
+        fact *= i;
+
+    printf("%llu", fact);
+
+    return 0;
+}
+```
+
+For input `5`:
+
+\\[ 5!=1\times2\times3\times4\times5=120 \\]
+
+For input `0`, the loop does not execute and the result remains 1.
+
+**Overflow consideration:** Even `unsigned long long` has a finite range. In common 64-bit implementations, it can hold factorials only up to \\(20!\\). The mathematical factorial grows much faster than fixed-width integer types.
+
+## **5.2 Factorial using recursion**
+
+```
+long long factorial(int n)
+{
+    if (n <= 1)
+        return 1;
+
+    return n * factorial(n - 1);
+}
+```
+
+This function assumes a non-negative input. A production-quality version should explicitly reject negative values.
+
+## **5.3 Sum of digits**
+
+Problem: Find the sum of the digits of an integer.
+
+For `n = 5274`:
+
+\\[ 5+2+7+4=18 \\]
+
+```
+int n, sum = 0;
+
+scanf("%d", &n);
+
+if (n < 0)
+    n = -n;
+
+while (n > 0)
+{
+    sum += n % 10;
+    n /= 10;
+}
+
+printf("%d", sum);
+```
+
+Output for `5274`:
+
+```
+18
+```
+
+The two key operations are:
+
+- `n % 10`: extracts the last digit.
+- `n / 10`: removes the last digit.
+
+For robust handling of the minimum signed integer, avoid directly negating it because its positive counterpart may not fit in the same signed type.
+
+## **5.4 Reverse a number**
+
+```
+int n, reverse = 0, digit;
+
+scanf("%d", &n);
+
+while (n > 0)
+{
+    digit = n % 10;
+    reverse = reverse * 10 + digit;
+    n /= 10;
+}
+
+printf("%d", reverse);
+```
+
+For input `1234`:
+
+```
+4321
+```
+
+## **5.5 Palindrome number**
+
+A number is a palindrome if it reads the same forward and backward.
+
+Examples: 121, 1331, 7.
+
+```
+int n, temp, reverse = 0, digit;
+
+scanf("%d", &n);
+
+temp = n;
+
+while (temp > 0)
+{
+    digit = temp % 10;
+    reverse = reverse * 10 + digit;
+    temp /= 10;
+}
+
+if (n == reverse)
+    printf("Palindrome");
+else
+    printf("Not Palindrome");
+```
+
+For negative numbers, define the expected convention in the question; the example above handles non-negative integers.
+
+## **5.6 Armstrong number**
+
+An Armstrong number is a number equal to the sum of its digits, each raised to the power of the number of digits.
+
+For a three-digit number:
+
+\\[ 153=1^3+5^3+3^3=153 \\]
+
+A general implementation:
+
+```
+#include <stdio.h>
+
+int main()
+{
+    int n, temp, digit, count = 0;
+    long long sum = 0, power;
+
+    scanf("%d", &n);
+
+    if (n < 0)
+    {
+        printf("Not Armstrong");
+        return 0;
+    }
+
+    temp = n;
+
+    do
+    {
+        count++;
+        temp /= 10;
+    } while (temp != 0);
+
+    temp = n;
+
+    do
+    {
+        digit = temp % 10;
+        power = 1;
+
+        for (int i = 0; i < count; i++)
+            power *= digit;
+
+        sum += power;
+        temp /= 10;
+    } while (temp != 0);
+
+    if (sum == n)
+        printf("Armstrong");
+    else
+        printf("Not Armstrong");
+
+    return 0;
+}
+```
+
+## **5.7 Summation of alternating series**
+
+Problem:
+
+\\[ S=1-2+3-4+5-\cdots+(-1)^{n+1}n \\]
+
+```
+int n, i, sum = 0;
+
+scanf("%d", &n);
+
+for (i = 1; i <= n; i++)
+{
+    if (i % 2 == 0)
+        sum -= i;
+    else
+        sum += i;
+}
+
+printf("%d", sum);
+```
+
+For \\(n=5\\):
+
+\\[ S=1-2+3-4+5=3 \\]
+
+## **5.8 Sum of the harmonic series**
+
+\\[ S=1+\frac12+\frac13+\cdots+\frac1n \\]
+
+```
+int n, i;
+double sum = 0.0;
+
+scanf("%d", &n);
+
+for (i = 1; i <= n; i++)
+    sum += 1.0 / i;
+
+printf("%.4f", sum);
+```
+
+**Exam trap:** `1 / i` performs integer division if both operands are integers. Use `1.0 / i`.
+
+# **6. Matrix Addition and Multiplication**
+
+A matrix is a rectangular arrangement of elements in rows and columns.
+
+For a matrix \\(A\\) with \\(m\\) rows and \\(n\\) columns, its dimensions are \\(m\times n\\).
+
+## **6.1 Matrix addition**
+
+Two matrices can be added only when they have the same dimensions.
+
+Given:
+
+\\[ A= \begin{bmatrix} 1&2\\\ 3&4 \end{bmatrix} ,\quad B= \begin{bmatrix} 5&6\\\ 7&8 \end{bmatrix} \\]
+
+Then:
+
+\\[ A+B= \begin{bmatrix} 1+5&2+6\\\ 3+7&4+8 \end{bmatrix} = \begin{bmatrix} 6&8\\\ 10&12 \end{bmatrix} \\]
+
+C program:
+
+```
+#include <stdio.h>
+
+int main()
+{
+    int A[10][10], B[10][10], C[10][10];
+    int r, c, i, j;
+
+    scanf("%d %d", &r, &c);
+
+    for (i = 0; i < r; i++)
+        for (j = 0; j < c; j++)
+            scanf("%d", &A[i][j]);
+
+    for (i = 0; i < r; i++)
+        for (j = 0; j < c; j++)
+            scanf("%d", &B[i][j]);
+
+    for (i = 0; i < r; i++)
+        for (j = 0; j < c; j++)
+            C[i][j] = A[i][j] + B[i][j];
+
+    for (i = 0; i < r; i++)
+    {
+        for (j = 0; j < c; j++)
+            printf("%d ", C[i][j]);
+
+        printf("\n");
+    }
+
+    return 0;
+}
+```
+
+Time complexity:
+
+\\[ O(mn) \\]
+
+## **6.2 Matrix multiplication**
+
+Matrix multiplication is one of the most important matrix-related programming problems.
+
+If:
+
+- \\(A\\) has dimensions \\(m\times n\\),
+- \\(B\\) has dimensions \\(n\times p\\),
+
+then the product \\(C=AB\\) has dimensions:
+
+\\[ m\times p \\]
+
+The number of columns in the first matrix must equal the number of rows in the second matrix.
+
+A
+
+2
+
+1
+
+3
+
+4
+
+0
+
+2
+
+×
+
+B
+
+5
+
+2
+
+1
+
+4
+
+3
+
+7
+
+\=
+
+AB
+
+20292622
+
+\\(\left(AB\right)\_{11}=(2\cdot 5)+(1\cdot 1)+(3\cdot 3)=20\\)
+
+Row
+
+12
+
+Column
+
+12
+
+Give feedback
+
+### **Example**
+
+\\[ A= \begin{bmatrix} 1&2\\\ 3&4 \end{bmatrix} ,\quad B= \begin{bmatrix} 5&6\\\ 7&8 \end{bmatrix} \\]
+
+The product is:
+
+\\[ C=AB \\]
+
+Calculate each element by multiplying a row of A by a column of B and adding the products.
+
+\\[ C\_{11}=(1\times5)+(2\times7)=19 \\]
+
+\\[ C\_{12}=(1\times6)+(2\times8)=22 \\]
+
+\\[ C\_{21}=(3\times5)+(4\times7)=43 \\]
+
+\\[ C\_{22}=(3\times6)+(4\times8)=50 \\]
+
+Therefore:
+
+\\[ AB= \begin{bmatrix} 19&22\\\ 43&50 \end{bmatrix} \\]
+
+### **C program for matrix multiplication**
+
+```
+#include <stdio.h>
+
+int main()
+{
+    int A[10][10], B[10][10], C[10][10];
+    int r1, c1, r2, c2;
+    int i, j, k;
+
+    scanf("%d %d", &r1, &c1);
+    scanf("%d %d", &r2, &c2);
+
+    if (c1 != r2)
+    {
+        printf("Matrix multiplication not possible");
+        return 0;
+    }
+
+    for (i = 0; i < r1; i++)
+        for (j = 0; j < c1; j++)
+            scanf("%d", &A[i][j]);
+
+    for (i = 0; i < r2; i++)
+        for (j = 0; j < c2; j++)
+            scanf("%d", &B[i][j]);
+
+    for (i = 0; i < r1; i++)
+    {
+        for (j = 0; j < c2; j++)
+        {
+            C[i][j] = 0;
+
+            for (k = 0; k < c1; k++)
+                C[i][j] += A[i][k] * B[k][j];
+        }
+    }
+
+    for (i = 0; i < r1; i++)
+    {
+        for (j = 0; j < c2; j++)
+            printf("%d ", C[i][j]);
+
+        printf("\n");
+    }
+
+    return 0;
+}
+```
+
+Time complexity of the conventional algorithm:
+
+\\[ O(mnp) \\]
+
+For two square matrices of order \\(n\\):
+
+\\[ O(n^3) \\]
+
+### **Common matrix examination traps**
+
+1. Matrix addition requires identical dimensions.
+2. Matrix multiplication requires `columns of A = rows of B`.
+3. The output dimensions are `rows of A × columns of B`.
+4. The accumulator `C[i][j]` must be initialized to zero before the inner multiplication loop.
+5. Matrix multiplication is generally not commutative:
+
+\\[ AB\ne BA \\]
+
+6\. Matrix multiplication is associative:
+
+\\[ (AB)C=A(BC) \\]
+
+7\. Matrix multiplication is distributive over addition:
+
+\\[ A(B+C)=AB+AC \\]
+
+# **7. Object-Oriented Programming (OOP)**
+
+Object-Oriented Programming is a programming paradigm in which software is organized around objects that combine data and the operations that manipulate that data.
+
+An object is an instance of a class.
+
+For example, a university management system may contain:
+
+- `Student`
+- `Teacher`
+- `Course`
+- `Department`
+- `Result`
+
+Each class defines a structure and behavior. Individual objects represent specific entities.
+
+## **7.1 Class and object**
+
+**Class:** A blueprint or user-defined type describing data members and member functions.
+
+**Object:** A runtime instance of a class.
+
+C++ example:
+
+```
+#include <iostream>
+using namespace std;
+
+class Student
+{
+public:
+    int id;
+    string name;
+
+    void display()
+    {
+        cout << id << " " << name;
+    }
+};
+
+int main()
+{
+    Student s1;
+
+    s1.id = 101;
+    s1.name = "Rahim";
+
+    s1.display();
+
+    return 0;
+}
+```
+
+Output:
+
+```
+101 Rahim
+```
+
+Here:
+
+- `Student` is a class.
+- `s1` is an object.
+- `id` and `name` are data members.
+- `display()` is a member function or method.
+
+## **7.2 The four characteristics of OOP**
+
+The four fundamental characteristics are:
+
+1. Encapsulation
+2. Abstraction
+3. Inheritance
+4. Polymorphism
+
+## **Four pillars of OOP**
+
+**Encapsulation**
+
+Bundling data and methods, controlling access.
+
+**Abstraction**
+
+Showing essential features, hiding implementation details.
+
+**Inheritance**
+
+Deriving a new class from an existing class.
+
+**Polymorphism**
+
+One interface, multiple forms of behavior.
+
+## **7.3 Encapsulation**
+
+Encapsulation is the bundling of data and the methods that operate on that data within a class, together with controlled access to the internal state.
+
+Example:
+
+```
+#include <iostream>
+using namespace std;
+
+class BankAccount
+{
+private:
+    double balance;
+
+public:
+    BankAccount()
+    {
+        balance = 0;
+    }
+
+    void deposit(double amount)
+    {
+        if (amount > 0)
+            balance += amount;
+    }
+
+    double getBalance()
+    {
+        return balance;
+    }
+};
+
+int main()
+{
+    BankAccount account;
+
+    account.deposit(5000);
+
+    cout << account.getBalance();
+
+    return 0;
+}
+```
+
+Output:
+
+```
+5000
+```
+
+The `balance` member is private. External code cannot directly modify it.
+
+Instead, controlled public methods provide access.
+
+**Advantages:**
+
+- Data protection.
+- Controlled state modification.
+- Reduced dependency between internal implementation and external code.
+- Easier maintenance.
+- Better modularity.
+
+## **7.4 Abstraction**
+
+Abstraction means exposing essential functionality while hiding unnecessary implementation details.
+
+Consider an ATM:
+
+- The user selects withdrawal.
+- The user enters an amount.
+- The machine processes the transaction.
+- The user does not need to understand the internal banking network protocol or database transaction implementation.
+
+C++ abstract class example:
+
+```
+#include <iostream>
+using namespace std;
+
+class Shape
+{
+public:
+    virtual double area() = 0;
+};
+
+class Rectangle : public Shape
+{
+private:
+    double length, width;
+
+public:
+    Rectangle(double l, double w)
+    {
+        length = l;
+        width = w;
+    }
+
+    double area() override
+    {
+        return length * width;
+    }
+};
+
+int main()
+{
+    Rectangle r(5, 4);
+
+    cout << r.area();
+
+    return 0;
+}
+```
+
+Output:
+
+```
+20
+```
+
+`Shape` is an abstract class because it contains a pure virtual function.
+
+An abstract class cannot be instantiated directly.
+
+## **7.5 Abstraction vs encapsulation**
+
+| Abstraction                                                              | Encapsulation                                                         |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| Focuses on what an object exposes                                        | Focuses on bundling and access control                                |
+| Hides implementation complexity                                          | Protects internal state and groups data with behavior                 |
+| Achieved through interfaces and abstract classes, among other techniques | Achieved through classes and access modifiers, among other techniques |
+| Answers: What can this object do?                                        | Answers: How is its internal state controlled?                        |
+
+A useful example:
+
+- A car's driving controls provide abstraction.
+- The internal components and controlled access to engine state illustrate encapsulation.
+
+These concepts are related but not interchangeable.
+
+## **7.6 Inheritance**
+
+Inheritance allows a derived class to acquire accessible properties and behavior from a base class.
+
+Example:
+
+```
+#include <iostream>
+using namespace std;
+
+class Animal
+{
+public:
+    void eat()
+    {
+        cout << "Eating\n";
+    }
+};
+
+class Dog : public Animal
+{
+public:
+    void bark()
+    {
+        cout << "Barking\n";
+    }
+};
+
+int main()
+{
+    Dog d;
+
+    d.eat();
+    d.bark();
+
+    return 0;
+}
+```
+
+Output:
+
+```
+Eating
+Barking
+```
+
+`Dog` inherits the accessible public member function `eat()` from `Animal`.
+
+## **7.7 Types of inheritance**
+
+### **A. Single inheritance**
+
+One derived class inherits from one base class.
+
+Animal
+
+Dog
+
+One parent → one child
+
+```
+class Animal {};
+class Dog : public Animal {};
+```
+
+### **B. Multilevel inheritance**
+
+A class derives from another derived class.
+
+Animal
+
+Mammal
+
+Dog
+
+```
+class Animal {};
+class Mammal : public Animal {};
+class Dog : public Mammal {};
+```
+
+### **C. Multiple inheritance**
+
+One derived class inherits from more than one base class.
+
+Camera
+
+Phone
+
+Smartphone
+
+```
+class Camera {};
+class Phone {};
+
+class Smartphone : public Camera, public Phone {};
+```
+
+### **D. Hierarchical inheritance**
+
+Multiple derived classes inherit from the same base class.
+
+Animal
+
+Dog
+
+Cat
+
+```
+class Animal {};
+class Dog : public Animal {};
+class Cat : public Animal {};
+```
+
+### **E. Hybrid inheritance**
+
+A combination of two or more inheritance types.
+
+For example, a combination of hierarchical and multiple inheritance.
+
+### **Summary**
+
+| Type         | Structure                        |
+| ------------ | -------------------------------- |
+| Single       | A → B                            |
+| Multilevel   | A → B → C                        |
+| Multiple     | A + B → C                        |
+| Hierarchical | A → B, C                         |
+| Hybrid       | Combination of inheritance types |
+
+## **7.8 Diamond problem in multiple inheritance**
+
+Consider:
+
+- `A` is the base class.
+- `B` and `C` inherit from `A`.
+- `D` inherits from both `B` and `C`.
+
+This creates two paths to `A`.
+
+A
+
+B
+
+C
+
+D
+
+Without special handling, `D` may contain two separate inherited `A` subobjects, making access to members of `A` ambiguous.
+
+C++ resolves this using virtual inheritance:
+
+```
+class A
+{
+public:
+    int x;
+};
+
+class B : virtual public A {};
+class C : virtual public A {};
+
+class D : public B, public C {};
+```
+
+Now `D` contains one shared virtual base `A` subobject.
+
+**Exam point:** Virtual inheritance is a C++ mechanism used to avoid duplicate base-class subobjects in diamond-shaped inheritance. It is not the same as a virtual function.
+
+## **7.9 Access modes in C++ inheritance**
+
+C++ supports public, protected and private inheritance.
+
+| Base member | Public inheritance      | Protected inheritance   | Private inheritance     |
+| ----------- | ----------------------- | ----------------------- | ----------------------- |
+| `public`    | public                  | protected               | private                 |
+| `protected` | protected               | protected               | private                 |
+| `private`   | Not directly accessible | Not directly accessible | Not directly accessible |
+
+A base class's private members still exist as part of the derived object, but the derived class cannot directly access them. Public or protected base-class methods may provide access.
+
+# **8. Polymorphism, Static Binding and Dynamic Binding**
+
+Polymorphism means one interface can represent different forms of behavior.
+
+Two important forms are:
+
+- Compile-time polymorphism.
+- Runtime polymorphism.
+
+## **8.1 Compile-time polymorphism**
+
+The compiler determines which function or operator is used during compilation.
+
+Common mechanisms:
+
+- Function overloading.
+- Operator overloading.
+- Templates in C++.
+
+Example:
+
+```
+#include <iostream>
+using namespace std;
+
+class Calculator
+{
+public:
+    int add(int a, int b)
+    {
+        return a + b;
+    }
+
+    double add(double a, double b)
+    {
+        return a + b;
+    }
+};
+
+int main()
+{
+    Calculator c;
+
+    cout << c.add(2, 3) << endl;
+    cout << c.add(2.5, 3.5);
+
+    return 0;
+}
+```
+
+Output:
+
+```
+5
+6
+```
+
+The compiler selects the appropriate overload based on the argument types.
+
+## **8.2 Runtime polymorphism**
+
+Runtime polymorphism occurs when the method implementation is selected during program execution.
+
+In C++, it is commonly achieved using:
+
+- Inheritance.
+- Virtual functions.
+- Base-class pointers or references.
+
+Example:
+
+```
+#include <iostream>
+using namespace std;
+
+class Animal
+{
+public:
+    virtual void sound()
+    {
+        cout << "Animal sound";
+    }
+};
+
+class Dog : public Animal
+{
+public:
+    void sound() override
+    {
+        cout << "Bark";
+    }
+};
+
+int main()
+{
+    Animal *ptr;
+    Dog d;
+
+    ptr = &d;
+    ptr->sound();
+
+    return 0;
+}
+```
+
+Output:
+
+```
+Bark
+```
+
+Although `ptr` is an `Animal*`, it points to a `Dog` object. Because `sound()` is virtual, the derived implementation is selected at runtime.
+
+## **8.3 Static binding vs dynamic binding**
+
+Binding means associating a function call with the function implementation that will execute.
+
+| Static binding                                     | Dynamic binding                                   |
+| -------------------------------------------------- | ------------------------------------------------- |
+| Resolved at compile time                           | Resolved at runtime                               |
+| Also called early binding                          | Also called late binding                          |
+| Common for non-virtual functions                   | Common for overridden virtual functions           |
+| Generally lower dispatch overhead                  | Requires runtime dispatch mechanism               |
+| Based on compile-time type and overload resolution | Based on runtime object type for virtual dispatch |
+
+### **Static binding example**
+
+```
+#include <iostream>
+using namespace std;
+
+class Base
+{
+public:
+    void show()
+    {
+        cout << "Base";
+    }
+};
+
+class Derived : public Base
+{
+public:
+    void show()
+    {
+        cout << "Derived";
+    }
+};
+
+int main()
+{
+    Base *ptr;
+    Derived d;
+
+    ptr = &d;
+    ptr->show();
+
+    return 0;
+}
+```
+
+Output:
+
+```
+Base
+```
+
+Why? `show()` is not virtual. The call is resolved using the pointer's static type, `Base*`.
+
+### **Dynamic binding example**
+
+Change the base declaration to:
+
+```
+virtual void show()
+```
+
+Now the same call produces:
+
+```
+Derived
+```
+
+### **Java comparison**
+
+Java instance methods are dynamically dispatched by default when overridden. Java does not use the C++ `virtual` keyword.
+
+However, `static`, `private` and `final` methods are not overridden through ordinary runtime polymorphic dispatch in the same way as ordinary instance methods.
+
+# **9. Method vs Function, Object vs Class, Friend Function and Friend Class**
+
+## **9.1 Function vs method**
+
+| Function                                          | Method                                                            |
+| ------------------------------------------------- | ----------------------------------------------------------------- |
+| A named block of reusable code                    | A function associated with a class or object                      |
+| Can exist independently in procedural programming | Defined as part of a class/interface or associated with an object |
+| May not operate on an object                      | Often operates on an object's state                               |
+| Example: `calculateSum()`                         | Example: `student.display()`                                      |
+
+In C++, a free-standing function is not a member of a class. A member function is commonly called a method.
+
+In Java, methods are declared within classes, interfaces or enums; there are no ordinary free-standing functions.
+
+## **9.2 Class vs object**
+
+| Class                            | Object                      |
+| -------------------------------- | --------------------------- |
+| Blueprint or user-defined type   | Instance of a class         |
+| Defines data members and methods | Holds actual instance state |
+| Logical definition               | Runtime entity              |
+| Example: `Student`               | Example: `Student s1;`      |
+
+A class may define many objects.
+
+## **9.3 Friend function in C++**
+
+A friend function is a non-member function that is granted access to a class's private and protected members.
+
+Example:
+
+```
+#include <iostream>
+using namespace std;
+
+class Box
+{
+private:
+    int length;
+
+public:
+    Box()
+    {
+        length = 10;
+    }
+
+    friend void display(Box b);
+};
+
+void display(Box b)
+{
+    cout << b.length;
+}
+
+int main()
+{
+    Box b;
+
+    display(b);
+
+    return 0;
+}
+```
+
+Output:
+
+```
+10
+```
+
+Important properties:
+
+- A friend function is not a member function.
+- It can access private and protected members of the class that declares it as a friend.
+- It is called like an ordinary function.
+- It does not have a `this` pointer.
+- Friendship is not automatically inherited.
+- Friendship is not automatically reciprocal.
+- Friendship is not automatically transitive.
+
+## **9.4 Friend class**
+
+A friend class allows all member functions of the friend class to access the private and protected members of the class granting friendship.
+
+```
+#include <iostream>
+using namespace std;
+
+class A
+{
+private:
+    int x = 100;
+
+    friend class B;
+};
+
+class B
+{
+public:
+    void display(A obj)
+    {
+        cout << obj.x;
+    }
+};
+
+int main()
+{
+    A a;
+    B b;
+
+    b.display(a);
+
+    return 0;
+}
+```
+
+Output:
+
+```
+100
+```
+
+**Exam distinction:** Friendship is a C++ feature. Java does not have `friend` functions or `friend` classes.
+
+# **10. Method Overloading vs Method Overriding**
+
+Both are associated with polymorphism, but they are fundamentally different.
+
+## **10.1 Method overloading**
+
+Method overloading means defining multiple methods with the same name but different parameter lists.
+
+Example:
+
+```
+class Calculator
+{
+public:
+    int add(int a, int b)
+    {
+        return a + b;
+    }
+
+    int add(int a, int b, int c)
+    {
+        return a + b + c;
+    }
+
+    double add(double a, double b)
+    {
+        return a + b;
+    }
+};
+```
+
+The methods have the same name but different parameter lists.
+
+### **Important trap**
+
+Changing only the return type does not create a valid overload.
+
+```
+int calculate(int a);
+double calculate(int a);  // Invalid overload
+```
+
+The parameter list is identical, so the compiler cannot distinguish the calls based only on the return type.
+
+## **10.2 Method overriding**
+
+Method overriding occurs when a derived class provides its own implementation of an inherited method with a compatible signature.
+
+C++ example:
+
+```
+#include <iostream>
+using namespace std;
+
+class Parent
+{
+public:
+    virtual void show()
+    {
+        cout << "Parent";
+    }
+};
+
+class Child : public Parent
+{
+public:
+    void show() override
+    {
+        cout << "Child";
+    }
+};
+
+int main()
+{
+    Child c;
+    c.show();
+
+    return 0;
+}
+```
+
+Output:
+
+```
+Child
+```
+
+## **10.3 Comparison**
+
+| Overloading                                    | Overriding                                                |
+| ---------------------------------------------- | --------------------------------------------------------- |
+| Same method name, different parameter lists    | Derived class redefines an inherited method               |
+| Usually compile-time polymorphism              | Runtime polymorphism when virtual dispatch is used in C++ |
+| Inheritance is not required                    | Inheritance is required                                   |
+| Return type alone cannot distinguish overloads | Return type must be compatible with the overridden method |
+| Resolved using overload resolution             | Resolved through dynamic dispatch for virtual methods     |
+
+### **Java-specific point**
+
+Java supports method overloading and overriding. Java allows covariant return types when overriding: a derived method may return a more specific reference type than the base method.
+
+# **11. Constructors and Destructors**
+
+## **11.1 Constructor**
+
+A constructor is a special member function that initializes an object.
+
+In C++:
+
+- It has the same name as the class.
+- It has no return type.
+- It is called automatically when an object is initialized.
+- It can be overloaded.
+- It can have default arguments.
+- It may use a member initializer list.
+
+Example:
+
+```
+#include <iostream>
+using namespace std;
+
+class Student
+{
+public:
+    int id;
+
+    Student()
+    {
+        id = 0;
+        cout << "Default constructor\n";
+    }
+
+    Student(int x)
+    {
+        id = x;
+        cout << "Parameterized constructor\n";
+    }
+};
+
+int main()
+{
+    Student s1;
+    Student s2(101);
+
+    cout << s1.id << endl;
+    cout << s2.id;
+
+    return 0;
+}
+```
+
+Output:
+
+```
+Default constructor
+Parameterized constructor
+0
+101
+```
+
+### **Types of constructors**
+
+1. **Default constructor:** Takes no arguments.
+2. **Parameterized constructor:** Accepts arguments.
+3. **Copy constructor:** Initializes an object from another object of the same class.
+4. **Move constructor:** Transfers resources from an eligible source object in modern C++.
+
+Copy constructor example:
+
+```
+class Number
+{
+public:
+    int value;
+
+    Number(int x)
+    {
+        value = x;
+    }
+
+    Number(const Number &obj)
+    {
+        value = obj.value;
+    }
+};
+```
+
+Usage:
+
+```
+Number n1(10);
+Number n2 = n1;
+```
+
+Here, `n2` is initialized using the copy constructor.
+
+### **Constructor initializer list**
+
+```
+class Student
+{
+private:
+    int id;
+
+public:
+    Student(int x) : id(x)
+    {
+    }
+};
+```
+
+This initializes `id` directly rather than assigning to it after the object has been constructed.
+
+It is particularly important for:
+
+- `const` data members.
+- Reference data members.
+- Members without default constructors.
+- Base-class construction.
+
+## **11.2 Destructor**
+
+A destructor is a special C++ member function called when an object is destroyed.
+
+Characteristics:
+
+- Its name is the class name prefixed by `~`.
+- It has no return type.
+- It takes no parameters.
+- A class has only one destructor; it cannot be overloaded.
+- It is commonly used for releasing resources owned by the object.
+
+Example:
+
+```
+#include <iostream>
+using namespace std;
+
+class Test
+{
+public:
+    Test()
+    {
+        cout << "Constructor\n";
+    }
+
+    ~Test()
+    {
+        cout << "Destructor\n";
+    }
+};
+
+int main()
+{
+    Test t;
+
+    cout << "Inside main\n";
+
+    return 0;
+}
+```
+
+Output:
+
+```
+Constructor
+Inside main
+Destructor
+```
+
+The local object is destroyed when execution leaves its scope.
+
+## **11.3 Constructor and destructor execution order**
+
+For local objects in the same scope:
+
+- Constructors execute in declaration order.
+- Destructors execute in reverse destruction order.
+
+```
+#include <iostream>
+using namespace std;
+
+class Test
+{
+    int id;
+
+public:
+    Test(int x) : id(x)
+    {
+        cout << "Construct " << id << endl;
+    }
+
+    ~Test()
+    {
+        cout << "Destroy " << id << endl;
+    }
+};
+
+int main()
+{
+    Test a(1);
+    Test b(2);
+    Test c(3);
+
+    return 0;
+}
+```
+
+Output:
+
+```
+Construct 1
+Construct 2
+Construct 3
+Destroy 3
+Destroy 2
+Destroy 1
+```
+
+## **11.4 Constructor and destructor in inheritance**
+
+In C++, the base-class constructor runs before the derived-class constructor. Destruction occurs in reverse order.
+
+```
+#include <iostream>
+using namespace std;
+
+class Base
+{
+public:
+    Base()
+    {
+        cout << "Base constructor\n";
+    }
+
+    ~Base()
+    {
+        cout << "Base destructor\n";
+    }
+};
+
+class Derived : public Base
+{
+public:
+    Derived()
+    {
+        cout << "Derived constructor\n";
+    }
+
+    ~Derived()
+    {
+        cout << "Derived destructor\n";
+    }
+};
+
+int main()
+{
+    Derived d;
+    return 0;
+}
+```
+
+Output:
+
+```
+Base constructor
+Derived constructor
+Derived destructor
+Base destructor
+```
+
+### **Virtual destructor**
+
+If a derived object may be destroyed through a base-class pointer, the base class should generally have a virtual destructor.
+
+```
+class Base
+{
+public:
+    virtual ~Base() {}
+};
+
+class Derived : public Base
+{
+public:
+    ~Derived() {}
+};
+
+int main()
+{
+    Base *ptr = new Derived();
+
+    delete ptr;
+}
+```
+
+The virtual destructor ensures that the derived destructor is also invoked.
+
+Without a virtual destructor, deleting a derived object through a base pointer when the base destructor is non-virtual results in undefined behavior in C++.
+
+## **11.5 Constructor and destructor in Java**
+
+Java has constructors but does not have C++-style destructors.
+
+Java uses garbage collection to reclaim unreachable objects. The timing of garbage collection is not deterministic.
+
+Java's `finalize()` mechanism is deprecated and should not be used as a reliable resource-management mechanism.
+
+For files, sockets and similar resources, Java commonly uses `try-with-resources` and `AutoCloseable`.
+
+# **12. Branching and Looping — Output Tracing**
+
+Control-flow questions frequently test nested conditions, loop boundaries, `break`, `continue`, `switch`, and the difference between `while` and `do-while`.
+
+## **12.1 Branching statements**
+
+### **A.&#x20;**`if`
+
+```
+int x = 10;
+
+if (x > 5)
+    printf("A");
+
+printf("B");
+```
+
+Output:
+
+```
+AB
+```
+
+Only the first `printf` belongs to the `if`.
+
+### **B.&#x20;**`if-else`
+
+```
+int x = 5;
+
+if (x % 2 == 0)
+    printf("Even");
+else
+    printf("Odd");
+```
+
+Output:
+
+```
+Odd
+```
+
+### **C. Nested&#x20;**`if-else`**&#x20;and dangling else**
+
+Consider:
+
+```
+int a = 1, b = 0;
+
+if (a == 1)
+    if (b == 1)
+        printf("A");
+    else
+        printf("B");
+```
+
+Output:
+
+```
+B
+```
+
+The `else` is associated with the nearest unmatched `if`, which is `if (b == 1)`.
+
+Use braces to avoid ambiguity:
+
+```
+if (a == 1)
+{
+    if (b == 1)
+        printf("A");
+}
+else
+{
+    printf("B");
+}
+```
+
+This version has a different structure: the `else` belongs to the outer `if`.
+
+## **12.2 Switch statement**
+
+```
+int x = 2;
+
+switch (x)
+{
+    case 1:
+        printf("One");
+        break;
+
+    case 2:
+        printf("Two");
+
+    case 3:
+        printf("Three");
+        break;
+
+    default:
+        printf("Default");
+}
+```
+
+Output:
+
+```
+TwoThree
+```
+
+Why?
+
+- `case 2` matches.
+- There is no `break` after `case 2`.
+- Execution falls through to `case 3`.
+- The `break` after `case 3` terminates the switch.
+
+**Exam trap:** A `switch` without `break` may execute multiple case bodies after the matching label.
+
+In C and C++, the controlling expression of a traditional `switch` must have an appropriate integral or enumeration type; ordinary floating-point values and strings cannot be used as traditional switch expressions. Java supports `switch` over additional types such as `String` and certain reference types, depending on the language version.
+
+## **12.3&#x20;**`while`**&#x20;vs&#x20;**`do-while`
+
+| `while`                       | `do-while`                           |
+| ----------------------------- | ------------------------------------ |
+| Entry-controlled loop         | Exit-controlled loop                 |
+| Condition checked before body | Condition checked after body         |
+| May execute zero times        | Executes at least once               |
+| Syntax: `while(condition)`    | Syntax: `do {...} while(condition);` |
+
+Example:
+
+```
+int x = 5;
+
+while (x < 5)
+{
+    printf("A");
+}
+```
+
+Output: nothing.
+
+Now:
+
+```
+int x = 5;
+
+do
+{
+    printf("A");
+} while (x < 5);
+```
+
+Output:
+
+```
+A
+```
+
+## **12.4&#x20;**`break`**&#x20;vs&#x20;**`continue`
+
+- `break`: terminates the nearest enclosing loop or switch.
+- `continue`: skips the remaining body of the current iteration and proceeds to the next iteration.
+
+Example:
+
+```
+int i;
+
+for (i = 1; i <= 5; i++)
+{
+    if (i == 3)
+        continue;
+
+    printf("%d ", i);
+}
+```
+
+Output:
+
+```
+1 2 4 5
+```
+
+With `break` instead:
+
+```
+for (i = 1; i <= 5; i++)
+{
+    if (i == 3)
+        break;
+
+    printf("%d ", i);
+}
+```
+
+Output:
+
+```
+1 2
+```
+
+## **12.5 Nested loop output**
+
+```
+int i, j;
+
+for (i = 1; i <= 3; i++)
+{
+    for (j = 1; j <= 2; j++)
+        printf("%d%d ", i, j);
+}
+```
+
+Output:
+
+```
+11 12 21 22 31 32
+```
+
+The inner loop completes all its iterations for each iteration of the outer loop.
+
+Number of executions of the inner statement:
+
+\\[ 3\times2=6 \\]
+
+For nested loops with independent bounds \\(n\\) and \\(m\\), the time complexity is commonly:
+
+\\[ O(nm) \\]
+
+## **12.6 Loop with an unusual increment**
+
+```
+int i = 1;
+
+for (; i <= 10; i += 2)
+    printf("%d ", i);
+```
+
+Output:
+
+```
+1 3 5 7 9
+```
+
+The initialization and increment sections of a `for` loop are optional. The two semicolons remain necessary.
+
+## **12.7 Loop tracing with&#x20;**`continue`
+
+A particularly common trap is using `continue` in a `for` loop versus a `while` loop.
+
+```
+int i;
+
+for (i = 1; i <= 5; i++)
+{
+    if (i == 3)
+        continue;
+
+    printf("%d ", i);
+}
+```
+
+The `for` loop's increment expression still executes after `continue`.
+
+Output:
+
+```
+1 2 4 5
+```
+
+But this `while` loop can become infinite:
+
+```
+int i = 1;
+
+while (i <= 5)
+{
+    if (i == 3)
+        continue;
+
+    printf("%d ", i);
+    i++;
+}
+```
+
+When `i` reaches 3, `continue` skips `i++`. The condition remains true forever.
+
+Correct version:
+
+```
+int i = 1;
+
+while (i <= 5)
+{
+    if (i == 3)
+    {
+        i++;
+        continue;
+    }
+
+    printf("%d ", i);
+    i++;
+}
+```
+
+Output:
+
+```
+1 2 4 5
+```
+
+# **13. Call by Value, Call by Reference and Pointers**
+
+These topics are particularly important in C and C++ programming questions.
+
+## **13.1 Call by value**
+
+In call by value, a function receives a copy of the argument's value.
+
+Changing the parameter does not change the caller's original variable.
+
+```
+#include <stdio.h>
+
+void change(int x)
+{
+    x = 100;
+}
+
+int main()
+{
+    int a = 10;
+
+    change(a);
+
+    printf("%d", a);
+
+    return 0;
+}
+```
+
+Output:
+
+```
+10
+```
+
+The function modifies its local copy.
+
+## **13.2 Call by reference in C++**
+
+Call by reference allows a function parameter to refer directly to the caller's variable.
+
+```
+#include <iostream>
+using namespace std;
+
+void change(int &x)
+{
+    x = 100;
+}
+
+int main()
+{
+    int a = 10;
+
+    change(a);
+
+    cout << a;
+
+    return 0;
+}
+```
+
+Output:
+
+```
+100
+```
+
+Here, `x` is a reference to `a`.
+
+## **13.3 Simulating reference behavior in C using pointers**
+
+C does not have C++ reference variables. It can achieve similar effects by passing addresses.
+
+```
+#include <stdio.h>
+
+void change(int *x)
+{
+    *x = 100;
+}
+
+int main()
+{
+    int a = 10;
+
+    change(&a);
+
+    printf("%d", a);
+
+    return 0;
+}
+```
+
+Output:
+
+```
+100
+```
+
+## **13.4 Swap two numbers**
+
+### **Incorrect swap: call by value**
+
+```
+void swap(int a, int b)
+{
+    int temp = a;
+    a = b;
+    b = temp;
+}
+```
+
+This swaps only the local copies.
+
+### **Correct swap using pointers in C**
+
+```
+#include <stdio.h>
+
+void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int main()
+{
+    int x = 10, y = 20;
+
+    swap(&x, &y);
+
+    printf("%d %d", x, y);
+
+    return 0;
+}
+```
+
+Output:
+
+```
+20 10
+```
+
+### **Correct swap using references in C++**
+
+```
+void swap(int &a, int &b)
+{
+    int temp = a;
+    a = b;
+    b = temp;
+}
+```
+
+## **13.5 Call by value vs call by reference**
+
+| Feature                    | Call by value                            | Call by reference                    |
+| -------------------------- | ---------------------------------------- | ------------------------------------ |
+| Parameter receives         | A copy                                   | A reference to the original variable |
+| Original variable changed? | Not through the parameter                | Yes, if modified                     |
+| C support                  | Yes                                      | No native reference parameters       |
+| C++ support                | Yes                                      | Yes                                  |
+| Pointer-based alternative  | Not required                             | Pass an address and dereference it   |
+| Risk                       | Copying large objects can cost resources | Unintended modification or aliasing  |
+
+### **Important Java trap: Java is always pass-by-value**
+
+Java does not support C++-style call by reference.
+
+When an object reference is passed to a method, Java copies the reference value. Both the caller and method may then refer to the same object, so the method can mutate that object's fields. But reassigning the method's parameter does not reassign the caller's variable.
+
+Example:
+
+```
+class Box {
+    int value;
+}
+
+public class Main {
+    static void change(Box b) {
+        b.value = 100;
+    }
+
+    public static void main(String[] args) {
+        Box x = new Box();
+        x.value = 10;
+
+        change(x);
+
+        System.out.println(x.value);
+    }
+}
+```
+
+Output:
+
+```
+100
+```
+
+The method changed the object referred to by the copied reference.
+
+Now consider:
+
+```
+static void replace(Box b) {
+    b = new Box();
+    b.value = 500;
+}
+```
+
+Calling `replace(x)` does not change which object `x` refers to in the caller.
+
+## **13.6 Pointers in C/C++**
+
+A pointer is a variable that stores the memory address of another object or function.
+
+```
+int x = 10;
+int *p = &x;
+
+printf("%d\n", x);
+printf("%p\n", (void *)p);
+printf("%d\n", *p);
+```
+
+- `&x`: address of `x`.
+- `p`: pointer storing the address of `x`.
+- `*p`: dereferencing the pointer to access the pointed-to value.
+
+## **13.7 Pointer arithmetic**
+
+For a pointer of type `int*`, incrementing the pointer advances it by `sizeof(int)` bytes, not necessarily by one byte.
+
+```
+int a[] = {10, 20, 30};
+int *p = a;
+
+printf("%d ", *p);
+p++;
+printf("%d", *p);
+```
+
+Output:
+
+```
+10 20
+```
+
+The pointer advances to the next `int` element.
+
+## **13.8 Array and pointer relationship**
+
+In many expressions, an array name is converted to a pointer to its first element.
+
+```
+int a[3] = {10, 20, 30};
+
+printf("%d", *(a + 1));
+```
+
+Output:
+
+```
+20
+```
+
+The expression:
+
+\\[ a[i]\equiv \*(a+i) \\]
+
+is valid for array indexing in C and C++.
+
+However, an array is not itself a pointer. For example:
+
+```
+int a[5];
+int *p = a;
+```
+
+`a` is an array object, while `p` is a pointer variable.
+
+## **13.9 Null, void, wild and dangling pointers**
+
+| Pointer type     | Meaning                                                                                                   |
+| ---------------- | --------------------------------------------------------------------------------------------------------- |
+| Null pointer     | Intentionally points to no object/function                                                                |
+| Void pointer     | Generic object pointer; must be converted to an appropriate object pointer type before dereferencing in C |
+| Wild pointer     | Uninitialized pointer                                                                                     |
+| Dangling pointer | Pointer whose referenced object or allocated storage is no longer valid                                   |
+
+Example of a null pointer:
+
+```
+int *p = NULL;
+```
+
+Do not dereference it.
+
+Example of a wild pointer:
+
+```
+int *p;
+```
+
+`p` is uninitialized. Using it as though it points to a valid object is unsafe.
+
+Example of a dangling pointer:
+
+```
+int *p = malloc(sizeof(int));
+
+free(p);
+```
+
+After `free(p)`, the pointer value is no longer valid for accessing the released allocation. Setting `p = NULL` can prevent accidental reuse through that variable.
+
+## **13.10 Pointer to pointer**
+
+A pointer can point to another pointer.
+
+```
+int x = 10;
+int *p = &x;
+int **q = &p;
+
+printf("%d", **q);
+```
+
+Output:
+
+```
+10
+```
+
+- `p` points to `x`.
+- `q` points to `p`.
+- `*q` gives `p`.
+- `**q` gives the value of `x`.
+
+## **13.11 Dynamic memory allocation**
+
+C functions:
+
+| Function    | Purpose                                                                   |
+| ----------- | ------------------------------------------------------------------------- |
+| `malloc()`  | Allocates uninitialized storage                                           |
+| `calloc()`  | Allocates storage for multiple elements and initializes all bytes to zero |
+| `realloc()` | Resizes an existing allocation, possibly moving it                        |
+| `free()`    | Releases allocated storage                                                |
+
+Example:
+
+```
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int n = 5;
+    int *p = malloc(n * sizeof(int));
+
+    if (p == NULL)
+        return 1;
+
+    for (int i = 0; i < n; i++)
+        p[i] = (i + 1) * 10;
+
+    for (int i = 0; i < n; i++)
+        printf("%d ", p[i]);
+
+    free(p);
+    p = NULL;
+
+    return 0;
+}
+```
+
+Output:
+
+```
+10 20 30 40 50
+```
+
+**Important distinction:** `calloc()` zeroes the allocated bytes. This is not a universal guarantee that every possible type's semantic zero value is represented by all-bits-zero, although it works as expected for ordinary integer and floating-point types on mainstream systems.
+
+### **Memory leaks**
+
+A memory leak occurs when dynamically allocated memory is no longer reachable but has not been released.
+
+```
+int *p = malloc(100 * sizeof(int));
+
+p = NULL;  // The allocation address is lost
+```
+
+The allocated memory can no longer be freed through `p`, resulting in a memory leak.
+
+# **14. Data Types and Type Conversion**
+
+Data types determine what values a variable can represent, how much storage it occupies, and what operations are meaningful.
+
+## **14.1 Fundamental C data types**
+
+| Type             | Typical purpose                                                      |
+| ---------------- | -------------------------------------------------------------------- |
+| `char`           | Character or small integer                                           |
+| `int`            | Integer                                                              |
+| `float`          | Single-precision floating-point                                      |
+| `double`         | Double-precision floating-point                                      |
+| `void`           | No value / generic function return type                              |
+| `_Bool` / `bool` | Boolean representation (`bool` in C requires `stdbool.h` before C23) |
+
+Modifiers include:
+
+- `signed`
+- `unsigned`
+- `short`
+- `long`
+- `long long`
+
+**Important:** The exact size of many C data types is implementation-dependent. Do not assume `int` is always 4 bytes or `long` is always 8 bytes.
+
+Use `sizeof` to determine sizes on a particular implementation.
+
+```
+#include <stdio.h>
+
+int main()
+{
+    printf("%zu\n", sizeof(char));
+    printf("%zu\n", sizeof(int));
+    printf("%zu\n", sizeof(float));
+    printf("%zu\n", sizeof(double));
+
+    return 0;
+}
+```
+
+The standard guarantees:
+
+\\[ sizeof(char)=1 \\]
+
+where one C byte is the size of a `char`, and a C byte contains at least 8 bits. Other sizes vary by implementation.
+
+## **14.2 Signed vs unsigned integer**
+
+A signed integer can represent negative and positive values.
+
+An unsigned integer represents only non-negative values.
+
+For an unsigned integer type with \\(n\\) value bits:
+
+\\[ 0\leq x\leq2^n-1 \\]
+
+Unsigned arithmetic is performed modulo \\(2^n\\).
+
+Example:
+
+```
+unsigned int x = 0;
+x--;
+
+printf("%u", x);
+```
+
+On a common implementation with a 32-bit `unsigned int`, output is:
+
+```
+4294967295
+```
+
+The exact value depends on the width of `unsigned int`.
+
+## **14.3 Type conversion**
+
+### **Implicit conversion**
+
+The compiler automatically converts one type to another.
+
+```
+int a = 10;
+double b = a;
+
+printf("%.1f", b);
+```
+
+Output:
+
+```
+10.0
+```
+
+### **Explicit conversion (type casting)**
+
+```
+int a = 5, b = 2;
+
+double result = (double)a / b;
+
+printf("%.2f", result);
+```
+
+Output:
+
+```
+2.50
+```
+
+## **14.4 Integer promotion**
+
+In C and C++, types narrower than `int` are often promoted to `int` or `unsigned int` before arithmetic operations.
+
+```
+char a = 10, b = 20;
+int c = a + b;
+```
+
+The addition is normally performed after integer promotion.
+
+## **14.5 Floating-point precision**
+
+Floating-point numbers are approximations of real numbers.
+
+```
+double x = 0.1 + 0.2;
+printf("%.17f", x);
+```
+
+The result may look similar to:
+
+```
+0.30000000000000004
+```
+
+This occurs because many decimal fractions cannot be represented exactly in binary floating-point.
+
+**Exam point:** Do not assume floating-point equality is always safe.
+
+Instead of:
+
+```
+if (a == b)
+```
+
+a numerical program may compare:
+
+\\[ |a-b|<\epsilon \\]
+
+where \\(\epsilon\\) is an appropriately chosen tolerance.
+
+## **14.6 Scope and storage classes**
+
+| Term            | Meaning                                                                                           |
+| --------------- | ------------------------------------------------------------------------------------------------- |
+| Local variable  | Declared within a block or function                                                               |
+| Global variable | Declared outside functions                                                                        |
+| `auto`          | Automatic storage duration in C; type inference in modern C++                                     |
+| `static`        | Static storage duration for local variables; internal linkage for certain file-scope declarations |
+| `extern`        | Declares an entity defined elsewhere                                                              |
+| `register`      | Historical storage-class hint; largely obsolete                                                   |
+| `const`         | Restricts modification through that declared access path                                          |
+| `volatile`      | Informs the compiler that accesses have observable effects beyond ordinary program flow           |
+
+### **Static local variable output trap**
+
+```
+#include <stdio.h>
+
+void count()
+{
+    static int x = 0;
+    x++;
+    printf("%d ", x);
+}
+
+int main()
+{
+    count();
+    count();
+    count();
+
+    return 0;
+}
+```
+
+Output:
+
+```
+1 2 3
+```
+
+A static local variable retains its value between function calls.
+
+# **15. Version Control with Git**
+
+Version control is a system for tracking changes to source code and other project files. It allows developers to inspect history, restore earlier versions, collaborate and manage parallel development.
+
+Git is a distributed version control system.
+
+## **15.1 Important Git terminology**
+
+| Term                 | Explanation                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------ |
+| Repository           | A project and its version-control data                                                     |
+| Working directory    | Current files being edited                                                                 |
+| Staging area / Index | Area containing changes selected for the next commit                                       |
+| Commit               | A recorded snapshot of staged changes                                                      |
+| Branch               | An independent line of development                                                         |
+| Merge                | Combining changes from different branches                                                  |
+| Clone                | Creating a local copy of a remote repository                                               |
+| Fetch                | Downloading remote references and objects without integrating them into the current branch |
+| Pull                 | Fetching and integrating remote changes                                                    |
+| Push                 | Sending local commits to a remote repository                                               |
+| HEAD                 | Reference to the currently checked-out commit or branch state                              |
+| Conflict             | A situation where changes cannot be automatically reconciled                               |
+| Remote               | A named reference to another repository, commonly hosted on a server                       |
+
+## **15.2 Git's three main areas**
+
+## **Git workflow**
+
+**Working Directory**
+
+Files you edit
+
+git add
+
+**Staging Area**
+
+Changes selected for commit
+
+git commit
+
+**Local Repository**
+
+Recorded commits and history
+
+git push / git fetch
+
+**Remote Repository**
+
+Shared repository on a server
+
+## **15.3 Essential Git commands**
+
+### **A. Configure Git**
+
+```
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+```
+
+### **B. Initialize a repository**
+
+```
+git init
+```
+
+Creates a new Git repository in the current directory.
+
+### **C. Clone a repository**
+
+```
+git clone https://github.com/user/project.git
+```
+
+Creates a local copy of the repository.
+
+### **D. Check status**
+
+```
+git status
+```
+
+Shows modified, untracked and staged files.
+
+### **E. Stage changes**
+
+```
+git add file.c
+```
+
+Stages one file.
+
+```
+git add .
+```
+
+Stages changes under the current directory, subject to Git's path and ignore rules.
+
+### **F. Commit changes**
+
+```
+git commit -m "Add matrix multiplication"
+```
+
+Records the staged changes in the local repository.
+
+### **G. View commit history**
+
+```
+git log
+```
+
+Compact history:
+
+```
+git log --oneline
+```
+
+### **H. View changes**
+
+```
+git diff
+```
+
+Shows unstaged changes.
+
+```
+git diff --staged
+```
+
+Shows staged changes relative to the current commit.
+
+### **I. Create and switch branches**
+
+```
+git branch feature
+```
+
+Creates a branch.
+
+```
+git switch feature
+```
+
+Switches to the branch.
+
+Combined:
+
+```
+git switch -c feature
+```
+
+Older equivalent:
+
+```
+git checkout -b feature
+```
+
+### **J. Merge branches**
+
+```
+git switch main
+git merge feature
+```
+
+Integrates the changes from `feature` into `main`.
+
+### **K. Push and pull**
+
+```
+git push origin main
+```
+
+Pushes local commits to the remote `origin`, branch `main`.
+
+```
+git pull origin main
+```
+
+Fetches and integrates changes from the remote branch.
+
+### **L. Fetch**
+
+```
+git fetch origin
+```
+
+Downloads remote changes without merging them into the current branch.
+
+### **M. Remove a file**
+
+```
+git rm file.txt
+```
+
+Stages the file's deletion.
+
+### **N. Rename a file**
+
+```
+git mv old.txt new.txt
+```
+
+Stages the rename operation.
+
+## **15.4 Git merge vs rebase**
+
+| Merge                                              | Rebase                                          |
+| -------------------------------------------------- | ----------------------------------------------- |
+| Combines histories                                 | Replays commits on top of another base          |
+| May create a merge commit                          | Usually creates a linear history                |
+| Preserves the branch topology                      | Rewrites commit history                         |
+| Generally suitable for integrating shared branches | Useful for reorganizing local, unpublished work |
+
+Example:
+
+```
+git switch feature
+git rebase main
+```
+
+This replays the feature branch's commits on top of the latest `main` history.
+
+**Important:** Avoid rebasing commits that other people already rely on unless the team has coordinated the history rewrite.
+
+## **15.5 Git reset vs revert**
+
+These commands are frequently confused.
+
+| `git reset`                                         | `git revert`                                         |
+| --------------------------------------------------- | ---------------------------------------------------- |
+| Moves the current branch reference                  | Creates a new commit that reverses an earlier commit |
+| Can change commit history                           | Preserves existing history                           |
+| Useful for local history correction                 | Suitable for safely undoing shared changes           |
+| Can unstage or discard changes depending on options | Usually keeps the working history explicit           |
+
+Common reset modes:
+
+```
+git reset --soft HEAD~1
+```
+
+Moves the branch back one commit while retaining changes staged.
+
+```
+git reset --mixed HEAD~1
+```
+
+Moves the branch back one commit and leaves changes unstaged. This is the default reset mode.
+
+```
+git reset --hard HEAD~1
+```
+
+Moves the branch back and discards tracked working-tree and staging changes that differ from the target commit. It can destroy uncommitted work.
+
+Revert:
+
+```
+git revert <commit-id>
+```
+
+Creates a new commit that reverses the specified commit's changes.
+
+## **15.6 Git merge conflict**
+
+A merge conflict occurs when Git cannot automatically combine changes.
+
+Typical conflict markers:
+
+```
+<<<<<<< HEAD
+Current branch content
+=======
+Incoming branch content
+>>>>>>> feature
+```
+
+Resolution process:
+
+1. Open the conflicted file.
+2. Decide which changes to keep or combine.
+3. Remove conflict markers.
+4. Stage the resolved file using `git add`.
+5. Complete the merge commit if required.
+
+## **15.7&#x20;**`.gitignore`
+
+A `.gitignore` file specifies intentionally untracked files and patterns that Git should ignore.
+
+Example:
+
+```
+node_modules/
+.env
+*.log
+dist/
+build/
+__pycache__/
+```
+
+**Important:** `.gitignore` does not automatically remove files that are already tracked by Git.
+
+## **15.8 Git vs GitHub**
+
+| Git                                | GitHub                                                            |
+| ---------------------------------- | ----------------------------------------------------------------- |
+| Version control software           | Hosted collaboration platform                                     |
+| Can run locally                    | Provides remote repository hosting and collaboration tools        |
+| Tracks code history                | Adds pull requests, issues, code review and project collaboration |
+| Distributed version control system | A service built around Git repositories                           |
+
+Other Git hosting services include GitLab and Bitbucket.
+
+# **16. Essential Bash Commands for IT Recruitment Exams**
+
+Bash is a command-line shell commonly used on Linux systems. These commands are particularly useful for system administration, server maintenance and network engineering.
+
+## **16.1 Navigation and directory management**
+
+| Command | Purpose                                   | Example          |
+| ------- | ----------------------------------------- | ---------------- |
+| `pwd`   | Print current directory                   | `pwd`            |
+| `ls`    | List directory contents                   | `ls -la`         |
+| `cd`    | Change directory                          | `cd /var/log`    |
+| `mkdir` | Create directory                          | `mkdir projects` |
+| `rmdir` | Remove an empty directory                 | `rmdir old`      |
+| `touch` | Create empty file or update timestamps    | `touch file.txt` |
+| `tree`  | Display directory hierarchy, if installed | `tree`           |
+
+## **16.2 File operations**
+
+| Command | Purpose                         |
+| ------- | ------------------------------- |
+| `cp`    | Copy files or directories       |
+| `mv`    | Move or rename                  |
+| `rm`    | Remove files                    |
+| `cat`   | Display or concatenate files    |
+| `less`  | View content page by page       |
+| `head`  | Display the beginning of a file |
+| `tail`  | Display the end of a file       |
+| `wc`    | Count lines, words and bytes    |
+| `file`  | Identify file type              |
+| `stat`  | Display file metadata           |
+
+Examples:
+
+```
+cp source.txt backup.txt
+mv old.txt new.txt
+rm file.txt
+head -n 10 logfile.txt
+tail -f /var/log/syslog
+wc -l file.txt
+```
+
+`tail -f` follows new content appended to a log file.
+
+## **16.3 Search commands**
+
+### `grep`
+
+Searches text using patterns.
+
+```
+grep "error" logfile.txt
+```
+
+Case-insensitive:
+
+```
+grep -i "error" logfile.txt
+```
+
+Recursive search:
+
+```
+grep -r "TODO" .
+```
+
+Show matching line numbers:
+
+```
+grep -n "failed" logfile.txt
+```
+
+### `find`
+
+Searches for files and directories.
+
+```
+find /home -name "*.txt"
+```
+
+Find directories:
+
+```
+find . -type d
+```
+
+Find files:
+
+```
+find . -type f
+```
+
+### `which`**&#x20;and&#x20;**`whereis`
+
+```
+which python
+whereis python
+```
+
+`which` finds the executable selected through the current `PATH`; `whereis` searches standard locations for binary, source and manual files.
+
+## **16.4 Permissions**
+
+Linux permissions include:
+
+- Read (`r`)
+- Write (`w`)
+- Execute (`x`)
+
+They apply to:
+
+- Owner
+- Group
+- Others
+
+Example:
+
+```
+ls -l
+```
+
+Output may look like:
+
+```
+-rwxr-xr--
+```
+
+This means:
+
+- Owner: read, write, execute.
+- Group: read, execute.
+- Others: read only.
+
+### `chmod`
+
+Change permissions.
+
+```
+chmod 755 script.sh
+```
+
+Permission calculation:
+
+| Permission | Numeric value |
+| ---------- | ------------- |
+| Read       | 4             |
+| Write      | 2             |
+| Execute    | 1             |
+
+Thus:
+
+\\[ 755=(7,5,5) \\]
+
+- Owner: \\(4+2+1=7\\)
+- Group: \\(4+1=5\\)
+- Others: \\(4+1=5\\)
+
+### `chown`
+
+Change ownership:
+
+```
+sudo chown user:group file.txt
+```
+
+### `chgrp`
+
+Change group ownership:
+
+```
+sudo chgrp developers project.txt
+```
+
+## **16.5 Process management**
+
+| Command  | Purpose                                              |
+| -------- | ---------------------------------------------------- |
+| `ps`     | Display process information                          |
+| `top`    | Interactive process and resource monitor             |
+| `htop`   | Enhanced process monitor, if installed               |
+| `kill`   | Send a signal to a process                           |
+| `pkill`  | Send a signal based on process name/pattern          |
+| `jobs`   | List shell jobs                                      |
+| `bg`     | Resume a job in the background                       |
+| `fg`     | Bring a job to the foreground                        |
+| `nice`   | Start a process with an adjusted scheduling priority |
+| `renice` | Change the priority of an existing process           |
+
+Examples:
+
+```
+ps aux
+top
+kill 1234
+```
+
+A process ID is commonly called a PID.
+
+### **Important signals**
+
+| Signal    | Number | Meaning                                        |
+| --------- | ------ | ---------------------------------------------- |
+| `SIGHUP`  | 1      | Hangup                                         |
+| `SIGINT`  | 2      | Interrupt                                      |
+| `SIGKILL` | 9      | Force termination; cannot be caught or ignored |
+| `SIGTERM` | 15     | Request termination; can be caught or handled  |
+
+Prefer a normal termination request where appropriate:
+
+```
+kill -15 1234
+```
+
+`kill -9` should not be the first choice because it prevents the process from performing its normal cleanup.
+
+## **16.6 System and disk information**
+
+| Command         | Purpose                                     |
+| --------------- | ------------------------------------------- |
+| `uname -a`      | Kernel and system information               |
+| `hostname`      | Show or set hostname                        |
+| `uptime`        | Show uptime and load averages               |
+| `free -h`       | Show memory usage                           |
+| `df -h`         | Show filesystem disk usage                  |
+| `du -sh folder` | Show folder size                            |
+| `lsblk`         | List block devices                          |
+| `lscpu`         | Show CPU information                        |
+| `lsmem`         | Show memory block information, if available |
+| `dmesg`         | Show kernel messages                        |
+| `journalctl`    | Query systemd journal logs                  |
+
+### `df`**&#x20;vs&#x20;**`du`
+
+- `df`: reports filesystem-level capacity and usage.
+- `du`: estimates space used by files and directories.
+
+Example:
+
+```
+df -h
+du -sh /var/log
+```
+
+## **16.7 Networking commands**
+
+| Command       | Purpose                                                    |
+| ------------- | ---------------------------------------------------------- |
+| `ip addr`     | Show IP addresses and interfaces                           |
+| `ip route`    | Show routing table                                         |
+| `ping`        | Test reachability using ICMP Echo                          |
+| `traceroute`  | Trace a route to a destination, if installed               |
+| `tracepath`   | Trace path and path-MTU information, if available          |
+| `ss -tulnp`   | Show socket and listening-port information                 |
+| `curl`        | Transfer data using URLs                                   |
+| `wget`        | Download files                                             |
+| `dig`         | DNS query utility                                          |
+| `nslookup`    | DNS lookup utility                                         |
+| `hostname -I` | Show configured IP addresses                               |
+| `ethtool`     | Inspect or configure supported Ethernet interface settings |
+
+Examples:
+
+```
+ip addr
+ip route
+ping 8.8.8.8
+ss -tulnp
+dig example.com
+curl -I https://example.com
+```
+
+**Exam distinction:**
+
+- `ping` checks IP-level reachability using ICMP, not whether a particular application service is working.
+- `ss` is a modern socket-inspection tool; `netstat` is older and may not be installed.
+- `dig` and `nslookup` query DNS; they do not test general Internet connectivity.
+
+## **16.8 Package management**
+
+On Debian/Ubuntu:
+
+```
+sudo apt update
+sudo apt upgrade
+sudo apt install package-name
+sudo apt remove package-name
+```
+
+On Fedora:
+
+```
+sudo dnf check-update
+sudo dnf upgrade
+sudo dnf install package-name
+sudo dnf remove package-name
+```
+
+`apt update` refreshes package metadata; it does not itself upgrade installed packages.
+
+## **16.9 Pipes and redirection**
+
+Pipes and redirection are common Bash examination topics.
+
+### **Pipe&#x20;**`|`
+
+Sends the standard output of one command to the standard input of another.
+
+```
+ps aux | grep python
+```
+
+### **Output redirection&#x20;**`>`
+
+Writes output to a file, replacing existing contents.
+
+```
+echo "Hello" > output.txt
+```
+
+### **Append&#x20;**`>>`
+
+Appends output.
+
+```
+echo "Another line" >> output.txt
+```
+
+### **Input redirection&#x20;**`<`
+
+```
+sort < names.txt
+```
+
+### **Standard error redirection&#x20;**`2>`
+
+```
+command 2> error.log
+```
+
+### **Redirect both standard output and standard error**
+
+```
+command > output.log 2>&1
+```
+
+This sends standard output to `output.log` and then redirects standard error to the same destination.
+
+# **17. Additional High-Probability Programming Problems**
+
+The following problems are often used to assess basic algorithmic reasoning and the ability to manipulate integers, arrays and strings.
+
+## **17.1 Find the largest of three numbers**
+
+```
+int a, b, c;
+
+scanf("%d %d %d", &a, &b, &c);
+
+if (a >= b && a >= c)
+    printf("%d", a);
+else if (b >= a && b >= c)
+    printf("%d", b);
+else
+    printf("%d", c);
+```
+
+Using `>=` ensures ties are handled.
+
+## **17.2 Find the largest and second-largest distinct elements in an array**
+
+```
+#include <stdio.h>
+#include <limits.h>
+
+int main()
+{
+    int a[] = {10, 50, 20, 50, 40};
+    int n = sizeof(a) / sizeof(a[0]);
+
+    int largest = INT_MIN;
+    int second = INT_MIN;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (a[i] > largest)
+        {
+            second = largest;
+            largest = a[i];
+        }
+        else if (a[i] > second && a[i] < largest)
+        {
+            second = a[i];
+        }
+    }
+
+    if (second == INT_MIN)
+        printf("No second distinct largest value");
+    else
+        printf("Largest = %d, Second = %d", largest, second);
+
+    return 0;
+}
+```
+
+Output:
+
+```
+Largest = 50, Second = 40
+```
+
+This version treats the second-largest element as a distinct value. A robust implementation should use a separate Boolean flag rather than relying on `INT_MIN` as a sentinel if the array itself may contain `INT_MIN`.
+
+Time complexity:
+
+\\[ O(n) \\]
+
+## **17.3 Linear search**
+
+```
+int a[] = {10, 20, 30, 40, 50};
+int key = 30;
+int found = -1;
+
+for (int i = 0; i < 5; i++)
+{
+    if (a[i] == key)
+    {
+        found = i;
+        break;
+    }
+}
+
+printf("%d", found);
+```
+
+Output:
+
+```
+2
+```
+
+Time complexity:
+
+\\[ O(n) \\]
+
+## **17.4 Binary search**
+
+Binary search works on a sorted array.
+
+```
+#include <stdio.h>
+
+int main()
+{
+    int a[] = {10, 20, 30, 40, 50, 60};
+    int n = 6, key = 40;
+    int low = 0, high = n - 1;
+    int mid, found = -1;
+
+    while (low <= high)
+    {
+        mid = low + (high - low) / 2;
+
+        if (a[mid] == key)
+        {
+            found = mid;
+            break;
+        }
+        else if (a[mid] < key)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+
+    printf("%d", found);
+
+    return 0;
+}
+```
+
+Output:
+
+```
+3
+```
+
+Time complexity:
+
+\\[ O(\log n) \\]
+
+**Exam trap:** Binary search requires the data to be sorted according to the search order.
+
+## **17.5 Bubble sort**
+
+Bubble sort repeatedly compares adjacent elements and swaps them if they are in the wrong order.
+
+```
+#include <stdio.h>
+
+int main()
+{
+    int a[] = {5, 1, 4, 2, 8};
+    int n = 5, temp;
+
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (a[j] > a[j + 1])
+            {
+                temp = a[j];
+                a[j] = a[j + 1];
+                a[j + 1] = temp;
+            }
+        }
+    }
+
+    for (int i = 0; i < n; i++)
+        printf("%d ", a[i]);
+
+    return 0;
+}
+```
+
+Output:
+
+```
+1 2 4 5 8
+```
+
+Time complexity:
+
+- Average: \\(O(n^2)\\)
+- Worst: \\(O(n^2)\\)
+- Best: \\(O(n)\\) with an early-exit optimization.
+- Auxiliary space: \\(O(1)\\).
+
+## **17.6 Selection sort**
+
+Selection sort repeatedly selects the smallest remaining element and places it in the next sorted position.
+
+```
+int a[] = {64, 25, 12, 22, 11};
+int n = 5;
+
+for (int i = 0; i < n - 1; i++)
+{
+    int minIndex = i;
+
+    for (int j = i + 1; j < n; j++)
+    {
+        if (a[j] < a[minIndex])
+            minIndex = j;
+    }
+
+    int temp = a[i];
+    a[i] = a[minIndex];
+    a[minIndex] = temp;
+}
+```
+
+Time complexity:
+
+\\[ O(n^2) \\]
+
+## **17.7 Insertion sort**
+
+Insertion sort builds a sorted portion by inserting each new element into its correct position.
+
+```
+int a[] = {5, 2, 4, 6, 1, 3};
+int n = 6;
+
+for (int i = 1; i < n; i++)
+{
+    int key = a[i];
+    int j = i - 1;
+
+    while (j >= 0 && a[j] > key)
+    {
+        a[j + 1] = a[j];
+        j--;
+    }
+
+    a[j + 1] = key;
+}
+```
+
+Time complexity:
+
+- Best: \\(O(n)\\)
+- Average: \\(O(n^2)\\)
+- Worst: \\(O(n^2)\\)
+
+## **17.8 Sorting algorithm comparison**
+
+| Algorithm      | Best             | Average          | Worst            | Stable?    |
+| -------------- | ---------------- | ---------------- | ---------------- | ---------- |
+| Bubble sort    | \\(O(n)\\)\*     | \\(O(n^2)\\)     | \\(O(n^2)\\)     | Yes        |
+| Selection sort | \\(O(n^2)\\)     | \\(O(n^2)\\)     | \\(O(n^2)\\)     | Usually no |
+| Insertion sort | \\(O(n)\\)       | \\(O(n^2)\\)     | \\(O(n^2)\\)     | Yes        |
+| Merge sort     | \\(O(n\log n)\\) | \\(O(n\log n)\\) | \\(O(n\log n)\\) | Yes        |
+| Quick sort     | \\(O(n\log n)\\) | \\(O(n\log n)\\) | \\(O(n^2)\\)     | Usually no |
+| Heap sort      | \\(O(n\log n)\\) | \\(O(n\log n)\\) | \\(O(n\log n)\\) | No         |
+
+\*Bubble sort achieves \\(O(n)\\) best-case time only when implemented with a swap-detection flag.
+
+## **17.9 Reverse an array**
+
+```
+int a[] = {1, 2, 3, 4, 5};
+int n = 5;
+
+for (int i = 0; i < n / 2; i++)
+{
+    int temp = a[i];
+    a[i] = a[n - 1 - i];
+    a[n - 1 - i] = temp;
+}
+```
+
+Result:
+
+```
+5 4 3 2 1
+```
+
+Time complexity:
+
+\\[ O(n) \\]
+
+Auxiliary space:
+
+\\[ O(1) \\]
+
+## **17.10 Count vowels in a string**
+
+```
+#include <stdio.h>
+#include <ctype.h>
+
+int main()
+{
+    char str[] = "Government IT Examination";
+    int count = 0;
+
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        char ch = tolower((unsigned char)str[i]);
+
+        if (ch == 'a' || ch == 'e' || ch == 'i' ||
+            ch == 'o' || ch == 'u')
+        {
+            count++;
+        }
+    }
+
+    printf("%d", count);
+
+    return 0;
+}
+```
+
+Output:
+
+```
+10
+```
+
+The string terminator `'\0'` marks the end of a C string.
+
+## **17.11 Check whether two strings are equal**
+
+```
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    char a[] = "computer";
+    char b[] = "computer";
+
+    if (strcmp(a, b) == 0)
+        printf("Equal");
+    else
+        printf("Not Equal");
+
+    return 0;
+}
+```
+
+Output:
+
+```
+Equal
+```
+
+`strcmp()` returns:
+
+- `0` if strings are equal.
+- A negative value if the first differing character in the first string has a lower value.
+- A positive value if it has a higher value.
+
+Do not assume it returns exactly `-1` or `1`.
+
+## **17.12 Check whether a string is a palindrome**
+
+```
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    char str[] = "madam";
+    int left = 0;
+    int right = strlen(str) - 1;
+    int palindrome = 1;
+
+    while (left < right)
+    {
+        if (str[left] != str[right])
+        {
+            palindrome = 0;
+            break;
+        }
+
+        left++;
+        right--;
+    }
+
+    if (palindrome)
+        printf("Palindrome");
+    else
+        printf("Not Palindrome");
+
+    return 0;
+}
+```
+
+Output:
+
+```
+Palindrome
+```
+
+## **17.13 Find GCD and LCM**
+
+The Greatest Common Divisor (GCD) is the largest positive integer that divides two integers without a remainder.
+
+Euclidean algorithm:
+
+\\[ gcd(a,b)=gcd(b,a\bmod b) \\]
+
+until \\(b=0\\).
+
+```
+int a = 48, b = 18;
+int x = a, y = b;
+
+while (y != 0)
+{
+    int temp = y;
+    y = x % y;
+    x = temp;
+}
+
+int gcd = x;
+```
+
+Output:
+
+```
+6
+```
+
+For nonzero integers:
+
+\\[ LCM(a,b)=\frac{|a\times b|}{GCD(a,b)} \\]
+
+For the example:
+
+\\[ LCM(48,18)=\frac{48\times18}{6}=144 \\]
+
+For production code, use a sufficiently wide type and avoid overflow in the intermediate product.
+
+## **17.14 Find whether a year is a leap year**
+
+A year is a leap year if:
+
+- It is divisible by 400, or
+- It is divisible by 4 but not by 100.
+
+```
+int year;
+
+scanf("%d", &year);
+
+if (year % 400 == 0 ||
+    (year % 4 == 0 && year % 100 != 0))
+{
+    printf("Leap Year");
+}
+else
+{
+    printf("Not Leap Year");
+}
+```
+
+Examples:
+
+| Year | Result          |
+| ---- | --------------- |
+| 2000 | Leap year       |
+| 1900 | Not a leap year |
+| 2024 | Leap year       |
+| 2025 | Not a leap year |
+
+# **18. Additional Programming Concepts Frequently Tested**
+
+## **18.1 Time and space complexity**
+
+Time complexity describes how an algorithm's running time grows with input size. Space complexity describes how its memory requirements grow.
+
+### **Common Big-O complexities**
+
+| Complexity       | Name         | Example                                   |
+| ---------------- | ------------ | ----------------------------------------- |
+| \\(O(1)\\)       | Constant     | Accessing an array element                |
+| \\(O(\log n)\\)  | Logarithmic  | Binary search                             |
+| \\(O(n)\\)       | Linear       | Traversing an array                       |
+| \\(O(n\log n)\\) | Linearithmic | Merge sort                                |
+| \\(O(n^2)\\)     | Quadratic    | Nested loops over an array                |
+| \\(O(n^3)\\)     | Cubic        | Conventional square matrix multiplication |
+| \\(O(2^n)\\)     | Exponential  | Naïve recursive Fibonacci                 |
+| \\(O(n!)\\)      | Factorial    | Generating all permutations               |
+
+### **Code-tracing complexity problems**
+
+**Example A:**
+
+```
+for (int i = 0; i < n; i++)
+    printf("%d ", i);
+```
+
+The loop executes \\(n\\) times.
+
+\\[ T(n)=O(n) \\]
+
+**Example B:**
+
+```
+for (int i = 0; i < n; i++)
+{
+    for (int j = 0; j < n; j++)
+        printf("*");
+}
+```
+
+The inner statement executes \\(n\times n\\) times.
+
+\\[ T(n)=O(n^2) \\]
+
+**Example C:**
+
+```
+for (int i = 1; i < n; i *= 2)
+    printf("%d ", i);
+```
+
+The variable doubles on each iteration.
+
+\\[ 1,2,4,8,16,\ldots \\]
+
+The number of iterations is approximately \\(\log_2n\\).
+
+\\[ T(n)=O(\log n) \\]
+
+**Example D:**
+
+```
+for (int i = 0; i < n; i++)
+{
+    for (int j = 1; j < n; j *= 2)
+    {
+        printf("*");
+    }
+}
+```
+
+Outer loop: \\(O(n)\\).
+
+Inner loop: \\(O(\log n)\\).
+
+Therefore:
+
+\\[ T(n)=O(n\log n) \\]
+
+## **18.2 Pass by pointer vs pointer to constant**
+
+C and C++ questions sometimes test the meaning of `const` with pointers.
+
+```
+const int *p;
+```
+
+Pointer to constant integer: the integer cannot be modified through `p`, but `p` can point elsewhere.
+
+```
+int *const p = &x;
+```
+
+Constant pointer to integer: `p` cannot point elsewhere, but the pointed-to integer can be modified through `p`.
+
+```
+const int *const p = &x;
+```
+
+Constant pointer to constant integer: neither the pointer nor the value can be modified through `p`.
+
+## **18.3 Structure vs union in C**
+
+A structure stores its members as separate fields, while a union shares storage among its members.
+
+```
+struct Data
+{
+    int a;
+    float b;
+};
+```
+
+Each member has its own storage, subject to padding and alignment.
+
+```
+union Data
+{
+    int a;
+    float b;
+};
+```
+
+The members share storage. Only one member's stored value should be treated as active at a time under the applicable language rules.
+
+| Structure                                                        | Union                                                                     |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Each member has separate storage                                 | Members share storage                                                     |
+| Can hold meaningful values in all members simultaneously         | Typically used to represent one of several alternative values             |
+| Size is at least enough for all members plus possible padding    | Size is sufficient for its largest member plus possible alignment padding |
+| Modifying one member does not overwrite another member's storage | Writing one member changes the shared representation                      |
+
+## **18.4 Recursion and stack overflow**
+
+Every recursive call generally requires a new stack frame. Excessive recursion can exhaust the call stack.
+
+Example of infinite recursion:
+
+```
+void fun()
+{
+    fun();
+}
+```
+
+There is no base case, so the function never terminates normally.
+
+## **18.5 C vs C++ vs Java — high-value distinctions**
+
+| Feature                    | C                                | C++                    | Java                                                                  |
+| -------------------------- | -------------------------------- | ---------------------- | --------------------------------------------------------------------- |
+| Primary paradigm           | Procedural                       | Multi-paradigm         | Object-oriented and multi-paradigm                                    |
+| Classes                    | No                               | Yes                    | Yes                                                                   |
+| Objects                    | No built-in class objects        | Yes                    | Yes                                                                   |
+| Pointer arithmetic         | Yes                              | Yes                    | No ordinary pointer arithmetic                                        |
+| References                 | No C++-style references          | Yes                    | Object references exist, but parameters are passed by value           |
+| Multiple class inheritance | No                               | Yes                    | No multiple inheritance of classes; multiple interfaces are supported |
+| Operator overloading       | No                               | Yes                    | Generally no user-defined operator overloading                        |
+| Function overloading       | No                               | Yes                    | Yes                                                                   |
+| Method overriding          | No class methods                 | Yes                    | Yes                                                                   |
+| Virtual functions          | No                               | Yes                    | Ordinary overridable instance methods use dynamic dispatch            |
+| Friend function/class      | No                               | Yes                    | No                                                                    |
+| Destructor                 | No class destructor              | Yes                    | No C++-style deterministic destructor                                 |
+| Garbage collection         | No built-in tracing GC           | No built-in tracing GC | Automatic garbage collection                                          |
+| Exception handling         | No built-in C++-style exceptions | Yes                    | Yes                                                                   |
+| Preprocessor               | Yes                              | Yes                    | No C/C++-style preprocessor                                           |
+
+### **Common Java output trap: integer division**
+
+```
+public class Main {
+    public static void main(String[] args) {
+        int x = 5 / 2;
+        double y = 5 / 2;
+
+        System.out.println(x);
+        System.out.println(y);
+    }
+}
+```
+
+Output:
+
+```
+2
+2.0
+```
+
+Even though `y` is a `double`, the expression `5 / 2` is evaluated as integer division first.
+
+Correct:
+
+```
+double y = 5.0 / 2;
+```
+
+Output:
+
+```
+2.5
+```
+
+### **Common Java output trap: string concatenation**
+
+```
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(10 + 20 + "Java");
+        System.out.println("Java" + 10 + 20);
+    }
+}
+```
+
+Output:
+
+```
+30Java
+Java1020
+```
+
+Explanation:
+
+- In the first expression, `10 + 20` is numeric addition before string concatenation.
+- In the second, string concatenation starts first and continues from left to right.
+
+### **Common Java output trap:&#x20;**`==`**&#x20;vs&#x20;**`.equals()`
+
+For primitive values, `==` compares values.
+
+For object references, `==` checks whether both references refer to the same object. The `.equals()` method checks logical equality according to the class's implementation.
+
+```
+String a = new String("Hello");
+String b = new String("Hello");
+
+System.out.println(a == b);
+System.out.println(a.equals(b));
+```
+
+Output:
+
+```
+false
+true
+```
+
+### **Common Java output trap: static variables**
+
+```
+class Test {
+    static int x = 0;
+
+    Test() {
+        x++;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        new Test();
+        new Test();
+        new Test();
+
+        System.out.println(Test.x);
+    }
+}
+```
+
+Output:
+
+```
+3
+```
+
+The static variable belongs to the class rather than to individual object instances.
+
+# **19. Model Examination Questions with Worked Solutions**
+
+The following questions are designed around the kinds of reasoning that appear in written recruitment examinations. They are illustrative practice questions, not claims about a particular examination's official question distribution.
+
+## **Section A — Code output analysis**
+
+### **Question 1**
+
+Determine the output:
+
+```
+int x = 5;
+printf("%d ", x++);
+printf("%d ", ++x);
+printf("%d", x);
+```
+
+**Solution:**
+
+- Initially, `x = 5`.
+- First statement prints 5, then `x = 6`.
+- Second statement increments `x` to 7, then prints 7.
+- Third statement prints 7.
+
+Answer
+
+```
+5 7 7
+```
+
+### **Question 2**
+
+Determine the output:
+
+```
+int a = 10, b = 3;
+
+printf("%d ", a / b);
+printf("%d ", a % b);
+printf("%d", a / b * b);
+```
+
+**Solution:**
+
+\\[ 10/3=3 \\]
+
+\\[ 10\\%3=1 \\]
+
+\\[ (10/3)\times3=3\times3=9 \\]
+
+Answer
+
+```
+3 1 9
+```
+
+### **Question 3**
+
+Determine the output:
+
+```
+int x = 0;
+
+if (x++ && ++x)
+    printf("A");
+else
+    printf("B");
+
+printf("%d", x);
+```
+
+**Solution:**
+
+- `x++` evaluates to 0, then increments `x` to 1.
+- Logical AND short-circuits because its left operand is false.
+- `++x` is not executed.
+- The `else` branch executes.
+
+Answer
+
+```
+B1
+```
+
+### **Question 4**
+
+Determine the output:
+
+```
+int i = 1, sum = 0;
+
+while (i <= 5)
+{
+    sum += i;
+    i += 2;
+}
+
+printf("%d", sum);
+```
+
+**Solution:**
+
+Values added:
+
+\\[ 1+3+5=9 \\]
+
+Answer
+
+```
+9
+```
+
+### **Question 5**
+
+Determine the output:
+
+```
+int x = 2;
+
+switch (x)
+{
+    case 1:
+        printf("A");
+
+    case 2:
+        printf("B");
+
+    case 3:
+        printf("C");
+        break;
+
+    default:
+        printf("D");
+}
+```
+
+**Solution:** Execution begins at `case 2` and falls through to `case 3`.
+
+Answer
+
+```
+BC
+```
+
+### **Question 6**
+
+Determine the output:
+
+```
+int a = 3;
+
+printf("%d", a << 2);
+```
+
+**Solution:**
+
+Left-shifting by two positions multiplies the value by four for this non-negative example:
+
+\\[ 3\times2^2=12 \\]
+
+Answer
+
+```
+12
+```
+
+### **Question 7**
+
+Determine the output:
+
+```
+int x = 5, y = 10;
+
+printf("%d", x > y ? x : y);
+```
+
+Answer
+
+```
+10
+```
+
+### **Question 8**
+
+Determine the output:
+
+```
+int a = 1, b = 2, c = 3;
+
+printf("%d", a + b * c);
+```
+
+**Solution:**
+
+Multiplication occurs before addition:
+
+\\[ 1+(2\times3)=7 \\]
+
+Answer
+
+```
+7
+```
+
+### **Question 9**
+
+Determine the output:
+
+```
+int i = 5;
+
+printf("%d ", i--);
+printf("%d ", i);
+printf("%d", --i);
+```
+
+**Solution:**
+
+- First prints 5; `i` becomes 4.
+- Second prints 4.
+- Third decrements to 3 and prints 3.
+
+Answer
+
+```
+5 4 3
+```
+
+### **Question 10**
+
+Determine the output:
+
+```
+int i = 1;
+
+do
+{
+    printf("%d ", i);
+    i++;
+} while (i < 1);
+```
+
+Answer
+
+```
+1
+```
+
+A `do-while` loop executes at least once.
+
+## **Section B — Recursion**
+
+### **Question 11**
+
+Determine the output:
+
+```
+void fun(int n)
+{
+    if (n == 0)
+        return;
+
+    printf("%d ", n);
+    fun(n - 1);
+}
+
+int main()
+{
+    fun(4);
+}
+```
+
+**Solution:** Output is printed during recursive descent.
+
+Answer
+
+```
+4 3 2 1
+```
+
+### **Question 12**
+
+Determine the output:
+
+```
+void fun(int n)
+{
+    if (n == 0)
+        return;
+
+    fun(n - 1);
+    printf("%d ", n);
+}
+
+int main()
+{
+    fun(4);
+}
+```
+
+**Solution:** Output is printed during recursion unwinding.
+
+Answer
+
+```
+1 2 3 4
+```
+
+### **Question 13**
+
+Determine the output:
+
+```
+int fun(int n)
+{
+    if (n <= 1)
+        return 1;
+
+    return n * fun(n - 1);
+}
+
+int main()
+{
+    printf("%d", fun(4));
+}
+```
+
+\\[ 4\times3\times2\times1=24 \\]
+
+Answer
+
+```
+24
+```
+
+### **Question 14**
+
+Determine the output:
+
+```
+int fun(int n)
+{
+    if (n == 0)
+        return 0;
+
+    return n + fun(n - 1);
+}
+
+int main()
+{
+    printf("%d", fun(5));
+}
+```
+
+\\[ 1+2+3+4+5=15 \\]
+
+Answer
+
+```
+15
+```
+
+### **Question 15**
+
+What is the output?
+
+```
+int fun(int n)
+{
+    static int x = 1;
+
+    if (n == 0)
+        return 0;
+
+    x++;
+    return x + fun(n - 1);
+}
+
+int main()
+{
+    printf("%d", fun(3));
+}
+```
+
+**Solution:**
+
+The same static variable is modified in each call.
+
+- `fun(3)`: `x` becomes 2; contributes 2.
+- `fun(2)`: `x` becomes 3; contributes 3.
+- `fun(1)`: `x` becomes 4; contributes 4.
+- `fun(0)`: returns 0.
+
+\\[ 2+3+4=9 \\]
+
+Answer
+
+```
+9
+```
+
+## **Section C — OOP and C++**
+
+### **Question 16**
+
+What is the output?
+
+```
+class A
+{
+public:
+    void show()
+    {
+        cout << "A";
+    }
+};
+
+class B : public A
+{
+public:
+    void show()
+    {
+        cout << "B";
+    }
+};
+
+int main()
+{
+    B obj;
+    A *ptr = &obj;
+
+    ptr->show();
+}
+```
+
+**Solution:** `show()` is not virtual. The call is resolved using the static type `A*`.
+
+Answer
+
+```
+A
+```
+
+### **Question 17**
+
+If the base class declaration is changed to:
+
+```
+virtual void show()
+```
+
+what is the output?
+
+**Solution:** Runtime dispatch invokes the derived-class implementation.
+
+Answer
+
+```
+B
+```
+
+### **Question 18**
+
+What is the output?
+
+```
+class Test
+{
+public:
+    Test()
+    {
+        cout << "C";
+    }
+
+    ~Test()
+    {
+        cout << "D";
+    }
+};
+
+int main()
+{
+    Test a;
+    Test b;
+}
+```
+
+**Solution:**
+
+- `a` constructed.
+- `b` constructed.
+- `b` destroyed.
+- `a` destroyed.
+
+Answer
+
+```
+CCDD
+```
+
+### **Question 19**
+
+What is the output?
+
+```
+class A
+{
+public:
+    A()
+    {
+        cout << "A";
+    }
+};
+
+class B : public A
+{
+public:
+    B()
+    {
+        cout << "B";
+    }
+};
+
+int main()
+{
+    B obj;
+}
+```
+
+Answer
+
+```
+AB
+```
+
+### **Question 20**
+
+Which OOP concept allows one method name to represent different implementations based on the runtime object type?
+
+**Answer:** Runtime polymorphism, typically implemented using method overriding and dynamic dispatch.
+
+# **20. More Analytical Questions and Answers**
+
+## **20.1 Programming fundamentals**
+
+**1. What is the difference between&#x20;**`=`**&#x20;and&#x20;**`==`**?**
+
+- `=` is the assignment operator.
+- `==` is the equality comparison operator.
+
+**2. What is the difference between&#x20;**`&&`**&#x20;and&#x20;**`&`**?**
+
+- `&&` is logical AND and supports short-circuit evaluation.
+- `&` is bitwise AND for integral operands; it does not short-circuit.
+
+**3. What is the difference between&#x20;**`break`**&#x20;and&#x20;**`continue`**?**
+
+- `break` exits the nearest loop or switch.
+- `continue` skips the remainder of the current loop iteration.
+
+**4. What is the difference between&#x20;**`while`**&#x20;and&#x20;**`do-while`**?**
+
+`while` checks its condition before executing the body; `do-while` checks after the body.
+
+**5. What is the difference between local and global variables?**
+
+A local variable is declared within a block or function and has scope limited to that region. A global variable is declared outside functions and may be accessible throughout the relevant translation unit or through declarations in other translation units.
+
+**6. What is a recursive function?**
+
+A function that calls itself, directly or indirectly.
+
+**7. What is a base case?**
+
+The condition that stops further recursive calls.
+
+**8. What is an infinite loop?**
+
+A loop that does not terminate because its exit condition is never satisfied or its control flow prevents termination.
+
+**9. What is the difference between compiler and interpreter?**
+
+A compiler translates source code into another representation, commonly machine code or intermediate code. An interpreter executes a program through an execution engine. Many modern language implementations combine compilation and interpretation.
+
+**10. What is an algorithm?**
+
+A finite, well-defined sequence of steps to solve a problem.
+
+## **20.2 OOP**
+
+**11. Which OOP principle supports code reuse through an existing class?**
+
+Inheritance.
+
+**12. Which OOP principle hides implementation details?**
+
+Abstraction.
+
+**13. Which OOP principle controls access to internal data?**
+
+Encapsulation.
+
+**14. Which OOP principle supports one interface with different implementations?**
+
+Polymorphism.
+
+**15. Can constructors be virtual in C++?**
+
+No. Constructors cannot be virtual because an object must be constructed before its runtime type can be used for virtual dispatch.
+
+**16. Can destructors be virtual in C++?**
+
+Yes. They should generally be virtual in a polymorphic base class when derived objects may be deleted through base pointers.
+
+**17. Can a constructor be overloaded?**
+
+Yes.
+
+**18. Can a destructor be overloaded?**
+
+No. A class has only one destructor.
+
+**19. Can a static member function directly access non-static data members?**
+
+No. A static member function has no implicit `this` pointer and cannot directly access instance members without an object.
+
+**20. Is a friend function a member of the class?**
+
+No. It is a non-member function granted access to specified private and protected members.
+
+**21. What is an abstract class?**
+
+A class that cannot be instantiated directly and is designed to provide a common abstraction. In C++, a class with at least one pure virtual function is abstract.
+
+**22. What is an interface?**
+
+A contract defining operations that implementing classes must provide. Java has a formal `interface` construct; C++ commonly models interfaces using abstract classes.
+
+## **20.3 Data structures and algorithms**
+
+**23. What is the difference between an array and a linked list?**
+
+| Array                                           | Linked list                                                |
+| ----------------------------------------------- | ---------------------------------------------------------- |
+| Contiguous storage                              | Nodes linked through references/pointers                   |
+| Direct indexed access                           | Sequential traversal for position access                   |
+| Typically low per-element overhead              | Extra pointer/reference overhead                           |
+| Insertion in the middle often requires shifting | Insertion can be efficient when the relevant node is known |
+| Usually better cache locality                   | Usually poorer cache locality                              |
+
+**24. What is a stack?**
+
+A linear data structure following LIFO: Last In, First Out.
+
+Operations:
+
+- Push
+- Pop
+- Peek/Top
+
+**25. What is a queue?**
+
+A linear data structure following FIFO: First In, First Out.
+
+Operations:
+
+- Enqueue
+- Dequeue
+- Front/Peek
+
+**26. What is a circular queue?**
+
+A queue in which the final array position logically connects back to the first, allowing unused positions to be reused.
+
+**27. What is a linked list?**
+
+A dynamic data structure made of nodes, each storing data and one or more links to other nodes.
+
+**28. What is a binary tree?**
+
+A tree in which each node has at most two children.
+
+**29. What is a binary search tree?**
+
+A binary tree whose nodes satisfy an ordering rule: values in the left subtree are smaller than the node, and values in the right subtree are greater, subject to the implementation's duplicate-value policy.
+
+**30. What is the difference between BFS and DFS?**
+
+- BFS explores level by level and commonly uses a queue.
+- DFS explores deeply before backtracking and commonly uses a stack or recursion.
+
+# **21. Practical Programming Problems — Exam Practice Set**
+
+Try to solve these without looking at the solutions first. They cover algorithmic reasoning, control flow, arrays, strings and OOP.
+
+**Programming knowledge self-test**
+
+0/8 answered
+
+**1. What is the output of \`printf("%d", 17 / 5 + 17 % 5);\`?**
+
+3
+
+4
+
+5
+
+6
+
+**2. Which loop is guaranteed to execute its body at least once?**
+
+for
+
+while
+
+do-while
+
+None
+
+**3. Which search algorithm requires sorted input?**
+
+Linear search
+
+Binary search
+
+Both
+
+Neither
+
+**4. Which C++ feature supports runtime polymorphism?**
+
+Function overloading
+
+Virtual functions
+
+Friend functions
+
+Static variables
+
+**5. What is the time complexity of binary search?**
+
+O(1)
+
+O(log n)
+
+O(n)
+
+O(n²)
+
+**6. Which Git command records staged changes in local history?**
+
+git add
+
+git push
+
+git commit
+
+git fetch
+
+**7. What is the output of \`int x=5; printf("%d", x++);\`?**
+
+4
+
+5
+
+6
+
+Undefined
+
+**8. What is the base case in recursion?**
+
+The first function call
+
+The condition that stops recursion
+
+The return type
+
+A global variable
+
+Check answers
+
+# **22. Common Examination Traps — Final Revision Table**
+
+\| Trap | Correct interpretation |\
+\|---|---|\
+\| `5 / 2` | Integer result 2 when both operands are integers |\
+\| `5.0 / 2` | Floating-point result 2.5 |\
+\| `i++` | Uses old value, then increments |\
+\| `++i` | Increments first, then uses new value |\
+\| `&&` | Logical AND with short-circuit behavior |\
+\| `&` | Bitwise AND for integral operands |\
+\| `||` | Logical OR with short-circuit behavior |\
+\| `|` | Bitwise OR for integral operands |\
+\| `=` | Assignment |\
+\| `==` | Equality comparison |\
+\| `break` | Exits nearest loop or switch |\
+\| `continue` | Skips the current loop iteration |\
+\| `do-while` | Executes at least once |\
+\| `switch` without `break` | May fall through to subsequent cases |\
+\| Recursion without base case | May not terminate normally |\
+\| Recursive statement after function call | Executes during stack unwinding |\
+\| Static local variable | Retains value between calls |\
+\| Array index starts at | 0 in C, C++ and Java |\
+\| Valid array indices for size N | 0 to N−1 |\
+\| Binary search | Requires sorted data |\
+\| Matrix addition | Same dimensions required |\
+\| Matrix multiplication | Columns of A = rows of B |\
+\| Matrix product dimensions | Rows of A × columns of B |\
+\| `A * ptr` | Pointer to A object type, in appropriate declaration context |\
+\| `*ptr` | Dereference pointer |\
+\| `&x` | Address of x |\
+\| C function argument | Passed by value |\
+\| C++ reference parameter | Can modify caller's object |\
+\| Java object parameter | Reference value is passed by value |\
+\| C++ virtual function | Enables runtime dispatch |\
+\| C++ non-virtual function | Does not use virtual dispatch |\
+\| Constructor | Initializes object |\
+\| Destructor | Cleans up object resources |\
+\| C++ base/derived construction | Base before derived |\
+\| C++ destruction | Derived before base |\
+\| Friend function | Not a class member |\
+\| Function overloading | Different parameter lists |\
+\| Return type only | Cannot distinguish overloads |\
+\| Git add | Stages changes |\
+\| Git commit | Records staged changes locally |\
+\| Git push | Sends commits to remote |\
+\| Git fetch | Downloads remote updates without integrating |\
+\| Git pull | Fetches and integrates |\
+\| `df -h` | Filesystem disk capacity/usage |\
+\| `du -sh` | Directory/file space usage |\
+\| `grep` | Searches text |\
+\| `find` | Searches files/directories |\
+\| `chmod` | Changes permissions |\
+\| `chown` | Changes ownership |
+
+# **23. Formula and Complexity Sheet**
+
+## **Number theory and series**
+
+| Problem                        | Formula                              |
+| ------------------------------ | ------------------------------------ |
+| Sum of first N natural numbers | \\(\frac{n(n+1)}2\\)                 |
+| Sum of first N even numbers    | \\(n(n+1)\\)                         |
+| Sum of first N odd numbers     | \\(n^2\\)                            |
+| Sum of squares                 | \\(\frac{n(n+1)(2n+1)}6\\)           |
+| Sum of cubes                   | \\(\left(\frac{n(n+1)}2\right)^2\\)  |
+| Factorial                      | \\(n!=n(n-1)!\\)                     |
+| Fibonacci                      | \\(F_n=F\_{n-1}+F\_{n-2}\\)          |
+| GCD                            | Euclidean algorithm                  |
+| LCM                            | \\(\frac{\|a\times b\|}{GCD(a,b)}\\) |
+| Floyd's triangle total         | \\(\frac{n(n+1)}2\\)                 |
+
+## **Algorithm complexity**
+
+| Algorithm                          | Time complexity                              |
+| ---------------------------------- | -------------------------------------------- |
+| Array access by index              | \\(O(1)\\)                                   |
+| Linear search                      | \\(O(n)\\)                                   |
+| Binary search                      | \\(O(\log n)\\)                              |
+| Bubble sort                        | \\(O(n^2)\\) average/worst                   |
+| Selection sort                     | \\(O(n^2)\\)                                 |
+| Insertion sort                     | \\(O(n^2)\\) average/worst                   |
+| Merge sort                         | \\(O(n\log n)\\)                             |
+| Quick sort                         | \\(O(n\log n)\\) average, \\(O(n^2)\\) worst |
+| Heap sort                          | \\(O(n\log n)\\)                             |
+| Matrix addition                    | \\(O(n^2)\\) for square matrices             |
+| Conventional matrix multiplication | \\(O(n^3)\\) for square matrices             |
+| Iterative factorial                | \\(O(n)\\)                                   |
+| Prime check by trial division      | \\(O(\sqrt n)\\)                             |
+| Sieve of Eratosthenes              | \\(O(n\log\log n)\\)                         |
+| Recursive naïve Fibonacci          | \\(O(2^n)\\) upper-bound scale               |
+
+# **24. Recommended Preparation Priorities**
+
+For written recruitment examinations such as Assistant Programmer, Assistant Network Engineer and other IT-related posts, prioritize the following topics:
+
+| Priority    | Topics                       | What to master                                               |
+| ----------- | ---------------------------- | ------------------------------------------------------------ |
+| Very high   | C/C++ output tracing         | Operators, integer division, loops, arrays, pointers         |
+| Very high   | Recursion                    | Call stack, base case, output before/after recursion         |
+| Very high   | OOP                          | Four pillars, inheritance, polymorphism, binding             |
+| Very high   | C++ constructors/destructors | Execution order, inheritance, virtual destructor             |
+| Very high   | Arrays and matrices          | Searching, sorting, matrix multiplication                    |
+| High        | Numerical programming        | Prime, factorial, Fibonacci, palindrome, Armstrong, GCD      |
+| High        | Function parameter passing   | Value, reference, pointers, Java reference semantics         |
+| High        | Data types                   | Casting, overflow, scope, static variables                   |
+| High        | Complexity                   | Big-O, nested loops, recursive complexity                    |
+| High        | Git                          | Add, commit, push, pull, fetch, merge, reset, revert         |
+| Medium–high | Bash                         | File operations, permissions, processes, networking commands |
+| Medium      | Data structures              | Stack, queue, linked list, tree, BFS and DFS                 |
+"
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-11-22T00:59:15+06:00.
+</ADDITIONAL_METADATA>
