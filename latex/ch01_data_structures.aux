@@ -1,0 +1,434 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\@writefile{toc}{\contentsline {chapter}{\numberline {1}Data Structures}{3}{chapter.1}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{ch:data_structures}{{1}{3}{Data Structures}{chapter.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}Stack and Queue: Fundamental Concepts}{4}{section.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.1}What is a Data Structure?}{4}{subsection.1.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}What is a Stack?}{4}{subsection.1.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.1}Basic Stack Operations}{4}{subsubsection.1.1.2.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.1}{\ignorespaces Basic stack operations and standard complexities.}}{4}{table.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.2}Important Conditions}{4}{subsubsection.1.1.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2.3}Applications of Stacks}{5}{subsubsection.1.1.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.3}What is a Queue?}{5}{subsection.1.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.3.1}Basic Queue Operations}{5}{subsubsection.1.1.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.3.2}Important Queue Terminology}{5}{subsubsection.1.1.3.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.2}{\ignorespaces Basic queue operations and standard complexities.}}{6}{table.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.3.3}Applications of Queues}{6}{subsubsection.1.1.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}Differences Between Stack and Queue}{6}{section.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}The Key Difference: Order of Removal}{6}{subsection.1.2.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.3}{\ignorespaces Comprehensive comparison between Stack and Queue data structures.}}{7}{table.1.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.4}{\ignorespaces Visualizing the distinct removal sequences for identical insertion orders.}}{7}{table.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}Can a Stack or Queue Access an Arbitrary Element Directly?}{7}{subsection.1.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.3}Stack versus Queue: Common Exam Traps}{7}{subsection.1.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Implementing a Queue Using Two Stacks}{8}{section.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}The Problem}{8}{subsection.1.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}Why Are Two Stacks Needed?}{8}{subsection.1.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.4}Method 1: Costly Enqueue, Efficient Dequeue}{9}{section.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.1}Algorithm}{9}{subsection.1.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.4.1.1}Enqueue Operation (\texttt  {ENQUEUE(x)})}{9}{subsubsection.1.4.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.4.1.2}Dequeue Operation (\texttt  {DEQUEUE()})}{9}{subsubsection.1.4.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.4.1.3}Front Operation (\texttt  {FRONT()})}{9}{subsubsection.1.4.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.2}Pseudocode}{9}{subsection.1.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.3}Step-by-Step Example}{10}{subsection.1.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.4}Complexity Analysis}{10}{subsection.1.4.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.5}{\ignorespaces Complexity profile for Method 1.}}{10}{table.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.5}Method 2: Efficient Enqueue, Costly Dequeue (Recommended)}{10}{section.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.5.1}Algorithm}{11}{subsection.1.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.5.1.1}Enqueue Operation (\texttt  {ENQUEUE(x)})}{11}{subsubsection.1.5.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.5.1.2}Dequeue Operation (\texttt  {DEQUEUE()})}{11}{subsubsection.1.5.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.5.1.3}Front Operation (\texttt  {FRONT()})}{11}{subsubsection.1.5.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.5.1.4}Pseudocode}{11}{subsubsection.1.5.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.5.2}Step-by-Step Execution Trace}{12}{subsection.1.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.6}{\ignorespaces Detailed step-by-step state trace of the two stacks.}}{12}{table.1.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.5.3}Complete C++ Implementation}{12}{subsection.1.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.5.3.1}Expected Output}{14}{subsubsection.1.5.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.5.3.2}Explanation of Implementation Details}{14}{subsubsection.1.5.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.6}Time and Space Complexity of the Two-Stack Queue}{14}{section.1.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.6.1}Complexity Comparison}{14}{subsection.1.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.6.2}Why is the Amortized Complexity $O(1)$?}{14}{subsection.1.6.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.7}{\ignorespaces Detailed performance comparison between the two approaches.}}{15}{table.1.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.7}Comparing Both Two-Stack Approaches}{15}{section.1.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.8}{\ignorespaces Strategic architectural comparison between Method 1 and Method 2.}}{15}{table.1.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.8}Common Mistakes and Edge Cases}{16}{section.1.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.8.1}Mistake 1: Transferring Elements on Every Dequeue}{16}{subsection.1.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.8.2}Mistake 2: Checking Only One Stack for Emptiness}{16}{subsection.1.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.8.3}Mistake 3: Popping an Empty Stack}{16}{subsection.1.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.8.4}Mistake 4: Equating Stack Top to Queue Front}{16}{subsection.1.8.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.8.5}Mistake 5: Stating Dequeue is $O(1)$ Worst-Case}{16}{subsection.1.8.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.9}Likely Recruitment Examination Questions: Stack and Queue}{16}{section.1.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.10}Quick Revision Summary}{17}{section.1.10}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.9}{\ignorespaces Quick revision reference for Stack and Queue fundamentals.}}{18}{table.1.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.11}What is a Linked List?}{18}{section.1.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.11.1}Important Terminology}{19}{subsection.1.11.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.10}{\ignorespaces Fundamental linked list terminology.}}{19}{table.1.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.12}Why Use Linked Lists Instead of Arrays?}{19}{section.1.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.12.1}Array versus Linked List Comparison}{19}{subsection.1.12.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.13}Singly Linked List}{19}{section.1.13}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.11}{\ignorespaces Architectural comparison between Arrays and Linked Lists.}}{20}{table.1.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.13.1}Definition and Node Structure}{20}{subsection.1.13.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.13.1.1}Main Characteristics}{20}{subsubsection.1.13.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.13.2}Traversing a Singly Linked List}{20}{subsection.1.13.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.13.3}Insertion Operations}{21}{subsection.1.13.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.13.3.1}A. Insert at the Beginning (Front)}{21}{subsubsection.1.13.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.13.3.2}B. Insert at the End (Tail)}{21}{subsubsection.1.13.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.13.3.3}C. Insert After a Specified Node}{22}{subsubsection.1.13.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.13.4}Deletion Operations}{22}{subsection.1.13.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.13.4.1}A. Delete the First Node (Front)}{22}{subsubsection.1.13.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.13.4.2}B. Delete a Node Containing a Target Value}{22}{subsubsection.1.13.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.13.5}Advantages and Disadvantages of Singly Linked Lists}{23}{subsection.1.13.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.13.6}Applications}{23}{subsection.1.13.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.14}Doubly Linked List}{23}{section.1.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.14.1}Definition and Node Structure}{23}{subsection.1.14.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.14.2}Singly versus Doubly Linked Lists}{24}{subsection.1.14.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.14.3}Insertion Operations}{24}{subsection.1.14.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.14.3.1}A. Insert at the Beginning}{24}{subsubsection.1.14.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.14.3.2}B. Insert After a Known Node}{24}{subsubsection.1.14.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.14.4}Deletion of a Known Node}{25}{subsection.1.14.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.14.5}Applications of Doubly Linked Lists}{25}{subsection.1.14.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.15}Circular Linked List}{25}{section.1.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.15.1}Definition and Principal Variants}{25}{subsection.1.15.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.15.2}Traversing a Circular Singly Linked List}{25}{subsection.1.15.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.15.3}Insertion Using a Tail Pointer}{26}{subsection.1.15.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.15.4}Applications of Circular Linked Lists}{27}{subsection.1.15.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.16}Comparison of Linked-List Types}{27}{section.1.16}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.12}{\ignorespaces Comprehensive comparison of linked-list variants.}}{28}{table.1.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.17}What is a Heap?}{28}{section.1.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.17.1}What is a Complete Binary Tree?}{28}{subsection.1.17.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.13}{\ignorespaces Distinguishing Complete, Full, and Perfect binary trees.}}{28}{table.1.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.17.2}Max-Heap vs Min-Heap}{28}{subsection.1.17.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.17.3}Is a Heap the Same as a Binary Search Tree (BST)?}{29}{subsection.1.17.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.14}{\ignorespaces Key distinctions between Binary Heap and Binary Search Tree.}}{29}{table.1.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.18}Representing a Binary Heap Using an Array}{29}{section.1.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.18.1}Zero-Based Indexing Formulas}{29}{subsection.1.18.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.18.2}One-Based Indexing Formulas}{29}{subsection.1.18.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.18.2.1}Example Mapping}{29}{subsubsection.1.18.2.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.15}{\ignorespaces Zero-based array index mapping of a binary heap.}}{30}{table.1.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.19}Max-Heap Construction: Step by Step}{30}{section.1.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.19.1}The Heapify (Sift-Down) Operation}{30}{subsection.1.19.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.19.2}Step-by-Step Bottom-Up Construction Trace}{30}{subsection.1.19.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.16}{\ignorespaces Trace of bottom-up max-heap construction.}}{31}{table.1.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.19.3}Why Does Bottom-Up Heap Construction Take $O(n)$?}{31}{subsection.1.19.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.20}Max-Heap Insertion}{31}{section.1.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.20.1}Algorithm}{31}{subsection.1.20.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.20.2}Step-by-Step Insertion Example}{32}{subsection.1.20.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.21}Max-Heap Deletion (Extract Maximum)}{32}{section.1.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.21.1}Algorithm}{32}{subsection.1.21.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.21.2}Step-by-Step Deletion Example}{32}{subsection.1.21.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.21.3}Deleting an Arbitrary Key}{33}{subsection.1.21.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.22}Complete C++ Implementation of a Max-Heap}{33}{section.1.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.22.0.1}Expected Output}{35}{subsubsection.1.22.0.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.23}Heap Complexity: Complete Comparison}{35}{section.1.23}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.17}{\ignorespaces Comprehensive operational complexity reference for Binary Heaps.}}{35}{table.1.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.23.1}Binary Heap versus Priority Queue}{35}{subsection.1.23.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.24}Heap Sort}{36}{section.1.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.24.1}Algorithm (Ascending Order)}{36}{subsection.1.24.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.24.2}Properties of Heap Sort}{36}{subsection.1.24.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.25}Common Heap Errors and Examination Traps}{36}{section.1.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.26}Practical Applications of Heaps}{37}{section.1.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.27}Likely Recruitment Examination Questions: Linked Lists and Heaps}{37}{section.1.27}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.18}{\ignorespaces Rapid-fire recruitment examination questions and answers.}}{37}{table.1.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.28}Final Quick-Revision Sheet: Linked Lists and Heaps}{38}{section.1.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.28.1}Linked Lists Quick Revision}{38}{subsection.1.28.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.28.2}Max-Heaps Quick Revision}{38}{subsection.1.28.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.29}What is a Circular Queue?}{38}{section.1.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.29.1}Practical Applications}{39}{subsection.1.29.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.30}Why is a Circular Queue Needed?}{39}{section.1.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.31}Front and Rear Indexing in a Circular Queue}{40}{section.1.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.32}Circular Queue Operations}{40}{section.1.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.32.1}Method A: Front and Rear with -1 Initialization}{40}{subsection.1.32.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.32.1.1}A. Enqueue Operation}{41}{subsubsection.1.32.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.32.1.2}B. Dequeue Operation}{41}{subsubsection.1.32.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.32.1.3}C. Peek / Front}{41}{subsubsection.1.32.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.32.2}Step-by-Step Execution Trace}{41}{subsection.1.32.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.19}{\ignorespaces Detailed step-by-step state trace of circular queue pointer wrapping.}}{42}{table.1.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.33}Circular Queue Implementation in C++}{42}{section.1.33}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.33.0.1}Expected Output}{44}{subsubsection.1.33.0.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.33.1}Complexity and Advantages}{44}{subsection.1.33.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.20}{\ignorespaces Operational complexity profile of Circular Queue.}}{44}{table.1.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.34}What is a Priority Queue?}{45}{section.1.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.34.1}Real-Life Analogy: Hospital Emergency Triage}{45}{subsection.1.34.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.21}{\ignorespaces Emergency triage priority comparison.}}{45}{table.1.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.34.2}Key Terminology}{45}{subsection.1.34.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.35}Types of Priority Queues}{45}{section.1.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.35.1}Max-Priority Queue vs Min-Priority Queue}{45}{subsection.1.35.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.35.2}Does a Priority Queue Preserve FIFO Order for Equal Priorities?}{46}{subsection.1.35.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.36}Priority Queue Implementation Strategies}{46}{section.1.36}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.22}{\ignorespaces Comparison of underlying priority queue data structures.}}{46}{table.1.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.37}Implementing a Priority Queue Using a Binary Heap}{46}{section.1.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.38}C++ Priority Queue Using the Standard Library}{46}{section.1.38}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.38.1}Standard Max-Priority Queue}{46}{subsection.1.38.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.38.2}Standard Min-Priority Queue}{47}{subsection.1.38.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.23}{\ignorespaces C++ STL priority\_queue member functions and complexities.}}{48}{table.1.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.39}Priority Queue with Real-World Tasks and Custom Comparators}{48}{section.1.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.39.1}Stable Priority Queue Implementation}{48}{subsection.1.39.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.39.1.1}Expected Output}{49}{subsubsection.1.39.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.40}Priority Queue Applications and Important Concepts}{49}{section.1.40}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.40.1}Operating System Scheduling and Starvation}{49}{subsection.1.40.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.40.2}Dijkstra's Shortest Path Algorithm}{49}{subsection.1.40.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.40.3}Huffman Coding Tree Construction}{49}{subsection.1.40.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.40.4}Top-$K$ Problem in Streaming Big Data}{49}{subsection.1.40.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.41}Circular Queue versus Priority Queue}{50}{section.1.41}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.24}{\ignorespaces Architectural comparison between Circular Queue and Priority Queue.}}{50}{table.1.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.42}Common Examination Mistakes and Traps}{50}{section.1.42}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.43}Likely Recruitment Examination Questions: Circular and Priority Queues}{50}{section.1.43}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.44}Final Quick-Revision Sheet: Circular and Priority Queues}{50}{section.1.44}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.25}{\ignorespaces Rapid-fire recruitment examination questions and answers.}}{51}{table.1.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.44.1}Circular Queue Summary}{52}{subsection.1.44.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.44.2}Priority Queue Summary}{52}{subsection.1.44.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.45}What is a Tree?}{52}{section.1.45}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.45.1}Basic Terminology}{53}{subsection.1.45.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.26}{\ignorespaces Fundamental tree terminology and definitions.}}{53}{table.1.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.45.2}Fundamental Mathematical Properties of Trees}{53}{subsection.1.45.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.45.2.1}Property 1: Number of Edges}{53}{subsubsection.1.45.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.45.2.2}Property 2: Unique Simple Path}{54}{subsubsection.1.45.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.45.2.3}Property 3: Invariance of Edge Count to Topology}{54}{subsubsection.1.45.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.45.2.4}Property 4: Edge Addition}{54}{subsubsection.1.45.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.45.2.5}Property 5: Edge Removal}{54}{subsubsection.1.45.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.46}General Tree Mathematics}{54}{section.1.46}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.46.1}Maximum Nodes at Level $i$}{54}{subsection.1.46.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.46.2}Maximum Total Nodes for Height $h$}{54}{subsection.1.46.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.46.3}Minimum Possible Height for $n$ Nodes}{55}{subsection.1.46.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.46.4}Maximum Possible Height for $n$ Nodes}{55}{subsection.1.46.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.47}Traversing a Tree}{55}{section.1.47}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.47.1}Preorder Traversal (Root $\to $ Left $\to $ Right)}{55}{subsection.1.47.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.47.2}Inorder Traversal (Left $\to $ Root $\to $ Right)}{55}{subsection.1.47.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.47.3}Postorder Traversal (Left $\to $ Right $\to $ Root)}{55}{subsection.1.47.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.47.4}Level-Order Traversal (Breadth-First)}{56}{subsection.1.47.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.48}What Is a Binary Tree?}{56}{section.1.48}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.48.1}Types of Binary Trees}{56}{subsection.1.48.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.48.2}Full vs Complete vs Perfect Comparison}{57}{subsection.1.48.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.27}{\ignorespaces Detailed comparison between Full, Complete, and Perfect binary trees.}}{57}{table.1.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.49}Important Binary Tree Formulas}{57}{section.1.49}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.49.1}Fundamental Extremum Bounds}{57}{subsection.1.49.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.49.2}Theorem: Leaves vs Two-Child Nodes ($n_0 = n_2 + 1$)}{57}{subsection.1.49.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.49.3}Number of Null Child Pointers}{57}{subsection.1.49.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.50}Array Representation of a Binary Tree}{58}{section.1.50}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.50.1}Zero-Based Indexing Formulas}{58}{subsection.1.50.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.50.2}One-Based Indexing Formulas}{58}{subsection.1.50.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.51}Number of Structurally Different Binary Trees}{58}{section.1.51}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.52}Binary Search Tree (BST)}{58}{section.1.52}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.52.1}Time Complexity}{58}{subsection.1.52.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.52.2}BST Node Deletion: Three Cases}{58}{subsection.1.52.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.53}AVL Tree (Adelson-Velsky and Landis)}{59}{section.1.53}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.28}{\ignorespaces The four AVL tree imbalance scenarios and rotation solutions.}}{59}{table.1.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.53.1}Minimum Nodes in an AVL Tree of Height $h$}{59}{subsection.1.53.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.54}Red-Black Tree}{59}{section.1.54}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.54.1}Height Bound}{60}{subsection.1.54.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.54.2}AVL vs Red-Black Tree Comparison}{60}{subsection.1.54.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.55}B-Tree}{60}{section.1.55}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.55.1}Order $m$ Specification}{60}{subsection.1.55.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.56}What Is a B+ Tree?}{60}{section.1.56}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.29}{\ignorespaces Structural comparison between B-Tree and B+ Tree architectures.}}{61}{table.1.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.57}Critical B+ Tree Calculation: Maximum Number of Keys}{61}{section.1.57}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.57.1}Standard Convention Formulation}{61}{subsection.1.57.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.57.1.1}Example: Order $m=4$, Height $h=3$ Edges}{61}{subsubsection.1.57.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.57.2}When Height Means Levels ($H$)}{61}{subsection.1.57.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.58}Maximum Key Entries Across All B+ Tree Nodes}{62}{section.1.58}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.59}Minimum Number of Keys in a B+ Tree}{62}{section.1.59}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.60}B-Tree Key-Count Calculations}{62}{section.1.60}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.61}Trie (Prefix Tree)}{63}{section.1.61}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.62}Expression Trees}{63}{section.1.62}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.63}Huffman Coding Tree}{63}{section.1.63}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.64}Segment Tree}{63}{section.1.64}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.30}{\ignorespaces Master operational time complexity across tree architectures.}}{64}{table.1.30}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.31}{\ignorespaces Comprehensive master mathematical formula sheet for recruitment examinations.}}{65}{table.1.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.65}What is a Graph?}{66}{section.1.65}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.32}{\ignorespaces Fundamental graph terminology and definitions.}}{67}{table.1.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.65.1}Basic Graph Terminology}{67}{subsection.1.65.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.66}Types of Graphs}{67}{section.1.66}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.66.1}Undirected Graph}{67}{subsection.1.66.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.66.2}Directed Graph (Digraph)}{67}{subsection.1.66.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.66.3}Weighted Graph}{68}{subsection.1.66.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.66.4}Simple Graph}{68}{subsection.1.66.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.66.5}Multigraph}{68}{subsection.1.66.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.66.6}Pseudograph}{68}{subsection.1.66.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.66.7}Complete Graph}{68}{subsection.1.66.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.66.8}Regular Graph}{69}{subsection.1.66.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.66.9}Null Graph and Trivial Graph}{69}{subsection.1.66.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.67}Connectivity, Cycles, and Special Graph Classes}{69}{section.1.67}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.67.1}Connected and Disconnected Graphs}{69}{subsection.1.67.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.67.2}Strongly Connected and Weakly Connected Directed Graphs}{69}{subsection.1.67.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.67.3}Cyclic and Acyclic Graphs}{69}{subsection.1.67.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.67.3.1}Directed Acyclic Graph (DAG)}{70}{subsubsection.1.67.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.67.4}Bipartite Graph}{70}{subsection.1.67.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.67.4.1}Complete Bipartite Graph}{70}{subsubsection.1.67.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.67.5}Planar Graph}{70}{subsection.1.67.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.67.6}Eulerian Graph}{70}{subsection.1.67.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.67.7}Hamiltonian Graph}{71}{subsection.1.67.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.68}Fundamental Graph Formulas}{71}{section.1.68}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.68.1}Handshaking Lemma for Undirected Graphs}{71}{subsection.1.68.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.68.2}Directed Graph Degree Formulas}{71}{subsection.1.68.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.68.3}Maximum Edges in a Simple Graph}{72}{subsection.1.68.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.68.4}Trees and Forests}{72}{subsection.1.68.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.68.5}Density of a Graph}{72}{subsection.1.68.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.69}What Is a Hash Table?}{73}{section.1.69}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.69.1}Basic Components}{73}{subsection.1.69.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.69.2}What is a Hash Function?}{73}{subsection.1.69.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.69.3}Characteristics of a Good Hash Function}{73}{subsection.1.69.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.70}Types of Hash Functions}{73}{section.1.70}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.70.1}Division Method}{73}{subsection.1.70.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.33}{\ignorespaces Division hash function with table size $m = 10$.}}{74}{table.1.33}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.70.2}Multiplication Method}{74}{subsection.1.70.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.70.3}Mid-Square Method}{74}{subsection.1.70.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.70.4}Folding Method}{74}{subsection.1.70.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.70.5}Direct Addressing versus Hashing}{74}{subsection.1.70.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.71}What Is a Collision?}{75}{section.1.71}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.34}{\ignorespaces Collision example: Multiple keys mapping to slot 3.}}{75}{table.1.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.71.1}Main Collision-Resolution Techniques}{75}{subsection.1.71.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.72}Separate Chaining}{75}{section.1.72}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.72.1}Operations in Separate Chaining}{75}{subsection.1.72.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.35}{\ignorespaces Separate chaining collision resolution.}}{76}{table.1.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.72.2}Complexity of Separate Chaining}{76}{subsection.1.72.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.36}{\ignorespaces Time complexity of separate chaining (where $\alpha = n / m$).}}{76}{table.1.36}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.73}Open Addressing}{76}{section.1.73}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.73.1}Linear Probing}{76}{subsection.1.73.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.73.2}Quadratic Probing}{77}{subsection.1.73.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.73.3}Double Hashing}{77}{subsection.1.73.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.74}Comparison of Collision-Resolution Methods}{78}{section.1.74}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.37}{\ignorespaces Comprehensive comparison of collision-resolution mechanisms.}}{78}{table.1.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.75}Load Factor and Rehashing}{78}{section.1.75}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.75.1}What is Load Factor?}{78}{subsection.1.75.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.75.2}Why Does Load Factor Matter?}{78}{subsection.1.75.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.75.3}Rehashing}{78}{subsection.1.75.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.76}Deletion in Open Addressing: Tombstones}{79}{section.1.76}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.76.1}The Solution: Tombstones (Deleted Marker)}{79}{subsection.1.76.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.77}Complexity of Hash Tables}{79}{section.1.77}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.38}{\ignorespaces Hash table time and space complexity summary.}}{79}{table.1.38}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.77.1}Why is Worst-Case Search $O(n)$?}{79}{subsection.1.77.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.78}C++ Implementation: Hash Table with Separate Chaining}{80}{section.1.78}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.1}C++ Hash Table implementation using separate chaining.}{80}{lstlisting.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.78.1}Implementation Notes}{81}{subsection.1.78.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.79}Representing a Graph in Memory}{82}{section.1.79}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.80}Adjacency Matrix}{82}{section.1.80}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.80.1}Adjacency Matrix Example}{82}{subsection.1.80.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.39}{\ignorespaces Adjacency matrix for an undirected graph (symmetric across main diagonal).}}{82}{table.1.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.80.2}Adjacency Matrix for a Directed Graph}{82}{subsection.1.80.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.40}{\ignorespaces Adjacency matrix for a directed graph with arcs $A \to B, B \to C, C \to A$.}}{83}{table.1.40}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.80.3}Weighted Adjacency Matrix}{83}{subsection.1.80.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.80.4}Complexity of an Adjacency Matrix}{83}{subsection.1.80.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.41}{\ignorespaces Operational complexities of an adjacency matrix.}}{83}{table.1.41}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.80.5}Advantages and Disadvantages}{83}{subsection.1.80.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.81}Adjacency List}{83}{section.1.81}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.42}{\ignorespaces Adjacency list for the undirected graph example.}}{83}{table.1.42}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.81.1}Directed Adjacency List}{83}{subsection.1.81.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.43}{\ignorespaces Adjacency list for directed cycle $A \to B \to C \to A$.}}{84}{table.1.43}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.81.2}Complexity of an Adjacency List}{84}{subsection.1.81.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.44}{\ignorespaces Operational complexities of an adjacency list.}}{84}{table.1.44}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.81.3}Advantages and Disadvantages}{84}{subsection.1.81.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.82}Adjacency List vs Adjacency Matrix: Complete Comparison}{84}{section.1.82}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.45}{\ignorespaces Master comparison between adjacency matrix and adjacency list.}}{85}{table.1.45}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.82.1}Worked Memory Comparison}{85}{subsection.1.82.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.82.2}Worked Example: Choosing the Right Representation}{85}{subsection.1.82.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.83}Graph Traversal: BFS and DFS}{85}{section.1.83}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.83.1}Breadth-First Search (BFS)}{86}{subsection.1.83.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.83.2}Depth-First Search (DFS)}{86}{subsection.1.83.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.83.3}Traversal Complexity}{86}{subsection.1.83.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.84}C++ Implementation of Adjacency List and Matrix}{86}{section.1.84}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.84.1}Adjacency List Implementation}{86}{subsection.1.84.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.2}C++ Graph implementation using Adjacency List.}{86}{lstlisting.1.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.3}Output of Adjacency List program.}{87}{lstlisting.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.84.2}Adjacency Matrix Implementation}{87}{subsection.1.84.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.4}C++ Graph implementation using Adjacency Matrix.}{87}{lstlisting.1.4}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.5}Output of Adjacency Matrix program.}{88}{lstlisting.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.85}Additional Graph Properties Worth Memorizing}{89}{section.1.85}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.86}Likely Recruitment Examination Questions: Graphs and Hashing}{89}{section.1.86}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.86.1}Questions on Graphs}{89}{subsection.1.86.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.86.2}Questions on Hash Tables}{89}{subsection.1.86.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.86.3}Questions on Graph Representation}{89}{subsection.1.86.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.87}Final Quick-Revision Sheet: Graphs and Hashing}{89}{section.1.87}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.46}{\ignorespaces Key examination questions on graphs.}}{90}{table.1.46}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.47}{\ignorespaces Key examination questions on hash tables.}}{90}{table.1.47}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.48}{\ignorespaces Key examination questions on graph representations.}}{91}{table.1.48}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.87.1}Graphs Summary}{91}{subsection.1.87.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.87.2}Hash Tables Summary}{91}{subsection.1.87.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.87.3}Adjacency List vs Matrix Summary}{92}{subsection.1.87.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.88}Arrays and Basic Algorithms}{92}{section.1.88}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.88.1}Problem 1: Find the Smallest Element in an Array}{93}{subsection.1.88.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.6}Input}{93}{lstlisting.1.6}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.7}Expected Output}{93}{lstlisting.1.7}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.8}C++ Solution for Finding Minimum Element.}{93}{lstlisting.1.8}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.49}{\ignorespaces Linear scan trace for finding the minimum element.}}{94}{table.1.49}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.88.2}Problem 2: Find the Second-Largest Distinct Element}{94}{subsection.1.88.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.9}Input}{94}{lstlisting.1.9}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.10}Expected Output}{94}{lstlisting.1.10}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.11}C++ Solution for Finding Second-Largest Distinct Element.}{94}{lstlisting.1.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.88.3}Problem 3: Binary Search on a Sorted Array}{95}{subsection.1.88.3}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.12}C++ Iterative Binary Search.}{96}{lstlisting.1.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.89}Stack and Queue Problems}{97}{section.1.89}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.89.1}Problem 4: Balanced Parentheses Checking}{97}{subsection.1.89.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.13}C++ Solution for Balanced Parentheses.}{97}{lstlisting.1.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.89.2}Problem 5: Postfix Expression Evaluation}{98}{subsection.1.89.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.89.3}Problem 6: Implement a Queue Using Two Stacks}{99}{subsection.1.89.3}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.14}C++ Implementation of Queue using Two Stacks.}{99}{lstlisting.1.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.90}Linked-List Problems}{101}{section.1.90}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.90.1}Problem 7: Reverse a Singly Linked List}{101}{subsection.1.90.1}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.15}C++ Solution for In-Place Linked List Reversal.}{101}{lstlisting.1.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.90.2}Problem 8: Detect a Cycle in a Linked List (Floyd's Algorithm)}{102}{subsection.1.90.2}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1.16}C++ Cycle Detection using Floyd's Algorithm.}{102}{lstlisting.1.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.91}Heap and Priority-Queue Problems}{103}{section.1.91}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.91.1}Problem 9: Build a Max-Heap from an Unordered Array}{103}{subsection.1.91.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.91.2}Problem 10: Insert and Delete Maximum from a Max-Heap}{103}{subsection.1.91.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.91.3}Problem 11: Priority Queue Extraction Order}{104}{subsection.1.91.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.92}Circular Queue Problems}{105}{section.1.92}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.92.1}Problem 12: Trace Circular Queue Operations}{105}{subsection.1.92.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.50}{\ignorespaces Trace of circular queue operations.}}{105}{table.1.50}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.93}Tree Problems}{106}{section.1.93}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.93.1}Problem 13: Tree Traversal Orders}{106}{subsection.1.93.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.93.2}Problem 14: Leaves, Nodes, and Edges in a Full Binary Tree}{106}{subsection.1.93.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.93.3}Problem 15: Minimum Height of a Binary Tree}{107}{subsection.1.93.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.93.4}Problem 16: Maximum Data Keys in a B+ Tree}{107}{subsection.1.93.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.94}Graph Problems}{108}{section.1.94}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.94.1}Problem 17: Edge Calculation using Handshaking Lemma}{108}{subsection.1.94.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.94.2}Problem 18: Maximum Edges in Simple Graphs}{108}{subsection.1.94.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.94.3}Problem 19: Complete Bipartite Graph Edges}{108}{subsection.1.94.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.94.4}Problem 20: BFS Traversal and Shortest Path}{108}{subsection.1.94.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.95}Hash Table Problems}{110}{section.1.95}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.95.1}Problem 21: Division Method Hash Index Calculation}{110}{subsection.1.95.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.51}{\ignorespaces Hash indices and collisions under division hashing.}}{110}{table.1.51}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.95.2}Problem 22: Linear Probing Insertion}{110}{subsection.1.95.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.52}{\ignorespaces Final state of hash table after linear probing.}}{110}{table.1.52}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.95.3}Problem 23: Load Factor Calculation}{110}{subsection.1.95.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.95.4}Problem 24: Rehashing Threshold Calculation}{111}{subsection.1.95.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.96}Graph Representation and Architecture Selection}{112}{section.1.96}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.96.1}Problem 25: Memory Comparison of Matrix vs List}{112}{subsection.1.96.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.96.2}Problem 26: Master Data Structure Selection Guide}{112}{subsection.1.96.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1.53}{\ignorespaces Master data structure selection chart for technical examinations.}}{112}{table.1.53}\protected@file@percent }
+\gdef \LT@i {\LT@entry 
+    {5}{23.74997pt}\LT@entry 
+    {1}{290.83708pt}\LT@entry 
+    {1}{205.47882pt}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.97}Rapid-Fire Revision Questions}{113}{section.1.97}\protected@file@percent }
+\@setckpt{ch01_data_structures}{
+\setcounter{page}{115}
+\setcounter{equation}{0}
+\setcounter{enumi}{2}
+\setcounter{enumii}{0}
+\setcounter{enumiii}{0}
+\setcounter{enumiv}{0}
+\setcounter{footnote}{0}
+\setcounter{mpfootnote}{0}
+\setcounter{part}{1}
+\setcounter{chapter}{1}
+\setcounter{section}{97}
+\setcounter{subsection}{0}
+\setcounter{subsubsection}{0}
+\setcounter{paragraph}{0}
+\setcounter{subparagraph}{0}
+\setcounter{figure}{0}
+\setcounter{table}{54}
+\setcounter{parentequation}{0}
+\setcounter{float@type}{16}
+\setcounter{lstnumber}{7}
+\setcounter{LT@tables}{1}
+\setcounter{LT@chunks}{5}
+\setcounter{tcbbreakpart}{1}
+\setcounter{tcblayer}{0}
+\setcounter{tcolorbox@number}{46}
+\setcounter{section@level}{0}
+\setcounter{Item}{192}
+\setcounter{Hfootnote}{0}
+\setcounter{bookmark@seq@number}{99}
+\setcounter{lstlisting}{16}
+}
